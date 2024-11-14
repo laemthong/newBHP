@@ -1,29 +1,33 @@
 <?php
-// เชื่อมต่อฐานข้อมูล
-include 'connect/connection.php';
+session_start();
+include 'connect/connection.php';   
+$userName = $_SESSION['user_name'] ?? 'Guest';
 
-// กำหนดจำนวนรายการที่จะแสดงต่อหน้า
-$records_per_page = 10;
+// กำหนดจำนวนรายการต่อหน้า
+$items_per_page = 10;
 
-// ตรวจสอบหน้าปัจจุบันจาก URL
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-$offset = ($page - 1) * $records_per_page;
+// ตรวจสอบหน้าปัจจุบันที่ถูกเลือก
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $items_per_page;
 
-// ดึงข้อมูลจากฐานข้อมูลโดยใช้ LIMIT และ OFFSET
-$sql = "SELECT * FROM personnel LIMIT $offset, $records_per_page";
+// ตัวแปรการค้นหา
+$search_query = isset($_GET['search']) ? $_GET['search'] : '';
+
+// ตรวจสอบว่ามีการค้นหาหรือไม่
+if ($search_query) {
+    // ดึงข้อมูลตามการค้นหา
+    $sql = "SELECT * FROM personnel WHERE person_name LIKE '%$search_query%' OR person_phone LIKE '%$search_query%' LIMIT $offset, $items_per_page";
+    $count_sql = "SELECT COUNT(*) AS count FROM personnel WHERE person_name LIKE '%$search_query%' OR person_phone LIKE '%$search_query%'";
+} else {
+    // ดึงข้อมูลทั้งหมด
+    $sql = "SELECT * FROM personnel LIMIT $offset, $items_per_page";
+    $count_sql = "SELECT COUNT(*) AS count FROM personnel";
+}
+
 $result = $conn->query($sql);
-
-// ดึงจำนวนเรคคอร์ดทั้งหมดเพื่อคำนวณจำนวนหน้า
-$total_records_sql = "SELECT COUNT(*) FROM personnel";
-$total_records_result = $conn->query($total_records_sql);
-$total_records = $total_records_result->fetch_row()[0];
-$total_pages = ceil($total_records / $records_per_page);
-
-//ดึงข้อมูลทั้งหมด (ไม่ใช้ LIMIT)
-$sql = "SELECT * FROM personnel";
-$result = $conn->query($sql);
+$total_items = $conn->query($count_sql)->fetch_assoc()['count'];
+$total_pages = ceil($total_items / $items_per_page);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -284,71 +288,86 @@ $result = $conn->query($sql);
                     <i class="bi bi-justify fs-3"></i>
                 </a>
 
-                <body>
+                <script>
+        function searchTable() {
+            const input = document.getElementById("searchInput");
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById("personnelTable");
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) { 
+                const tds = tr[i].getElementsByTagName("td");
+                let match = false;
+                for (let j = 0; j < tds.length; j++) {
+                    if (tds[j]) {
+                        const textValue = tds[j].textContent || tds[j].innerText;
+                        if (textValue.toLowerCase().indexOf(filter) > -1) {
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+                tr[i].style.display = match ? "" : "none";
+            }
+        }
+    </script>
+</head>
+<body>
     <div class="container my-4">
         <h1 class="text-center mb-4">Personnel Management</h1>
-        
-        <!-- Search Input -->
-        <div class="input-group mb-3">
-            <input type="text" id="searchInput" class="form-control" placeholder="ค้นหา..." onkeyup="searchTable()">
+
+        <!-- ช่องค้นหา -->
+        <div class="mb-3">
+            <input type="text" id="searchInput" onkeyup="searchTable()" class="form-control" placeholder="ค้นหา...">
         </div>
 
-        <section class="section">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">
-                        Simple Datatable
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped" id="table1">
-                        <thead>
-                            <tr>
-                                <th>ลำดับที่</th>
-                                <th>ชื่อ-สกุล</th>
-                                <th>เพศ</th>
-                                <th>ตำแหน่ง</th>
-                                <th>ปฏิบัติการที่</th>
-                                <th>ระดับ</th>
-                                <th>เงินเดือน</th>
-                                <th>วันเกิด</th>
-                                <th>โทรศัพท์</th>
-                                <th>แอคชั่น</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if ($result->num_rows > 0) {
-                                while($row = $result->fetch_assoc()) {
-                                    echo "<tr>";
-                                    echo "<td>" . $row["person_id"] . "</td>";
-                                    echo "<td>" . $row["person_name"] . "</td>";
-                                    echo "<td>" . $row["person_gender"] . "</td>";
-                                    echo "<td>" . $row["person_rank"] . "</td>";
-                                    echo "<td>" . $row["person_formwork"] . "</td>";
-                                    echo "<td>" . $row["person_level"] . "</td>";
-                                    echo "<td>" . $row["person_salary"] . "</td>";
-                                    echo "<td>" . $row["person_born"] . "</td>";
-                                    echo "<td>" . $row["person_phone"] . "</td>";
-                                    echo "<td>";
-                                    echo "<div class='d-flex'>";
-                                    echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-warning me-1'>แก้ไข</a>";
-                                    echo "<a href='delete_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-danger' onclick=\"return confirm('ต้องการลบข้อมูลนี้หรือไม่?');\">ลบ</a>";
-                                    echo "</div>";
-                                    echo "</td>";
-                                    echo "</tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Pagination -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="personnelTable">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ลำดับที่</th>
+                        <th>ชื่อ-สกุล</th>
+                        <th>เพศ</th>
+                        <th>ตำแหน่ง</th>
+                        <th>ปฏิบัติการที่</th>
+                        <th>ระดับ</th>
+                        <th>เงินเดือน</th>
+                        <th>วันเกิด</th>
+                        <th>โทรศัพท์</th>
+                        <th>แอคชั่น</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row["person_id"] . "</td>";
+                            echo "<td>" . $row["person_name"] . "</td>";
+                            echo "<td>" . $row["person_gender"] . "</td>";
+                            echo "<td>" . $row["person_rank"] . "</td>";
+                            echo "<td>" . $row["person_formwork"] . "</td>";
+                            echo "<td>" . $row["person_level"] . "</td>";
+                            echo "<td>" . $row["person_salary"] . "</td>";
+                            echo "<td>" . $row["person_born"] . "</td>";
+                            echo "<td>" . $row["person_phone"] . "</td>";
+                            echo "<td>";
+                            echo "<div class='d-flex'>";
+                            echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-warning me-1'>แก้ไข</a>";
+                            echo "<a href='delete_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-danger' onclick=\"return confirm('ต้องการลบข้อมูลนี้หรือไม่?');\">ลบ</a>";
+                            echo "</div>";
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ปุ่ม Pagination -->
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <?php if ($page > 1): ?>
@@ -376,36 +395,6 @@ $result = $conn->query($sql);
         </nav>
     </div>
 
-    <script>
-        function searchTable() {
-            // Get the input field and table
-            var input = document.getElementById("searchInput");
-            var filter = input.value.toUpperCase();
-            var table = document.getElementById("table1");
-            var tr = table.getElementsByTagName("tr");
-
-            // Loop through table rows, hiding those that don't match the query
-            for (var i = 1; i < tr.length; i++) {
-                var td = tr[i].getElementsByTagName("td");
-                var found = false;
-
-                for (var j = 0; j < td.length; j++) {
-                    if (td[j]) {
-                        var txtValue = td[j].textContent || td[j].innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-
-                tr[i].style.display = found ? "" : "none";
-            }
-        }
-    </script>
-</body>
-
-              
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    
 
 
