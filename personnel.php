@@ -308,7 +308,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
                 <body>
     <div class="container my-4">
-        <h1 class="text-center mb-4">Personnel Management</h1>
+        <h1 class="text-center mb-4">ข้อมูลบุคลากร</h1>
         
         <!-- Search Input -->
 <form method="GET" action="">
