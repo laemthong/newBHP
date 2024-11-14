@@ -140,7 +140,7 @@ $total_pages = ceil($total_records / $records_per_page);
                     </li>
                     
                     <li class="submenu-item  ">
-                        <a href="personnel_edit.php" class="submenu-link">เพิ่ม / ลบ / แก้ไข </a>
+                        <a href="form_person.php" class="submenu-link">เพิ่มบุคลากร</a>
                         
                     </li>
                     

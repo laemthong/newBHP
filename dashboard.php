@@ -109,7 +109,7 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
                     </li>
                     
                     <li class="submenu-item  ">
-                        <a href="personnel_edit.php" class="submenu-link">เพิ่ม / ลบ / แก้ไข </a>
+                        <a href="form_person.php" class="submenu-link">เพิ่มบุคลากร</a>
                         
                     </li>
                     
