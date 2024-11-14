@@ -311,58 +311,61 @@ $total_pages = ceil($total_records / $records_per_page);
         <h1 class="text-center mb-4">Personnel Management</h1>
         
         <!-- Search Input -->
-        <form method="GET" action="">
-        <div class="input-group mb-3">
-            <input type="text" name="search" class="form-control" placeholder="ค้นหา..." value="<?php echo htmlspecialchars($search_query); ?>">
-            <button type="submit" class="btn btn-primary">ค้นหา</button>
+<form method="GET" action="">
+    <div class="input-group mb-3" style="max-width: 300px; margin-left: 0;">
+        <input type="text" name="search" class="form-control" placeholder="ค้นหา..." value="<?php echo htmlspecialchars($search_query); ?>">
+        <button type="submit" class="btn btn-primary">ค้นหา</button>
+    </div>
+</form>
+
+    
+    <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="personnelTable">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ลำดับที่</th>
+                        <th>ชื่อ-สกุล</th>
+                        <th>เพศ</th>
+                        <th>ตำแหน่ง</th>
+                        <th>ปฏิบัติการที่</th>
+                        <th>ระดับ</th>
+                        <th>เงินเดือน</th>
+                        <th>วันเกิด</th>
+                        <th>โทรศัพท์</th>
+                        <th>แอคชั่น</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row["person_id"] . "</td>";
+                            echo "<td>" . $row["person_name"] . "</td>";
+                            echo "<td>" . $row["person_gender"] . "</td>";
+                            echo "<td>" . $row["person_rank"] . "</td>";
+                            echo "<td>" . $row["person_formwork"] . "</td>";
+                            echo "<td>" . $row["person_level"] . "</td>";
+                            echo "<td>" . $row["person_salary"] . "</td>";
+                            echo "<td>" . $row["person_born"] . "</td>";
+                            echo "<td>" . $row["person_phone"] . "</td>";
+                            echo "<td>";
+                            echo "<div class='d-flex'>";
+                            echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-warning me-1'>แก้ไข</a>";
+                            echo "<a href='delete_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-danger' onclick=\"return confirm('ต้องการลบข้อมูลนี้หรือไม่?');\">ลบ</a>";
+                            echo "</div>";
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
         </div>
-    </form>
-    
-    <!-- ตารางข้อมูล -->
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ลำดับที่</th>
-                <th>ชื่อ-สกุล</th>
-                <th>เพศ</th>
-                <th>ตำแหน่ง</th>
-                <th>ปฏิบัติการที่</th>
-                <th>ระดับ</th>
-                <th>เงินเดือน</th>
-                <th>วันเกิด</th>
-                <th>โทรศัพท์</th>
-                <th>แอคชั่น</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . $row["person_id"] . "</td>";
-                    echo "<td>" . $row["person_name"] . "</td>";
-                    echo "<td>" . $row["person_gender"] . "</td>";
-                    echo "<td>" . $row["person_rank"] . "</td>";
-                    echo "<td>" . $row["person_formwork"] . "</td>";
-                    echo "<td>" . $row["person_level"] . "</td>";
-                    echo "<td>" . $row["person_salary"] . "</td>";
-                    echo "<td>" . $row["person_born"] . "</td>";
-                    echo "<td>" . $row["person_phone"] . "</td>";
-                    echo "<td>";
-                    echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-warning'>แก้ไข</a> ";
-                    echo "<a href='delete_person.php?id=" . $row["person_id"] . "' class='btn btn-danger' onclick=\"return confirm('ต้องการลบข้อมูลนี้หรือไม่?');\">ลบ</a>";
-                    echo "</td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-    
-    <!-- Pagination -->
-    <nav aria-label="Page navigation">
+
+        <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <?php if ($page > 1): ?>
                 <li class="page-item">
