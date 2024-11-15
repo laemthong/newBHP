@@ -311,11 +311,10 @@ $total_pages = ceil($total_records / $records_per_page);
 
                         <!-- Search Input -->
                         <form method="GET" action="">
-                            <div class="input-group mb-3" style="max-width: 300px; margin-left: 0;">
-                                <input type="text" name="search" class="form-control" placeholder="ค้นหา..."
-                                    value="<?php echo htmlspecialchars($search_query); ?>">
-                                <button type="submit" class="btn btn-primary">ค้นหา</button>
-                            </div>
+                            <!-- Search Input -->
+<div class="input-group mb-3" style="max-width: 300px; margin-left: 0;">
+    <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหาในตาราง..." onkeyup="searchTable()">
+</div>
                         </form>
 
 
@@ -399,31 +398,32 @@ $total_pages = ceil($total_records / $records_per_page);
                     </div>
 
                     <script>
-                        function searchTable() {
-                            // Get the input field and table
-                            var input = document.getElementById("searchInput");
-                            var filter = input.value.toUpperCase();
-                            var table = document.getElementById("table1");
-                            var tr = table.getElementsByTagName("tr");
+                       function searchTable() {
+    // Get the input field and table
+    var input = document.getElementById("tableSearch");
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById("personnelTable");
+    var tr = table.getElementsByTagName("tr");
 
-                            // Loop through table rows, hiding those that don't match the query
-                            for (var i = 1; i < tr.length; i++) {
-                                var td = tr[i].getElementsByTagName("td");
-                                var found = false;
+    // Loop through table rows, hiding those that don't match the query
+    for (var i = 1; i < tr.length; i++) {
+        var td = tr[i].getElementsByTagName("td");
+        var found = false;
 
-                                for (var j = 0; j < td.length; j++) {
-                                    if (td[j]) {
-                                        var txtValue = td[j].textContent || td[j].innerText;
-                                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                }
+        for (var j = 0; j < td.length; j++) {
+            if (td[j]) {
+                var txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+        }
 
-                                tr[i].style.display = found ? "" : "none";
-                            }
-                        }
+        tr[i].style.display = found ? "" : "none";
+    }
+}
+
                         function confirmDelete(personId) {
                             Swal.fire({
                                 title: 'คุณต้องการลบข้อมูลนี้หรือไม่?',
