@@ -24,7 +24,6 @@ if ($search_query) {
             OR person_born LIKE '%$search_query%' 
             OR person_phone LIKE '%$search_query%' 
             LIMIT $offset, $records_per_page";
-    // นับจำนวนผลลัพธ์ทั้งหมด
     $total_records_sql = "SELECT COUNT(*) FROM personnel WHERE person_name LIKE '%$search_query%' 
             OR person_gender LIKE '%$search_query%' 
             OR person_rank LIKE '%$search_query%' 
@@ -34,7 +33,6 @@ if ($search_query) {
             OR person_born LIKE '%$search_query%' 
             OR person_phone LIKE '%$search_query%'";
 } else {
-    // ถ้าไม่มีคำค้นหา ให้ดึงข้อมูลทั้งหมด
     $sql = "SELECT * FROM personnel LIMIT $offset, $records_per_page";
     $total_records_sql = "SELECT COUNT(*) FROM personnel";
 }
@@ -43,9 +41,17 @@ $result = $conn->query($sql);
 $total_records_result = $conn->query($total_records_sql);
 $total_records = $total_records_result->fetch_row()[0];
 $total_pages = ceil($total_records / $records_per_page);
+
+// ถ้าเป็นการร้องขอผ่าน AJAX ให้ส่งข้อมูลในรูปแบบ JSON
+if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
+    $data = [];
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    echo json_encode(['data' => $data, 'total_pages' => $total_pages]);
+    exit;
+}
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -398,30 +404,67 @@ $total_pages = ceil($total_records / $records_per_page);
                     </div>
 
                     <script>
-                       function searchTable() {
-    // Get the input field and table
-    var input = document.getElementById("tableSearch");
-    var filter = input.value.toUpperCase();
-    var table = document.getElementById("personnelTable");
-    var tr = table.getElementsByTagName("tr");
+                      function searchTable() {
+    // ดึงค่าจากช่องค้นหา
+    var search = document.getElementById("tableSearch").value;
 
-    // Loop through table rows, hiding those that don't match the query
-    for (var i = 1; i < tr.length; i++) {
-        var td = tr[i].getElementsByTagName("td");
-        var found = false;
+    // ส่งคำค้นหาและหน้าปัจจุบันไปยัง PHP ผ่าน AJAX
+    fetch(`personnel.php?search=${search}&ajax=true`)
+        .then(response => response.json())
+        .then(data => {
+            // ล้างข้อมูลเดิมในตาราง
+            const tbody = document.querySelector("#personnelTable tbody");
+            tbody.innerHTML = "";
 
-        for (var j = 0; j < td.length; j++) {
-            if (td[j]) {
-                var txtValue = td[j].textContent || td[j].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    found = true;
-                    break;
-                }
-            }
-        }
+            // เพิ่มข้อมูลใหม่ที่ได้รับจากการค้นหา
+            data.data.forEach((row, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${row.person_name}</td>
+                        <td>${row.person_gender}</td>
+                        <td>${row.person_rank}</td>
+                        <td>${row.person_formwork}</td>
+                        <td>${row.person_level}</td>
+                        <td>${row.person_salary}</td>
+                        <td>${row.person_born}</td>
+                        <td>${row.person_phone}</td>
+                        <td>
+                            <div class='d-flex'>
+                                <a href='edit_person.php?id=${row.person_id}' class='btn btn-sm btn-warning me-1'>แก้ไข</a>
+                                <a href='#' class='btn btn-sm btn-danger' onclick="confirmDelete(${row.person_id})">ลบ</a>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
 
-        tr[i].style.display = found ? "" : "none";
+            // ปรับปรุง pagination
+            updatePagination(data.total_pages);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function updatePagination(totalPages) {
+    const pagination = document.querySelector(".pagination");
+    pagination.innerHTML = "";
+
+    for (let i = 1; i <= totalPages; i++) {
+        pagination.innerHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="goToPage(${i})">${i}</a>
+            </li>`;
     }
+}
+
+function goToPage(page) {
+    // ดึงค่าค้นหาปัจจุบันและเปลี่ยนหน้า
+    var search = document.getElementById("tableSearch").value;
+    fetch(`personnel.php?search=${search}&page=${page}&ajax=true`)
+        .then(response => response.json())
+        .then(data => {
+            // ทำการอัพเดตตารางและ pagination ใหม่
+            searchTable();
+        });
 }
 
                         function confirmDelete(personId) {
