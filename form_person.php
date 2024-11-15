@@ -461,10 +461,6 @@ unset($_SESSION['success'], $_SESSION['error']);
                         return isValid;
                     }
                 </script>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> c606a1139e15dac821c66c2060425126133677bc
      <script>
     document.getElementById('personnelForm').addEventListener('submit', function(event) {
         event.preventDefault(); // หยุดการส่งฟอร์มแบบปกติ
@@ -485,19 +481,6 @@ unset($_SESSION['success'], $_SESSION['error']);
     });
 </script>
 </body>
-<<<<<<< HEAD
-=======
-=======
-            </body>
-
-
-            <script src="assets/static/js/components/dark.js"></script>
-            <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-
-
-            <script src="assets/compiled/js/app.js"></script>
->>>>>>> 38647bfaeab0464b1750e62fdbf2273df4f3dd47
->>>>>>> c606a1139e15dac821c66c2060425126133677bc
 
 
     <script src="assets/static/js/components/dark.js"></script>
