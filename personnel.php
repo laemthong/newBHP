@@ -74,6 +74,27 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <style>
+        /* ปรับขอบโค้งให้กับการ์ดและตาราง */
+        .card {
+            border-radius: 10px;
+        }
+
+        .table {
+            border-radius: 10px;
+            overflow: hidden; /* ป้องกันไม่ให้มุมของตารางเกินการ์ด */
+        }
+
+        .table th, .table td {
+            border-top: none;
+            vertical-align: middle;
+        }
+        .custom-title {
+        font-size: 24px; /* ขนาดที่ต้องการ สามารถเปลี่ยนได้ */
+        font-weight: bold; /* ทำให้ตัวหนา (ถ้าต้องการ) */
+    }
+    </style>
+
 </head>
 
 <body>
@@ -312,103 +333,116 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                 </a>
 
                 <body>
-                    <div class="container my-4">
-                        <h1 class="text-center mb-4">ข้อมูลบุคลากร</h1>
+    <div class="container my-4">
+        
+        <!-- การ์ดสำหรับตาราง -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                <div class="d-flex justify-content-between align-items-center">
 
-                        <!-- Search Input -->
-                        <form method="GET" action="">
-                            <!-- Search Input -->
-<div class="input-group mb-3" style="max-width: 300px; margin-left: 0;">
-    <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหาในตาราง..." onkeyup="searchTable()">
-</div>
-                        </form>
-
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover" id="personnelTable">
-                                <thead class="table-primary">
-                                    <tr>
-                                        <th>ลำดับที่</th>
-                                        <th>ชื่อ-สกุล</th>
-                                        <th>เพศ</th>
-                                        <th>ตำแหน่ง</th>
-                                        <th>ปฏิบัติการที่</th>
-                                        <th>ระดับ</th>
-                                        <th>เงินเดือน</th>
-                                        <th>วันเกิด</th>
-                                        <th>โทรศัพท์</th>
-                                        <th>แอคชั่น</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
-                                            echo "<tr>";
-                                            echo "<td>" . $row["person_id"] . "</td>";
-                                            echo "<td>" . $row["person_name"] . "</td>";
-                                            echo "<td>" . $row["person_gender"] . "</td>";
-                                            echo "<td>" . $row["person_rank"] . "</td>";
-                                            echo "<td>" . $row["person_formwork"] . "</td>";
-                                            echo "<td>" . $row["person_level"] . "</td>";
-                                            echo "<td>" . $row["person_salary"] . "</td>";
-                                            echo "<td>" . $row["person_born"] . "</td>";
-                                            echo "<td>" . $row["person_phone"] . "</td>";
-                                            echo "<td>";
-                                            echo "<div class='d-flex'>";
-                                            echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-warning me-1'>แก้ไข</a>";
-                                            echo "<a href='#' class='btn btn-sm btn-danger' onclick=\"confirmDelete(" . $row["person_id"] . ")\">ลบ</a>";
-                                            echo "</div>";
-                                            echo "</td>";
-                                            echo "</tr>";
-                                        }
-                                    } else {
-                                        echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                <?php if ($page > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                            href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page - 1; ?>"
-                                            aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-
-                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                    <li class="page-item <?php if ($i == $page)
-                                        echo 'active'; ?>">
-                                        <a class="page-link"
-                                            href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                    </li>
-                                <?php endfor; ?>
-
-                                <?php if ($page < $total_pages): ?>
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                            href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page + 1; ?>"
-                                            aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
+                <span class="custom-title">ข้อมูลบุคลากร</span>
+                    <div style="max-width: 300px;">
+                        <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..." onkeyup="searchTable()">
                     </div>
+                </div>
+            </div>
+    </br>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped" id="personnelTable">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ลำดับที่</th>
+                                <th>ชื่อ-สกุล</th>
+                                <th>เพศ</th>
+                                <th>ตำแหน่ง</th>
+                                <th>ปฏิบัติการที่</th>
+                                <th>ระดับ</th>
+                                <th>เงินเดือน</th>
+                                <th>วันเกิด</th>
+                                <th>โทรศัพท์</th>
+                                <th>แอคชั่น</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<tr>";
+                                    echo "<td>" . $row["person_id"] . "</td>";
+                                    echo "<td>" . $row["person_name"] . "</td>";
+                                    echo "<td>" . $row["person_gender"] . "</td>";
+                                    echo "<td>" . $row["person_rank"] . "</td>";
+                                    echo "<td>" . $row["person_formwork"] . "</td>";
+                                    echo "<td>" . $row["person_level"] . "</td>";
+                                    echo "<td>" . $row["person_salary"] . "</td>";
+                                    echo "<td>" . $row["person_born"] . "</td>";
+                                    echo "<td>" . $row["person_phone"] . "</td>";
+                                    echo "<td>";
+                                    echo "<div class='d-flex'>";
+                                    echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-warning me-1'>แก้ไข</a>";
+                                    echo "<a href='#' class='btn btn-sm btn-danger' onclick=\"confirmDelete(" . $row["person_id"] . ")\">ลบ</a>";
+                                    echo "</div>";
+                                    echo "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <?php if ($page > 1): ?>
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page - 1; ?>"
+                                    aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                            <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                                <a class="page-link"
+                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $total_pages): ?>
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page + 1; ?>"
+                                    aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
 
                     <script>
-                      function searchTable() {
+                    function searchTable() {
     // ดึงค่าจากช่องค้นหา
     var search = document.getElementById("tableSearch").value;
 
-    // ส่งคำค้นหาและหน้าปัจจุบันไปยัง PHP ผ่าน AJAX
+    // ตรวจสอบว่าช่องค้นหาว่างหรือไม่
+    if (search.trim() === "") {
+        // ถ้าว่าง รีเฟรชหน้าใหม่
+        window.location.reload();
+        return;
+    }
+
+    // ส่งคำค้นหาไปยัง PHP ผ่าน AJAX ถ้าช่องค้นหาไม่ว่าง
     fetch(`personnel.php?search=${search}&ajax=true`)
         .then(response => response.json())
         .then(data => {
@@ -443,6 +477,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
         })
         .catch(error => console.error('Error:', error));
 }
+
 
 function updatePagination(totalPages) {
     const pagination = document.querySelector(".pagination");
