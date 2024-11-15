@@ -71,21 +71,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $person_CardExpired     // s (string - date)
     );
 
-    // รันคำสั่ง SQL
     if ($stmt->execute()) {
-        echo "<script>
-                alert('บันทึกข้อมูลเรียบร้อยแล้ว');
-                window.location.href = 'personnel_edit.php';
-              </script>";
-    } else {
-        echo "<script>
-                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล: " . $stmt->error . "' );
-                window.location.href = 'personnel_edit.php';
-              </script>";
-    }
+        $_SESSION['success'] = true; // ตั้งค่า session เพื่อบอกว่าบันทึกสำเร็จ
+    } 
 
-    // ปิดการเชื่อมต่อ
     $stmt->close();
     $conn->close();
+
+    header("Location: form_person.php"); // เปลี่ยนเส้นทางกลับไปยังหน้า form_person.php
+    exit();
 }
 ?>
