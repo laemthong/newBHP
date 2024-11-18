@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
     $conn->close();
 
-    header("Location: form_person.php"); // เปลี่ยนเส้นทางกลับไปยังหน้า form_person.php
+    header("Location: personnel.php"); // เปลี่ยนเส้นทางกลับไปยังหน้า form_person.php
     exit();
 }
 ?>

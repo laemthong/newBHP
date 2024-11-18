@@ -435,12 +435,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
     // ดึงค่าจากช่องค้นหา
     var search = document.getElementById("tableSearch").value;
 
-    // ตรวจสอบว่าช่องค้นหาว่างหรือไม่
-    if (search.trim() === "") {
-        // ถ้าว่าง รีเฟรชหน้าใหม่
-        window.location.reload();
-        return;
-    }
 
     // ส่งคำค้นหาไปยัง PHP ผ่าน AJAX ถ้าช่องค้นหาไม่ว่าง
     fetch(`personnel.php?search=${search}&ajax=true`)
