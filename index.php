@@ -9,6 +9,7 @@ if (isset($_SESSION['error'])) {
 <html lang="th">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="photo/รพ.png" type="image/png"><link rel="icon" href="photo/รพ.png" type="image/png">
     <title>Login</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
