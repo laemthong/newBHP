@@ -14,8 +14,9 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
 
 // สร้างคำสั่ง SQL สำหรับดึงข้อมูลพร้อมเงื่อนไขการค้นหา
 if ($search_query) {
-    // ค้นหาข้อมูลตามคำค้นหาในทุกคอลัมน์ที่ต้องการ
-    $sql = "SELECT * FROM personnel WHERE person_name LIKE '%$search_query%' 
+    // เพิ่มเงื่อนไขสำหรับค้นหา person_id
+    $sql = "SELECT * FROM personnel WHERE person_id LIKE '%$search_query%' 
+            OR person_name LIKE '%$search_query%' 
             OR person_gender LIKE '%$search_query%' 
             OR person_rank LIKE '%$search_query%' 
             OR person_formwork LIKE '%$search_query%' 
@@ -24,7 +25,8 @@ if ($search_query) {
             OR person_born LIKE '%$search_query%' 
             OR person_phone LIKE '%$search_query%' 
             LIMIT $offset, $records_per_page";
-    $total_records_sql = "SELECT COUNT(*) FROM personnel WHERE person_name LIKE '%$search_query%' 
+    $total_records_sql = "SELECT COUNT(*) FROM personnel WHERE person_id LIKE '%$search_query%' 
+            OR person_name LIKE '%$search_query%' 
             OR person_gender LIKE '%$search_query%' 
             OR person_rank LIKE '%$search_query%' 
             OR person_formwork LIKE '%$search_query%' 
@@ -51,6 +53,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
     echo json_encode(['data' => $data, 'total_pages' => $total_pages]);
     exit;
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -80,28 +84,58 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
             border-radius: 10px;
         }
 
-        .table {
-            border-radius: 10px;
-            overflow: hidden; /* ป้องกันไม่ให้มุมของตารางเกินการ์ด */
-        }
-
         .table th, .table td {
-            border-top: none;
-            vertical-align: middle;
-        }
-        .custom-title {
-        font-size: 24px; /* ขนาดที่ต้องการ สามารถเปลี่ยนได้ */
-        font-weight: bold; /* ทำให้ตัวหนา (ถ้าต้องการ) */
+        text-align: center; /* จัดข้อความให้อยู่กึ่งกลาง */
+        vertical-align: middle; /* จัดข้อความให้อยู่กลางแนวตั้ง */
+        white-space: nowrap; /* ป้องกันคำขาดบรรทัด */
     }
-    .sidebar-item.activee {
-    background-color: transparent; /* ลบสีพื้นหลัง */
-    color: inherit; /* ใช้สีของข้อความตามสีพื้นฐาน */
-    box-shadow: none; /* ลบเงาของปุ่ม */
-}
 
-.sidebar-item.activee a {
-    color: inherit; /* ใช้สีของข้อความตามสีพื้นฐาน */
-}
+    .table th {
+        background-color: #0097e6; /* เปลี่ยนสีพื้นหลังหัวตาราง */
+        color: #ffffff; /* สีข้อความหัวตาราง */
+        font-size: 14px; /* ขนาดข้อความ */
+    }
+
+    .table-responsive {
+        overflow-x: auto; /* เพิ่ม scroll bar เมื่อขนาดหน้าจอไม่พอ */
+    }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    .table th:first-child, .table td:first-child {
+        border-top-left-radius: 10px; /* มุมซ้ายบน */
+        border-bottom-left-radius: 10px; /* มุมซ้ายล่าง */
+    }
+
+    .table th:last-child, .table td:last-child {
+        border-top-right-radius: 10px; /* มุมขวาบน */
+        border-bottom-right-radius: 10px; /* มุมขวาล่าง */
+    }   
+
+        .custom-title {
+            font-size: 24px;
+            /* ขนาดที่ต้องการ สามารถเปลี่ยนได้ */
+            font-weight: bold;
+            /* ทำให้ตัวหนา (ถ้าต้องการ) */
+        }
+
+        .sidebar-item.activee {
+            background-color: transparent;
+            /* ลบสีพื้นหลัง */
+            color: inherit;
+            /* ใช้สีของข้อความตามสีพื้นฐาน */
+            box-shadow: none;
+            /* ลบเงาของปุ่ม */
+        }
+
+        .sidebar-item.activee a {
+            color: inherit;
+            /* ใช้สีของข้อความตามสีพื้นฐาน */
+        }
     </style>
 
 </head>
@@ -153,7 +187,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                         </div>
                     </div>
                 </div>
-                 <div class="sidebar-menu">
+                <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-title">เมนู</li>
 
@@ -206,7 +240,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                             <ul class="submenu ">
 
-                            <li class="submenu-item  ">
+                                <li class="submenu-item  ">
                                     <a href="Show_leave.php" class="submenu-link">แสดงข้อมูลการลา</a>
 
                                 </li>
@@ -216,7 +250,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                                 </li>
 
-                               
+
 
                                 <li class="submenu-item  ">
                                     <a href="extra-component-date-picker.html" class="submenu-link">Date Picker</a>
@@ -325,17 +359,17 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
 
                             </ul>
-                            <li
-                class="sidebar-item activee ">
-                <a href="logout.php" class='sidebar-link'>
-                    <i class="	fas fa-power-off"></i>
-                    <span>ออกจากระบบ</span>
-                </a>
-                
+                        <li
+                            class="sidebar-item activee ">
+                            <a href="logout.php" class='sidebar-link'>
+                                <i class="	fas fa-power-off"></i>
+                                <span>ออกจากระบบ</span>
+                            </a>
 
-            </li>
 
-            
+                        </li>
+
+
 
 
                     </ul>
@@ -349,122 +383,119 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                 </a>
 
                 <body>
-    <div class="container my-4">
-        
-        <!-- การ์ดสำหรับตาราง -->
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                <div class="d-flex justify-content-between align-items-center">
+                    <div class="container my-4">
 
-                <span class="custom-title">ข้อมูลบุคลากร</span>
-                    <div style="max-width: 300px;">
-                        <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..." onkeyup="searchTable()">
+                        <!-- การ์ดสำหรับตาราง -->
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-primary text-white" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                <div class="d-flex justify-content-between align-items-center">
+
+                                    <span class="custom-title">ข้อมูลบุคลากร</span>
+                                    <div style="max-width: 300px;">
+                                        <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..." onkeyup="searchTable()">
+                                    </div>
+                                </div>
+                            </div>
+                            </br>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped" id="personnelTable">
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>หมายเลขบัตรประชาชน 13 หลัก</th>
+                                                <th>ชื่อ-สกุล</th>
+                                                <th>เพศ</th>
+                                                <th>ตำแหน่ง</th>
+                                                <th>ปฏิบัติการที่</th>
+                                                <th>ระดับ</th>
+                                                <th>เงินเดือน</th>
+                                                <th>วันเกิด</th>
+                                                <th>โทรศัพท์</th>
+                                                <th>แอคชั่น</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if ($result->num_rows > 0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                                    echo "<tr>";
+                                                    echo "<td>" . $row["person_id"] . "</td>";
+                                                    echo "<td>" . $row["person_name"] . "</td>";
+                                                    echo "<td>" . $row["person_gender"] . "</td>";
+                                                    echo "<td>" . $row["person_rank"] . "</td>";
+                                                    echo "<td>" . $row["person_formwork"] . "</td>";
+                                                    echo "<td>" . $row["person_level"] . "</td>";
+                                                    echo "<td>" . $row["person_salary"] . "</td>";
+                                                    echo "<td>" . $row["person_born"] . "</td>";
+                                                    echo "<td>" . $row["person_phone"] . "</td>";
+                                                    echo "<td>";
+                                                    echo "<div class='d-flex'>";
+                                                    echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-warning me-1'>แก้ไข</a>";
+                                                    echo "<a href='#' class='btn btn-sm btn-danger' onclick=\"confirmDelete(" . $row["person_id"] . ")\">ลบ</a>";
+                                                    echo "</div>";
+                                                    echo "</td>";
+                                                    echo "</tr>";
+                                                }
+                                            } else {
+                                                echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card-footer" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center">
+                                        <?php if ($page > 1): ?>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page - 1; ?>"
+                                                    aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+
+                                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                            <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                                                <a class="page-link"
+                                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+
+                                        <?php if ($page < $total_pages): ?>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page + 1; ?>"
+                                                    aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-    </br>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped" id="personnelTable">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>ลำดับที่</th>
-                                <th>ชื่อ-สกุล</th>
-                                <th>เพศ</th>
-                                <th>ตำแหน่ง</th>
-                                <th>ปฏิบัติการที่</th>
-                                <th>ระดับ</th>
-                                <th>เงินเดือน</th>
-                                <th>วันเกิด</th>
-                                <th>โทรศัพท์</th>
-                                <th>แอคชั่น</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<tr>";
-                                    echo "<td>" . $row["person_id"] . "</td>";
-                                    echo "<td>" . $row["person_name"] . "</td>";
-                                    echo "<td>" . $row["person_gender"] . "</td>";
-                                    echo "<td>" . $row["person_rank"] . "</td>";
-                                    echo "<td>" . $row["person_formwork"] . "</td>";
-                                    echo "<td>" . $row["person_level"] . "</td>";
-                                    echo "<td>" . $row["person_salary"] . "</td>";
-                                    echo "<td>" . $row["person_born"] . "</td>";
-                                    echo "<td>" . $row["person_phone"] . "</td>";
-                                    echo "<td>";
-                                    echo "<div class='d-flex'>";
-                                    echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-warning me-1'>แก้ไข</a>";
-                                    echo "<a href='#' class='btn btn-sm btn-danger' onclick=\"confirmDelete(" . $row["person_id"] . ")\">ลบ</a>";
-                                    echo "</div>";
-                                    echo "</td>";
-                                    echo "</tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card-footer" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <?php if ($page > 1): ?>
-                            <li class="page-item">
-                                <a class="page-link"
-                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page - 1; ?>"
-                                    aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-
-                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                            <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
-                                <a class="page-link"
-                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                            </li>
-                        <?php endfor; ?>
-
-                        <?php if ($page < $total_pages): ?>
-                            <li class="page-item">
-                                <a class="page-link"
-                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page + 1; ?>"
-                                    aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
 
 
                     <script>
-                    function searchTable() {
-    // ดึงค่าจากช่องค้นหา
-    var search = document.getElementById("tableSearch").value;
+                      function searchTable(page = 1) {
+    var search = document.getElementById("tableSearch").value; // ดึงค่าค้นหา
+    var url = `personnel.php?search=${encodeURIComponent(search)}&page=${page}&ajax=true`;
 
-
-    // ส่งคำค้นหาไปยัง PHP ผ่าน AJAX ถ้าช่องค้นหาไม่ว่าง
-    fetch(`personnel.php?search=${search}&ajax=true`)
+    fetch(url)
         .then(response => response.json())
         .then(data => {
-            // ล้างข้อมูลเดิมในตาราง
             const tbody = document.querySelector("#personnelTable tbody");
-            tbody.innerHTML = "";
+            tbody.innerHTML = ""; // ล้างข้อมูลเดิมในตาราง
 
-            // เพิ่มข้อมูลใหม่ที่ได้รับจากการค้นหา
+            // วนลูปเพื่อแสดงข้อมูลในตารางใหม่
             data.data.forEach((row, index) => {
                 tbody.innerHTML += `
                     <tr>
-                        <td>${index + 1}</td>
+                        <td>${row.person_id}</td>
                         <td>${row.person_name}</td>
                         <td>${row.person_gender}</td>
                         <td>${row.person_rank}</td>
@@ -479,38 +510,63 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                 <a href='#' class='btn btn-sm btn-danger' onclick="confirmDelete(${row.person_id})">ลบ</a>
                             </div>
                         </td>
-                    </tr>`;
+                    </tr>
+                `;
             });
 
-            // ปรับปรุง pagination
-            updatePagination(data.total_pages);
+            // อัปเดต pagination พร้อมคำค้นหา
+            updatePagination(data.total_pages, page, search);
         })
         .catch(error => console.error('Error:', error));
 }
 
 
-function updatePagination(totalPages) {
+function updatePagination(totalPages, currentPage, search = "") {
     const pagination = document.querySelector(".pagination");
-    pagination.innerHTML = "";
+    pagination.innerHTML = ""; // ล้าง pagination เดิม
 
-    for (let i = 1; i <= totalPages; i++) {
+    // ปุ่มไปหน้าก่อนหน้า
+    if (currentPage > 1) {
         pagination.innerHTML += `
             <li class="page-item">
-                <a class="page-link" href="#" onclick="goToPage(${i})">${i}</a>
-            </li>`;
+                <a class="page-link" href="#" onclick="searchTable(${currentPage - 1})">&laquo;</a>
+            </li>
+        `;
     }
+
+    // สร้าง pagination
+    for (let i = 1; i <= totalPages; i++) {
+        pagination.innerHTML += `
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="searchTable(${i})">${i}</a>
+            </li>
+        `;
+    }
+
+    // ปุ่มไปหน้าถัดไป
+    if (currentPage < totalPages) {
+        pagination.innerHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="searchTable(${currentPage + 1})">&raquo;</a>
+            </li>
+        `;
+    }
+
+    // // ปุ่ม ">>" ไปหน้าสุดท้าย
+    // if (currentPage < totalPages) {
+    //     pagination.innerHTML += `
+    //         <li class="page-item">
+    //             <a class="page-link" href="#" onclick="searchTable(${totalPages})">&raquo;&raquo;</a>
+    //         </li>
+    //     `;
+    // }
 }
 
-function goToPage(page) {
-    // ดึงค่าค้นหาปัจจุบันและเปลี่ยนหน้า
-    var search = document.getElementById("tableSearch").value;
-    fetch(`personnel.php?search=${search}&page=${page}&ajax=true`)
-        .then(response => response.json())
-        .then(data => {
-            // ทำการอัพเดตตารางและ pagination ใหม่
-            searchTable();
-        });
-}
+
+                        // เรียกใช้งานเมื่อมีการป้อนคำค้นหา
+                        document.getElementById("tableSearch").addEventListener("input", () => searchTable(1));
+
+
 
                         function confirmDelete(personId) {
                             Swal.fire({

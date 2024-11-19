@@ -46,34 +46,80 @@ $total_pages = ceil($total_items / $items_per_page);
     <link rel="stylesheet" href="./assets/compiled/css/iconly.css">
 
     <style>
-        .sidebar-item.activee {
-    background-color: transparent; /* ลบสีพื้นหลัง */
-    color: inherit; /* ใช้สีของข้อความตามสีพื้นฐาน */
-    box-shadow: none; /* ลบเงาของปุ่ม */
-}
-
-.sidebar-item.activee a {
-    color: inherit; /* ใช้สีของข้อความตามสีพื้นฐาน */
-}
-  /* ปรับขอบโค้งให้กับการ์ดและตาราง */
-  .card {
+        /* ปรับขอบโค้งให้กับการ์ดและตาราง */
+        .card {
             border-radius: 10px;
+        }
+
+        .table th,
+        .table td {
+            text-align: center;
+            /* จัดข้อความให้อยู่กึ่งกลาง */
+            vertical-align: middle;
+            /* จัดข้อความให้อยู่กลางแนวตั้ง */
+            white-space: nowrap;
+            /* ป้องกันคำขาดบรรทัด */
+        }
+
+        .table th {
+            background-color: #0097e6;
+            /* เปลี่ยนสีพื้นหลังหัวตาราง */
+            color: #ffffff;
+            /* สีข้อความหัวตาราง */
+            font-size: 14px;
+            /* ขนาดข้อความ */
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            /* เพิ่ม scroll bar เมื่อขนาดหน้าจอไม่พอ */
         }
 
         .table {
-            border-radius: 10px;
-            overflow: hidden; /* ป้องกันไม่ให้มุมของตารางเกินการ์ด */
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
         }
 
-        .table th, .table td {
-            border-top: none;
-            vertical-align: middle;
+        .table th:first-child,
+        .table td:first-child {
+            border-top-left-radius: 10px;
+            /* มุมซ้ายบน */
+            border-bottom-left-radius: 10px;
+            /* มุมซ้ายล่าง */
         }
+
+        .table th:last-child,
+        .table td:last-child {
+            border-top-right-radius: 10px;
+            /* มุมขวาบน */
+            border-bottom-right-radius: 10px;
+            /* มุมขวาล่าง */
+        }
+
         .custom-title {
-        font-size: 24px; /* ขนาดที่ต้องการ สามารถเปลี่ยนได้ */
-        font-weight: bold; /* ทำให้ตัวหนา (ถ้าต้องการ) */
-    }
-        </style>
+            font-size: 24px;
+            /* ขนาดที่ต้องการ สามารถเปลี่ยนได้ */
+            font-weight: bold;
+            /* ทำให้ตัวหนา (ถ้าต้องการ) */
+          
+        }
+
+        .sidebar-item.activee {
+            background-color: transparent;
+            /* ลบสีพื้นหลัง */
+            color: inherit;
+            /* ใช้สีของข้อความตามสีพื้นฐาน */
+            box-shadow: none;
+            /* ลบเงาของปุ่ม */
+        }
+
+        .sidebar-item.activee a {
+            color: inherit;
+            /* ใช้สีของข้อความตามสีพื้นฐาน */
+        }
+       
+    </style>
 
 
 
@@ -295,15 +341,15 @@ $total_pages = ceil($total_items / $items_per_page);
 
 
                             </ul>
-                            <li
-                class="sidebar-item activee ">
-                <a href="logout.php" class='sidebar-link'>
-                    <i class="	fas fa-power-off"></i>
-                    <span>ออกจากระบบ</span>
-                </a>
-                
+                        <li
+                            class="sidebar-item activee ">
+                            <a href="logout.php" class='sidebar-link'>
+                                <i class="	fas fa-power-off"></i>
+                                <span>ออกจากระบบ</span>
+                            </a>
 
-            </li>
+
+                        </li>
 
                     </ul>
                 </div>
@@ -317,110 +363,108 @@ $total_pages = ceil($total_items / $items_per_page);
             </header>
 
             <body>
-<div class="container my-4">
-    <!-- การ์ดสำหรับตาราง -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
-            <div class="d-flex justify-content-between align-items-center">
-            <span class="custom-title">ข้อมูลการลา</span>
-                <div style="max-width: 300px;">
-                    <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..." onkeyup="searchTable()">
+                <div class="container my-4">
+                    <!-- การ์ดสำหรับตาราง -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="custom-title">ข้อมูลการลา</span>
+                                <div style="max-width: 300px;">
+                                    <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..." onkeyup="searchTable()">
+                                </div>
+                            </div>
+                        </div>
+
+                        </br>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped" id="personnelTable">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th>ลำดับที่</th>
+                                            <th>ชื่อ-สกุล</th>
+                                            <th>ตำแหน่ง</th>
+                                            <th>วันพักผ่อนสะสม (วัน)</th>
+                                            <th>สิทธิวันพักผ่อนประจำปี (วัน)</th>
+                                            <th>รวมเป็นกี่วัน (วัน)</th>
+                                            <th>ตั้งแต่วันที่</th>
+                                            <th>หมายเลขโทรศัพท์</th>
+                                            <th>ชื่อผู้ปฏิบัติงานแทน</th>
+                                            <th>ตำแหน่งผู้ปฏิบัติงานแทน</th>
+                                            <th>อนุญาตหรือไม่</th>
+                                            <th>วันที่ปัจจุบัน</th>
+                                            <th>ชื่อประเภทการลา</th>
+                                            <th>กำหนดวัน (วัน)</th>
+                                            <th>ระดับข้าราชการ</th>
+                                            <th>ปฏิบัติการที่ (สังกัด)</th>
+                                            <th>เเอ็คชั่น</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        if ($result->num_rows > 0) {
+                                            $count = 1;
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo "<tr>";
+                                                echo "<td>" . $count++ . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_name']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_rank']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_accumulateDay']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_rightsDay']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_sumDay']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_since']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_numPhone']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_nameWorkinstead']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_WorkinsteadRank']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_allow']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_date']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['typeVacation_id']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_setDay']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_level']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['vacation_formwork']) . "</td>";
+                                                echo "<td>
+                            <a href='edit_vacation.php?vacation_id=" . $row['vacation_id'] . "' class='btn btn-warning btn-sm'>แก้ไข</a>
+                            <a href='delete_vacation.php?vacation_id=" . $row['vacation_id'] . "' class='btn btn-danger btn-sm' onclick='return confirm(\"คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?\")'>ลบ</a>
+                          </td>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='17' class='text-center'>ไม่มีข้อมูล</td></tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-</br>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped" id="vacationTable">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>ลำดับที่</th>
-                            <th>ชื่อ-สกุล</th>
-                            <th>ตำแหน่ง</th>
-                            <th>วันพักผ่อนสะสม(วัน)</th>
-                            <th>สิทธิวันพักผ่อนประจำปี(วัน)</th>
-                            <th>รวมเป็นกี่วัน(วัน)</th>
-                            <th>ตั้งแต่วันที่</th>
-                            <th>หมายเลขโทรศัพท์</th>
-                            <th>ชื่อผู้ปฏิบัติงานแทน</th>
-                            <th>ตำแหน่งผู้ปฏิบัติงานแทน</th>
-                            <th>อนุญาตหรือไม่</th>
-                            <th>วันที่ปัจจุบัน</th>
-                            <th>ชื่อประเภทการลา</th>
-                            <th>กำหนดวัน(วัน)</th>
-                            <th>ระดับข้าราชการ</th>
-                            <th>ปฏิบัติการที่(สังกัด)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if ($result->num_rows > 0) {
-                            $count = 1; // เริ่มลำดับที่ 1
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $count++ . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_name']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_rank']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_accumulateDay']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_rightsDay']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_sumDay']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_since']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_numPhone']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_nameWorkinstead']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_WorkinsteadRank']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_allow']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_date']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['typeVacation_id']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_setDay']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_level']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vacation_formwork']) . "</td>";
-                                
-                                // เพิ่มปุ่มแก้ไขและลบ
-                                echo "<td>";
-                                echo "<a href='edit_vacation.php?vacation_id=" . $row['vacation_id'] . "' class='btn btn-warning btn-sm'>แก้ไข</a> ";
-                                echo "<a href='delete_vacation.php?vacation_id=" . $row['vacation_id'] . "' class='btn btn-danger btn-sm' onclick='return confirm(\"คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?\")'>ลบ</a>";
-                                echo "</td>";
-                                
-                                echo "</tr>";
+                <script>
+                    function searchTable() {
+                        var input = document.getElementById("tableSearch").value.toLowerCase();
+                        var rows = document.querySelectorAll("#vacationTable tbody tr");
+
+                        rows.forEach(function(row) {
+                            var cells = row.querySelectorAll("td");
+                            var match = false;
+
+                            cells.forEach(function(cell) {
+                                if (cell.textContent.toLowerCase().includes(input)) {
+                                    match = true;
+                                }
+                            });
+
+                            if (match) {
+                                row.style.display = "";
+                            } else {
+                                row.style.display = "none";
                             }
-                        } else {
-                            echo "<tr><td colspan='17' class='text-center'>ไม่มีข้อมูล</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+                        });
+                    }
+                </script>
 
-<script>
-function searchTable() {
-    var input = document.getElementById("tableSearch").value.toLowerCase();
-    var rows = document.querySelectorAll("#vacationTable tbody tr");
-
-    rows.forEach(function(row) {
-        var cells = row.querySelectorAll("td");
-        var match = false;
-
-        cells.forEach(function(cell) {
-            if (cell.textContent.toLowerCase().includes(input)) {
-                match = true;
-            }
-        });
-
-        if (match) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
-}
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            </body>
 
 
 

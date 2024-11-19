@@ -20,9 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $person_dateAccepting = !empty($_POST['person_dateAccepting']) ? date("Y-m-d", strtotime($_POST['person_dateAccepting'])) : null;
     $person_typeHire = $_POST['person_typeHire'] ?? null;
     
-    // ดึงปีจากวันที่เกิดและวันที่รับเข้าทำงาน
-    $person_yearBorn = !empty($person_born) ? intval(date("Y", strtotime($person_born))) : null;
-    $person_yearAccepting = !empty($person_dateAccepting) ? intval(date("Y", strtotime($person_dateAccepting))) : null;
+   // ดึงปีจากวันที่เกิดและวันที่รับเข้าทำงาน (ใช้ปี ค.ศ.)
+$person_yearBorn = !empty($person_born) ? intval(date("Y", strtotime($person_born))) : null;
+$person_yearAccepting = !empty($person_dateAccepting) ? intval(date("Y", strtotime($person_dateAccepting))) : null;
+
 
     $person_positionAllowance = isset($_POST['person_positionAllowance']) ? floatval($_POST['person_positionAllowance']) : null;
     $person_phone = $_POST['person_phone'] ?? null;
@@ -78,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
     $conn->close();
 
-    header("Location: personnel.php"); // เปลี่ยนเส้นทางกลับไปยังหน้า form_person.php
+    header("Location: form_person.php"); // เปลี่ยนเส้นทางกลับไปยังหน้า form_person.php
     exit();
 }
 ?>

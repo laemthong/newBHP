@@ -301,11 +301,10 @@ if (!$vacation) {
                 </a>
             </header>
 
-            <body class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
-                <div class="container mt-4" style="max-width: 800px;">
+            <body class="d-flex align-items-start justify-content-center" style="min-height: 100vh;">
+                <div class="container mt-4" style="max-width: 800px; margin-top: 20px;">
                     <h2 class="text-center .text-secondary mb-4">ระบบบันทึกข้อมูลการลา</h2>
-                    <form id="vacationForm" action="save_vacation.php" method="POST"
-                        onsubmit="return validateVacationForm()">
+                    <form id="vacationForm" action="save_vacation.php" method="POST" onsubmit="return validateVacationForm()">
                         <div class="row g-3">
                             <!-- Row 1 -->
                             <div class="col-md-6">
@@ -314,8 +313,8 @@ if (!$vacation) {
                             </div>
 
 
-                            <div class="mb-3">
-                                <label for="typeVacation_id" class="form-label">ประเภทการลา</label>
+                            <div class="col-md-6">
+                                <label for="typeVacation_id" class="form-label">ประเภทการลา:</label>
                                 <select class="form-control" id="typeVacation_id" name="typeVacation_id" required>
                                     <option value="1" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 1 ? 'selected' : '' ?>>ลาพักผ่อน</option>
                                     <option value="2" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 2 ? 'selected' : '' ?>>ลาป่วย</option>
@@ -465,14 +464,14 @@ if (!$vacation) {
                         return isValid;
                     }
 
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         // กำหนด Flatpickr สำหรับ "ตั้งแต่วันที่" ให้เลือกแบบช่วง (Range Mode)
                         flatpickr("#vacation_since", {
                             mode: "range", // เปิดใช้งานเลือกช่วงวันที่
                             dateFormat: "d/m/Y", // รูปแบบวันที่
                             locale: "th", // ใช้ภาษาไทย
                             minDate: "today", // ป้องกันการเลือกวันที่ย้อนหลัง
-                            onChange: function (selectedDates) {
+                            onChange: function(selectedDates) {
                                 if (selectedDates.length === 2) { // ตรวจสอบว่าผู้ใช้เลือกครบสองวันที่
                                     const startDate = selectedDates[0];
                                     const endDate = selectedDates[1];
@@ -485,7 +484,7 @@ if (!$vacation) {
                             }
                         });
                     });
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         const today = new Date().toISOString().split('T')[0]; // แปลงวันที่ปัจจุบันเป็นรูปแบบ YYYY-MM-DD
                         document.getElementById('vacation_date').value = today; // ตั้งค่า value ให้กับ input
                     });
@@ -500,6 +499,7 @@ if (!$vacation) {
                             replacementFields.forEach(field => field.style.display = 'none');
                         }
                     }
+
                     function toggleReplacementFields() {
                         const typeVacation = document.getElementById('typeVacation_id').value; // รับค่าของประเภทการลา
                         const replacementFields = document.querySelectorAll('.replacement-fields'); // เลือกทุกช่องที่ต้องซ่อน/แสดง
@@ -512,7 +512,7 @@ if (!$vacation) {
                     }
 
                     // เรียกใช้งานฟังก์ชัน toggleReplacementFields เมื่อเปลี่ยนค่าใน Select
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         const typeVacationDropdown = document.getElementById('typeVacation_id');
                         typeVacationDropdown.addEventListener('change', toggleReplacementFields); // เรียก toggleReplacementFields เมื่อเปลี่ยนค่า
                         toggleReplacementFields(); // เรียกครั้งแรกเพื่อปรับการแสดงผลเริ่มต้น
