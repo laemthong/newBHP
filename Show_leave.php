@@ -375,10 +375,17 @@ $total_pages = ceil($total_items / $items_per_page);
                                 echo "<td>" . htmlspecialchars($row['vacation_setDay']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['vacation_level']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['vacation_formwork']) . "</td>";
+                                
+                                // เพิ่มปุ่มแก้ไขและลบ
+                                echo "<td>";
+                                echo "<a href='edit_vacation.php?vacation_id=" . $row['vacation_id'] . "' class='btn btn-warning btn-sm'>แก้ไข</a> ";
+                                echo "<a href='delete_vacation.php?vacation_id=" . $row['vacation_id'] . "' class='btn btn-danger btn-sm' onclick='return confirm(\"คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?\")'>ลบ</a>";
+                                echo "</td>";
+                                
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='16' class='text-center'>ไม่มีข้อมูล</td></tr>";
+                            echo "<tr><td colspan='17' class='text-center'>ไม่มีข้อมูล</td></tr>";
                         }
                         ?>
                     </tbody>
