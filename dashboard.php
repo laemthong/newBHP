@@ -81,176 +81,180 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
         </div>
     </div>
     <div class="sidebar-menu">
-        <ul class="menu">
-            <li class="sidebar-title">เมนู</li>
-            
-            <li
-                class="sidebar-item active ">
-                <a href="dashboard.php" class='sidebar-link'>
-                    <i class="bi bi-grid-fill"></i>
-                    <span>หน้าหลัก</span>
-                </a>
-                
+                    <ul class="menu">
+                        <li class="sidebar-title">เมนู</li>
 
-            </li>
-            
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-             <i class="fas fa-user-cog"></i>
-                 <span>บุคลากร</span>
-                </a>
+                        <li
+                            class="sidebar-item active ">
+                            <a href="dashboard.php" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span>หน้าหลัก</span>
+                            </a>
 
-                <ul class="submenu ">
-                    
-                    <li class="submenu-item  ">
-                        <a href="personnel.php" class="submenu-link">แสดงข้อมูลบุคลากร</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form_person.php" class="submenu-link">เพิ่มบุคลากร</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="component-badge.html" class="submenu-link">Badge</a>
-                        
-                    </li>
-                    
-                  
-                </ul>
-                
 
-            </li>
-            
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-                    <i class="fa fa-address-card"></i>
-                    <span>การลา</span>
-                </a>
-                
-                <ul class="submenu ">
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-avatar.html" class="submenu-link">ลากิจ</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-divider.html" class="submenu-link">ลาป่วย</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-date-picker.html" class="submenu-link">Date Picker</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-sweetalert.html" class="submenu-link">Sweet Alert</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-toastify.html" class="submenu-link">Toastify</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-rating.html" class="submenu-link">Rating</a>
-                        
-                    </li>
-                    
-                </ul>
-                
+                        </li>
 
-            </li>
-            
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-                    <i class="bi bi-grid-1x2-fill"></i>
-                    <span>Layouts</span>
-                </a>
-                
-                <ul class="submenu ">
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-default.html" class="submenu-link">Default Layout</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-vertical-1-column.html" class="submenu-link">1 Column</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-vertical-navbar.html" class="submenu-link">Vertical Navbar</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-rtl.html" class="submenu-link">RTL Layout</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-horizontal.html" class="submenu-link">Horizontal Menu</a>
-                        
-                    </li>
-                    
-                </ul>
-                
+                        <li
+                            class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="fas fa-user-cog"></i>
+                                <span>บุคลากร</span>
+                            </a>
 
-            </li>
-            
-            <li class="sidebar-title">อื่นๆ</li>
-            
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-                    <i class="	fas fa-cog"></i>
-                    <span>ตั้งค่า</span>
-                </a>
-                
-                <ul class="submenu ">
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-input.html" class="submenu-link">Input</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-input-group.html" class="submenu-link">Input Group</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-select.html" class="submenu-link">Select</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-radio.html" class="submenu-link">Radio</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-checkbox.html" class="submenu-link">Checkbox</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-textarea.html" class="submenu-link">Textarea</a>
-                        
-                    </li>
-                    
-                    
-                </ul>
-                <li
+                            <ul class="submenu ">
+
+                                <li class="submenu-item  ">
+                                    <a href="personnel.php" class="submenu-link">แสดงข้อมูลบุคลากร</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form_person.php" class="submenu-link">เพิ่ม / ลบ / แก้ไข </a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="component-badge.html" class="submenu-link">Badge</a>
+
+                                </li>
+
+
+                            </ul>
+
+
+                        </li>
+
+                        <li
+                            class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="fa fa-address-card"></i>
+                                <span>การลา</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                            <li class="submenu-item  ">
+                                    <a href="Show_leave.php" class="submenu-link">แสดงข้อมูลการลา</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="vacation_leave.php" class="submenu-link">ลาพักผ่อน</a>
+
+                                </li>
+
+                               
+
+                                <li class="submenu-item  ">
+                                    <a href="extra-component-date-picker.html" class="submenu-link">Date Picker</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="extra-component-sweetalert.html" class="submenu-link">Sweet Alert</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="extra-component-toastify.html" class="submenu-link">Toastify</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="extra-component-rating.html" class="submenu-link">Rating</a>
+
+                                </li>
+
+                            </ul>
+
+
+                        </li>
+
+                        <li
+                            class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>Layouts</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-default.html" class="submenu-link">Default Layout</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-vertical-1-column.html" class="submenu-link">1 Column</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-vertical-navbar.html" class="submenu-link">Vertical Navbar</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-rtl.html" class="submenu-link">RTL Layout</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-horizontal.html" class="submenu-link">Horizontal Menu</a>
+
+                                </li>
+
+                            </ul>
+
+
+                        </li>
+
+                        <li class="sidebar-title">อื่นๆ</li>
+
+                        <li
+                            class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="	fas fa-cog"></i>
+                                <span>ตั้งค่า</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-input.html" class="submenu-link">Input</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-input-group.html" class="submenu-link">Input Group</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-select.html" class="submenu-link">Select</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-radio.html" class="submenu-link">Radio</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-checkbox.html" class="submenu-link">Checkbox</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-textarea.html" class="submenu-link">Textarea</a>
+
+                                </li>
+
+
+                            </ul>
+
+                            
+                            <li
                 class="sidebar-item activee ">
                 <a href="logout.php" class='sidebar-link'>
                     <i class="	fas fa-power-off"></i>
@@ -261,9 +265,7 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
             </li>
                 
 
-            </li>
-            
-           
+         
             
         </ul>
     </div>

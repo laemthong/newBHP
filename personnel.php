@@ -93,6 +93,15 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
         font-size: 24px; /* ขนาดที่ต้องการ สามารถเปลี่ยนได้ */
         font-weight: bold; /* ทำให้ตัวหนา (ถ้าต้องการ) */
     }
+    .sidebar-item.activee {
+    background-color: transparent; /* ลบสีพื้นหลัง */
+    color: inherit; /* ใช้สีของข้อความตามสีพื้นฐาน */
+    box-shadow: none; /* ลบเงาของปุ่ม */
+}
+
+.sidebar-item.activee a {
+    color: inherit; /* ใช้สีของข้อความตามสีพื้นฐาน */
+}
     </style>
 
 </head>
@@ -144,11 +153,12 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                         </div>
                     </div>
                 </div>
-                <div class="sidebar-menu">
+                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-title">เมนู</li>
 
-                        <li class="sidebar-item active ">
+                        <li
+                            class="sidebar-item active ">
                             <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>หน้าหลัก</span>
@@ -157,7 +167,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         </li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li
+                            class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="fas fa-user-cog"></i>
                                 <span>บุคลากร</span>
@@ -171,7 +182,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                 </li>
 
                                 <li class="submenu-item  ">
-                                    <a href="form_person.php" class="submenu-link">เพิ่มบุคลากร</a>
+                                    <a href="form_person.php" class="submenu-link">เพิ่ม / ลบ / แก้ไข </a>
 
                                 </li>
 
@@ -186,7 +197,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         </li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li
+                            class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="fa fa-address-card"></i>
                                 <span>การลา</span>
@@ -194,15 +206,17 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                             <ul class="submenu ">
 
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-avatar.html" class="submenu-link">ลากิจ</a>
+                            <li class="submenu-item  ">
+                                    <a href="Show_leave.php" class="submenu-link">แสดงข้อมูลการลา</a>
 
                                 </li>
 
                                 <li class="submenu-item  ">
-                                    <a href="extra-component-divider.html" class="submenu-link">ลาป่วย</a>
+                                    <a href="vacation_leave.php" class="submenu-link">ลาพักผ่อน</a>
 
                                 </li>
+
+                               
 
                                 <li class="submenu-item  ">
                                     <a href="extra-component-date-picker.html" class="submenu-link">Date Picker</a>
@@ -229,7 +243,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         </li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li
+                            class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 <span>Layouts</span>
@@ -269,7 +284,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         <li class="sidebar-title">อื่นๆ</li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li
+                            class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="	fas fa-cog"></i>
                                 <span>ตั้งค่า</span>
@@ -309,17 +325,17 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
 
                             </ul>
-                        <li <a href="logout.php" class='sidebar-link'>
-                            <i class="fas fa-power-off "></i>
-                            <span>ออกจากระบบ</span>
-                            </a>
+                            <li
+                class="sidebar-item activee ">
+                <a href="logout.php" class='sidebar-link'>
+                    <i class="	fas fa-power-off"></i>
+                    <span>ออกจากระบบ</span>
+                </a>
+                
 
+            </li>
 
-                        </li>
-
-
-                        </li>
-
+            
 
 
                     </ul>
