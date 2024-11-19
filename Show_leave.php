@@ -55,6 +55,24 @@ $total_pages = ceil($total_items / $items_per_page);
 .sidebar-item.activee a {
     color: inherit; /* ใช้สีของข้อความตามสีพื้นฐาน */
 }
+  /* ปรับขอบโค้งให้กับการ์ดและตาราง */
+  .card {
+            border-radius: 10px;
+        }
+
+        .table {
+            border-radius: 10px;
+            overflow: hidden; /* ป้องกันไม่ให้มุมของตารางเกินการ์ด */
+        }
+
+        .table th, .table td {
+            border-top: none;
+            vertical-align: middle;
+        }
+        .custom-title {
+        font-size: 24px; /* ขนาดที่ต้องการ สามารถเปลี่ยนได้ */
+        font-weight: bold; /* ทำให้ตัวหนา (ถ้าต้องการ) */
+    }
         </style>
 
 
