@@ -401,16 +401,9 @@ if (!$vacation) {
                                 <label class="form-label">ตำแหน่งผู้ปฏิบัติงานแทน:</label>
                                 <input type="text" name="vacation_WorkinsteadRank" class="form-control" maxlength="255">
                             </div>
-<<<<<<< HEAD
                             <div class="col-md-12 cancel-reason-field">
                                 <label class="form-label">เหตุผลในการยกเลิก:</label>
                                 <textarea name="vacation_cancel_reason" class="form-control" rows="4"></textarea>
-=======
-                            <div class="col-md-12 ">
-                                <label class="form-label">เหตุผลในการยกเลิก:</label>
-                                <textarea name="vacation_cancel_reason" class="form-control" rows="4"
-                                    required></textarea>
->>>>>>> 0f6ed7ea49336a9a4039cd3a32b1ddc98bd2c9ca
                             </div>
                         </div>
 
