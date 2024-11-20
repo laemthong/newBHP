@@ -97,29 +97,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ban Phai Hospital</title>
+    <title>แก้ไขข้อมูลการลา</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="icon" href="photo/รพ.png" type="image/png"><link rel="icon" href="photo/รพ.png" type="image/png">
+    <link rel="icon" href="photo/รพ.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/compiled/css/app.css">
     <link rel="stylesheet" href="./assets/compiled/css/app-dark.css">
-    <link rel="stylesheet" href="./assets/compiled/css/iconly.css">
     <style>
-        .sidebar-item.activee {
-            background-color: transparent;
-            /* ลบสีพื้นหลัง */
-            color: inherit;
-            /* ใช้สีของข้อความตามสีพื้นฐาน */
-            box-shadow: none;
-            /* ลบเงาของปุ่ม */
-        }
-
-        .sidebar-item.activee a {
-            color: inherit;
-            /* ใช้สีของข้อความตามสีพื้นฐาน */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
         }
     </style>
-
-
 </head>
 
 <body>
@@ -361,145 +350,165 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </a>
             </header>
 
-            <div class="container my-4">
-                <h4>แก้ไขข้อมูลการลา</h4>
-                <form action="edit_vacation.php?vacation_id=<?= $vacation['vacation_id'] ?>" method="POST">
-                    <div class="mb-3">
-                        <label for="vacation_name" class="form-label">ชื่อ-สกุล</label>
-                        <input type="text" class="form-control" id="vacation_name" name="vacation_name"
-                            value="<?= htmlspecialchars($vacation['vacation_name']) ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_rank" class="form-label">ตำแหน่ง</label>
-                        <input type="text" class="form-control" id="vacation_rank" name="vacation_rank"
-                            value="<?= htmlspecialchars($vacation['vacation_rank']) ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_accumulateDay" class="form-label">วันพักผ่อนสะสม</label>
-                        <input type="number" class="form-control" id="vacation_accumulateDay"
-                            name="vacation_accumulateDay" value="<?= $vacation['vacation_accumulateDay'] ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_rightsDay" class="form-label">สิทธิวันพักผ่อนประจำปี</label>
-                        <input type="number" class="form-control" id="vacation_rightsDay" name="vacation_rightsDay"
-                            value="<?= $vacation['vacation_rightsDay'] ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_sumDay" class="form-label">รวมเป็นกี่วัน</label>
-                        <input type="number" class="form-control" id="vacation_sumDay" name="vacation_sumDay"
-                            value="<?= $vacation['vacation_sumDay'] ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_since" class="form-label">ตั้งแต่วันที่</label>
-                        <input type="text" class="form-control" id="vacation_since" name="vacation_since"
-                            value="<?= htmlspecialchars($vacation['vacation_since']) ?>" placeholder="เลือกช่วงวันที่"
-                            required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_numPhone" class="form-label">หมายเลขโทรศัพท์</label>
-                        <input type="text" class="form-control" id="vacation_numPhone" name="vacation_numPhone"
-                            value="<?= $vacation['vacation_numPhone'] ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="typeVacation_id" class="form-label">ประเภทการลา</label>
-                        <select class="form-control" id="typeVacation_id" name="typeVacation_id" required>
-                            <option value="1" <?= $vacation['typeVacation_id'] == 1 ? 'selected' : '' ?>>ลาพักผ่อน</option>
-                            <option value="2" <?= $vacation['typeVacation_id'] == 2 ? 'selected' : '' ?>>ลาป่วย</option>
-                            <option value="3" <?= $vacation['typeVacation_id'] == 3 ? 'selected' : '' ?>>ลาคลอดบุตร
-                            </option>
-                            <option value="4" <?= $vacation['typeVacation_id'] == 4 ? 'selected' : '' ?>>ลากิจส่วนตัว
-                            </option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_allow" class="form-label">อนุญาตหรือไม่</label>
-                        <select class="form-control" id="vacation_allow" name="vacation_allow" required>
-                            <option value="อนุญาต" <?= $vacation['vacation_allow'] == 'อนุญาต' ? 'selected' : '' ?>>อนุญาต
-                            </option>
-                            <option value="ไม่อนุญาต" <?= $vacation['vacation_allow'] == 'ไม่อนุญาต' ? 'selected' : '' ?>>
-                                ไม่อนุญาต</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_setDay" class="form-label">กำหนดวัน (วัน)</label>
-                        <input type="number" class="form-control" id="vacation_setDay" name="vacation_setDay"
-                            value="<?= $vacation['vacation_setDay'] ?>" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_level" class="form-label">ระดับข้าราชการ:</label>
-                        <select name="vacation_level" id="vacation_level" class="form-select" required>
-                            <option value="">เลือกระดับ</option>
-                            <option value="ระดับทักษะพิเศษ" <?= $vacation['vacation_level'] == "ระดับทักษะพิเศษ" ? 'selected' : '' ?>>ระดับทักษะพิเศษ</option>
-                            <option value="ระดับอาวุโส" <?= $vacation['vacation_level'] == "ระดับอาวุโส" ? 'selected' : '' ?>>ระดับอาวุโส</option>
-                            <option value="ระดับชำนาญงาน" <?= $vacation['vacation_level'] == "ระดับชำนาญงาน" ? 'selected' : '' ?>>ระดับชำนาญงาน</option>
-                            <option value="ระดับปฏิบัติงาน" <?= $vacation['vacation_level'] == "ระดับปฏิบัติงาน" ? 'selected' : '' ?>>ระดับปฏิบัติงาน</option>
-                            <option value="พลเรือน (ประเภทวิชาการ)" <?= $vacation['vacation_level'] == "พลเรือน (ประเภทวิชาการ)" ? 'selected' : '' ?>>พลเรือน (ประเภทวิชาการ)</option>
-                            <option value="ระดับเชี่ยวชาญ" <?= $vacation['vacation_level'] == "ระดับเชี่ยวชาญ" ? 'selected' : '' ?>>ระดับเชี่ยวชาญ</option>
-                            <option value="ระดับชำนาญการพิเศษ" <?= $vacation['vacation_level'] == "ระดับชำนาญการพิเศษ" ? 'selected' : '' ?>>ระดับชำนาญการพิเศษ</option>
-                            <option value="ระดับชำนาญการ" <?= $vacation['vacation_level'] == "ระดับชำนาญการ" ? 'selected' : '' ?>>ระดับชำนาญการ</option>
-                            <option value="ระดับปฏิบัติการ" <?= $vacation['vacation_level'] == "ระดับปฏิบัติการ" ? 'selected' : '' ?>>ระดับปฏิบัติการ</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacation_formwork" class="form-label">ปฏิบัติการที่ (สังกัด)</label>
-                        <select name="vacation_formwork" class="form-control" id="vacation_formwork" required>
-                            <option value="">เลือกปฏิบัติการ</option>
-                            <?php
-                            $work_group_sql = "SELECT group_id, group_name FROM work_group";
-                            $work_group_result = $conn->query($work_group_sql);
+            <div class="container my-5">
+                <div class="form-container">
+                    <h2 class="text-center mb-4">แก้ไขข้อมูลการลา</h2>
+                    <form action="edit_vacation.php?vacation_id=<?= $vacation['vacation_id'] ?>" method="POST">
+                        <input type="hidden" name="vacation_id" value="<?= $vacation['vacation_id'] ?>">
 
-                            while ($row = $work_group_result->fetch_assoc()): ?>
-                                <option value="<?= htmlspecialchars($row['group_id']) ?>"
-                                    <?= $vacation['vacation_formwork'] == $row['group_id'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($row['group_name']) ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
-                    </div>
-                    <?php if ($vacation['typeVacation_id'] == 1): ?>
-                        <div class="mb-3">
-                            <label for="vacation_nameWorkinstead" class="form-label">ชื่อผู้ปฏิบัติงานแทน</label>
-                            <input type="text" class="form-control" id="vacation_nameWorkinstead"
-                                name="vacation_nameWorkinstead" value="<?= $vacation['vacation_nameWorkinstead'] ?>">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="vacation_date" class="form-label">วันที่ปัจจุบัน:</label>
+                                <input type="text" class="form-control" id="vacation_date" name="vacation_date"
+                                    value="<?= htmlspecialchars($vacation['vacation_date']) ?>" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="typeVacation_id" class="form-label">ประเภทการลา:</label>
+                                <select class="form-select" id="typeVacation_id" name="typeVacation_id" required>
+                                    <option value="1" <?= $vacation['typeVacation_id'] == 1 ? 'selected' : '' ?>>ลาพักผ่อน
+                                    </option>
+                                    <option value="2" <?= $vacation['typeVacation_id'] == 2 ? 'selected' : '' ?>>ลาป่วย
+                                    </option>
+                                    <option value="3" <?= $vacation['typeVacation_id'] == 3 ? 'selected' : '' ?>>ลาคลอดบุตร
+                                    </option>
+                                    <option value="4" <?= $vacation['typeVacation_id'] == 4 ? 'selected' : '' ?>>
+                                        ลากิจส่วนตัว</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="vacation_name" class="form-label">ชื่อ-สกุล:</label>
+                                <input type="text" class="form-control" id="vacation_name" name="vacation_name"
+                                    value="<?= htmlspecialchars($vacation['vacation_name']) ?>" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="vacation_rank" class="form-label">ตำแหน่ง:</label>
+                                <input type="text" class="form-control" id="vacation_rank" name="vacation_rank"
+                                    value="<?= htmlspecialchars($vacation['vacation_rank']) ?>" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="vacation_accumulateDay" class="form-label">วันพักผ่อนสะสม:</label>
+                                <input type="number" class="form-control" id="vacation_accumulateDay"
+                                    name="vacation_accumulateDay" value="<?= $vacation['vacation_accumulateDay'] ?>"
+                                    required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="vacation_rightsDay" class="form-label">สิทธิวันพักผ่อนประจำปี:</label>
+                                <input type="number" class="form-control" id="vacation_rightsDay"
+                                    name="vacation_rightsDay" value="<?= $vacation['vacation_rightsDay'] ?>" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="vacation_sumDay" class="form-label">รวมเป็นกี่วัน:</label>
+                                <input type="number" class="form-control" id="vacation_sumDay" name="vacation_sumDay"
+                                    value="<?= $vacation['vacation_sumDay'] ?>" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="vacation_since" class="form-label">ตั้งแต่วันที่:</label>
+                                <input type="text" class="form-control" id="vacation_since" name="vacation_since"
+                                    value="<?= htmlspecialchars($vacation['vacation_since']) ?>"
+                                    placeholder="เลือกช่วงวันที่" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="vacation_numPhone" class="form-label">เบอร์โทรศัพท์:</label>
+                                <input type="text" class="form-control" id="vacation_numPhone" name="vacation_numPhone"
+                                    value="<?= $vacation['vacation_numPhone'] ?>" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">ระดับข้าราชการ:</label>
+                                <select name="vacation_level" class="form-select" required>
+                                    <option value="">เลือกระดับ</option>
+                                    <option value="ระดับทักษะพิเศษ" <?php if ($vacation['vacation_level'] == 'ระดับทักษะพิเศษ')
+                                        echo 'selected'; ?>>
+                                        ระดับทักษะพิเศษ</option>
+                                    <option value="ระดับอาวุโส" <?php if ($vacation['vacation_level'] == 'ระดับอาวุโส')
+                                        echo 'selected'; ?>>ระดับอาวุโส</option>
+                                    <option value="ระดับชำนาญงาน" <?php if ($vacation['vacation_level'] == 'ระดับชำนาญงาน')
+                                        echo 'selected'; ?>>
+                                        ระดับชำนาญงาน</option>
+                                    <option value="ระดับปฏิบัติงาน" <?php if ($vacation['vacation_level'] == 'ระดับปฏิบัติงาน')
+                                        echo 'selected'; ?>>
+                                        ระดับปฏิบัติงาน</option>
+                                    <option value="พลเรือน (ประเภทวิชาการ)" <?php if ($vacation['vacation_level'] == 'พลเรือน (ประเภทวิชาการ)')
+                                        echo 'selected'; ?>>
+                                        พลเรือน (ประเภทวิชาการ)</option>
+                                    <option value="ระดับเชี่ยวชาญ" <?php if ($vacation['vacation_level'] == 'ระดับเชี่ยวชาญ')
+                                        echo 'selected'; ?>>
+                                        ระดับเชี่ยวชาญ</option>
+                                    <option value="ระดับชำนาญการพิเศษ" <?php if ($vacation['vacation_level'] == 'ระดับชำนาญการพิเศษ')
+                                        echo 'selected'; ?>>
+                                        ระดับชำนาญการพิเศษ</option>
+                                    <option value="ระดับชำนาญการ" <?php if ($vacation['vacation_level'] == 'ระดับชำนาญการ')
+                                        echo 'selected'; ?>>
+                                        ระดับชำนาญการ</option>
+                                    <option value="ระดับปฏิบัติการ" <?php if ($vacation['vacation_level'] == 'ระดับปฏิบัติการ')
+                                        echo 'selected'; ?>>
+                                        ระดับปฏิบัติการ</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-md-12">
+                                <label for="vacation_formwork" class="form-label">ปฏิบัติการที่:</label>
+                                <select class="form-select" id="vacation_formwork" name="vacation_formwork" required>
+                                    <option value="">เลือกปฏิบัติการ</option>
+                                    <?php
+                                    $work_group_sql = "SELECT group_id, group_name FROM work_group";
+                                    $work_group_result = $conn->query($work_group_sql);
+                                    while ($row = $work_group_result->fetch_assoc()): ?>
+                                        <option value="<?= htmlspecialchars($row['group_id']) ?>"
+                                            <?= $vacation['vacation_formwork'] == $row['group_id'] ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($row['group_name']) ?></option>
+                                    <?php endwhile; ?>
+                                </select>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="vacation_WorkinsteadRank" class="form-label">ตำแหน่งผู้ปฏิบัติงานแทน</label>
-                            <input type="text" class="form-control" id="vacation_WorkinsteadRank"
-                                name="vacation_WorkinsteadRank" value="<?= $vacation['vacation_WorkinsteadRank'] ?>">
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success">บันทึกการแก้ไข</button>
+                            <a href="Show_leave.php" class="btn btn-secondary">ยกเลิก</a>
                         </div>
-                    <?php endif; ?>
-                    <button type="submit" class="btn btn-success">บันทึกการเปลี่ยนแปลง</button>
-                    <a href="Show_leave.php" class="btn btn-secondary">ยกเลิก</a>
-                </form>
+                    </form>
+                </div>
             </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    // กำหนด Flatpickr สำหรับ "ตั้งแต่วันที่" ให้เลือกแบบช่วง (Range Mode)
-                    flatpickr("#vacation_since", {
-                        mode: "range", // เปิดใช้งานเลือกช่วงวันที่
-                        dateFormat: "d/m/Y", // รูปแบบวันที่
-                        locale: "th", // ใช้ภาษาไทย (อาจต้องเพิ่ม locale TH ถ้าจำเป็น)
-                        minDate: "today", // ป้องกันการเลือกวันที่ย้อนหลัง
-                        defaultDate: "<?= str_replace(' to ', ' to ', $vacation['vacation_since']) ?>", // กำหนดค่าเริ่มต้น
-                        onChange: function (selectedDates) {
-                            if (selectedDates.length === 2) { // ตรวจสอบว่าผู้ใช้เลือกครบสองวันที่
-                                const startDate = selectedDates[0];
-                                const endDate = selectedDates[1];
-                                const diffTime = endDate - startDate;
-                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // รวมวันแรก
-                                document.getElementById('vacation_setDay').value = diffDays >= 0 ? diffDays : 0;
-                            } else {
-                                document.getElementById('vacation_setDay').value = ''; // เคลียร์ค่าเมื่อเลือกไม่ครบ
-                            }
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            </form>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // กำหนด Flatpickr สำหรับ "ตั้งแต่วันที่" ให้เลือกแบบช่วง (Range Mode)
+                flatpickr("#vacation_since", {
+                    mode: "range", // เปิดใช้งานเลือกช่วงวันที่
+                    dateFormat: "d/m/Y", // รูปแบบวันที่
+                    locale: "th", // ใช้ภาษาไทย (อาจต้องเพิ่ม locale TH ถ้าจำเป็น)
+                    minDate: "today", // ป้องกันการเลือกวันที่ย้อนหลัง
+                    defaultDate: "<?= str_replace(' to ', ' to ', $vacation['vacation_since']) ?>", // กำหนดค่าเริ่มต้น
+                    onChange: function (selectedDates) {
+                        if (selectedDates.length === 2) { // ตรวจสอบว่าผู้ใช้เลือกครบสองวันที่
+                            const startDate = selectedDates[0];
+                            const endDate = selectedDates[1];
+                            const diffTime = endDate - startDate;
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // รวมวันแรก
+                            document.getElementById('vacation_setDay').value = diffDays >= 0 ? diffDays : 0;
+                        } else {
+                            document.getElementById('vacation_setDay').value = ''; // เคลียร์ค่าเมื่อเลือกไม่ครบ
                         }
-                    });
+                    }
                 });
-            </script>
-            <script src="assets/static/js/components/dark.js"></script>
-            <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-            <script src="assets/compiled/js/app.js"></script>
-            <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
-            <script src="assets/static/js/pages/dashboard.js"></script>
+            });
+        </script>
+        <script src="assets/static/js/components/dark.js"></script>
+        <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+        <script src="assets/compiled/js/app.js"></script>
+        <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
+        <script src="assets/static/js/pages/dashboard.js"></script>
 
 </body>
 
