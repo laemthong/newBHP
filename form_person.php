@@ -304,7 +304,7 @@ $result = $conn->query($sql);
                                     <option value="">เลือกเพศ</option>
                                     <option value="ชาย">ชาย</option>
                                     <option value="หญิง">หญิง</option>
-                                    <option value="อื่นๆ">อื่นๆ</option>
+                                    
                                 </select>
                             </div>
 
@@ -361,19 +361,85 @@ $result = $conn->query($sql);
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">วันเดือนปีเกิด:</label>
-                                <input type="date" name="person_born" class="form-control">
-                            </div>
+    <label class="form-label">วันเดือนปีเกิด:</label>
+    <div class="d-flex">
+        <!-- Dropdown สำหรับวัน -->
+        <select name="born_day" class="form-control me-2">
+            <option value="">วัน</option>
+            <?php for ($i = 1; $i <= 31; $i++) { ?>
+                <option value="<?= $i ?>"><?= $i ?></option>
+            <?php } ?>
+        </select>
+
+        <!-- Dropdown สำหรับเดือน -->
+        <select name="born_month" class="form-control me-2">
+            <option value="">เดือน</option>
+            <?php 
+            $months = [
+                "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", 
+                "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", 
+                "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+            ];
+            foreach ($months as $index => $month) { ?>
+                <option value="<?= $index + 1 ?>"><?= $month ?></option>
+            <?php } ?>
+        </select>
+
+        <!-- Dropdown สำหรับปี -->
+        <select name="born_year" class="form-control">
+            <option value="">ปี</option>
+            <?php 
+            $currentYear = date('Y') + 543; // เปลี่ยน ค.ศ. เป็น พ.ศ.
+            for ($i = $currentYear; $i >= $currentYear - 100; $i--) { ?>
+                <option value="<?= $i ?>"><?= $i ?></option>
+            <?php } ?>
+        </select>
+    </div>
+</div>
+
 
                             <div class="col-md-6">
                                 <label class="form-label">เลขที่ตำแหน่ง:</label>
                                 <input type="number" name="person_positionNum" class="form-control">
                             </div>
 
+                           
                             <div class="col-md-6">
-                                <label class="form-label">วันที่บรรจุ:</label>
-                                <input type="date" name="person_dateAccepting" class="form-control">
-                            </div>
+    <label class="form-label">วันที่บรรจุ:</label>
+    <div class="d-flex">
+        <!-- Dropdown สำหรับวัน -->
+        <select name="person_dateAccepting_day" class="form-control me-2">
+            <option value="">วัน</option>
+            <?php for ($i = 1; $i <= 31; $i++) { ?>
+                <option value="<?= $i ?>"><?= $i ?></option>
+            <?php } ?>
+        </select>
+
+        <!-- Dropdown สำหรับเดือน -->
+        <select name="person_dateAccepting_month" class="form-control me-2">
+            <option value="">เดือน</option>
+            <?php 
+            $months = [
+                "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", 
+                "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", 
+                "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+            ];
+            foreach ($months as $index => $month) { ?>
+                <option value="<?= $index + 1 ?>"><?= $month ?></option>
+            <?php } ?>
+        </select>
+
+        <!-- Dropdown สำหรับปี -->
+        <select name="person_dateAccepting_year" class="form-control">
+            <option value="">ปี</option>
+            <?php 
+            $currentYear = date('Y') + 543; // แปลง ค.ศ. เป็น พ.ศ.
+            for ($i = $currentYear; $i >= $currentYear - 100; $i--) { ?>
+                <option value="<?= $i ?>"><?= $i ?></option>
+            <?php } ?>
+        </select>
+    </div>
+</div>
 
                             <div class="col-md-6">
                                 <label class="form-label">ประเภทการจ้าง:</label>
@@ -427,7 +493,7 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">วันหมดอายุบัตรข้าราชการ:</label>
-                                <input type="date" name="person_CardExpired" class="form-control">
+                                <input type="text" name="person_CardExpired" class="form-control">
                             </div>
                         </div>
 
@@ -437,6 +503,8 @@ $result = $conn->query($sql);
 
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
                 <script>
+
+
                     // ฟังก์ชันสำหรับตรวจสอบความถูกต้องของฟอร์ม
                     function validateForm() {
                         const form = document.getElementById('personnelForm');
