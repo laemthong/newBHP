@@ -547,14 +547,14 @@ function updatePagination(totalPages, currentPage, search = "") {
         `;
     }
 
-    // // ปุ่ม ">>" ไปหน้าสุดท้าย
-    // if (currentPage < totalPages) {
-    //     pagination.innerHTML += `
-    //         <li class="page-item">
+    // // // ปุ่ม ">>" ไปหน้าสุดท้าย
+    //  if (currentPage < totalPages) {
+    //      pagination.innerHTML += `
+    //          <li class="page-item">
     //             <a class="page-link" href="#" onclick="searchTable(${totalPages})">&raquo;&raquo;</a>
     //         </li>
-    //     `;
-    // }
+    //      `;
+    //  }
 }
 
 
