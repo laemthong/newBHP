@@ -314,7 +314,12 @@ if (!$vacation) {
                                     <option value="2" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 2 ? 'selected' : '' ?>>ลาป่วย</option>
                                     <option value="3" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 3 ? 'selected' : '' ?>>ลาคลอดบุตร</option>
                                     <option value="4" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 4 ? 'selected' : '' ?>>ลากิจส่วนตัว</option>
+<<<<<<< HEAD
                                     <option value="5" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 4 ? 'selected' : '' ?>>ยกเลิกการลา</option>
+=======
+                                    <option value="5" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 5 ? 'selected' : '' ?>>ลาไปช่วยเหลือภริยาที่คลอดบุตร</option>
+                                    <option value="6" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 6? 'selected' : '' ?>>ขอยกเลิกวันลา</option>
+>>>>>>> 0f6ed7ea49336a9a4039cd3a32b1ddc98bd2c9ca
                                 </select>
                             </div>
 
@@ -396,9 +401,16 @@ if (!$vacation) {
                                 <label class="form-label">ตำแหน่งผู้ปฏิบัติงานแทน:</label>
                                 <input type="text" name="vacation_WorkinsteadRank" class="form-control" maxlength="255">
                             </div>
+<<<<<<< HEAD
                             <div class="col-md-12 cancel-reason-field">
                                 <label class="form-label">เหตุผลในการยกเลิก:</label>
                                 <textarea name="vacation_cancel_reason" class="form-control" rows="4"></textarea>
+=======
+                            <div class="col-md-12 ">
+                                <label class="form-label">เหตุผลในการยกเลิก:</label>
+                                <textarea name="vacation_cancel_reason" class="form-control" rows="4"
+                                    required></textarea>
+>>>>>>> 0f6ed7ea49336a9a4039cd3a32b1ddc98bd2c9ca
                             </div>
                         </div>
 
@@ -515,17 +527,6 @@ if (!$vacation) {
                         document.getElementById('vacation_date').value = today; // ตั้งค่า value ให้กับ input
                     });
 
-                    function toggleReplacementFields() {
-                        const typeVacation = document.getElementById('typeVacation_id').value;
-                        const replacementFields = document.querySelectorAll('.replacement-fields ');
-
-                        if (typeVacation === "1") { // แสดงเฉพาะกรณีที่ typeVacation_id = 1
-                            replacementFields.forEach(field => field.style.display = 'block');
-                        } else {
-                            replacementFields.forEach(field => field.style.display = 'none');
-                        }
-
-                    }
 
                     document.addEventListener('DOMContentLoaded', function () {
                         const typeVacationDropdown = document.getElementById('typeVacation_id');
@@ -565,6 +566,8 @@ if (!$vacation) {
                         // Initialize fields on page load
                         handleLeaveTypeChange();
                     });
+
+                    
                 </script>
 
             </body>
