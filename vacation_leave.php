@@ -314,12 +314,8 @@ if (!$vacation) {
                                     <option value="2" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 2 ? 'selected' : '' ?>>ลาป่วย</option>
                                     <option value="3" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 3 ? 'selected' : '' ?>>ลาคลอดบุตร</option>
                                     <option value="4" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 4 ? 'selected' : '' ?>>ลากิจส่วนตัว</option>
-<<<<<<< HEAD
-                                    <option value="5" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 4 ? 'selected' : '' ?>>ยกเลิกการลา</option>
-=======
                                     <option value="5" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 5 ? 'selected' : '' ?>>ลาไปช่วยเหลือภริยาที่คลอดบุตร</option>
-                                    <option value="6" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 6? 'selected' : '' ?>>ขอยกเลิกวันลา</option>
->>>>>>> 0f6ed7ea49336a9a4039cd3a32b1ddc98bd2c9ca
+                                    <option value="6" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 6? 'selected' : '' ?>>ยกเลิกวันลา</option>
                                 </select>
                             </div>
 
@@ -405,6 +401,7 @@ if (!$vacation) {
                                 <label class="form-label">เหตุผลในการยกเลิก:</label>
                                 <textarea name="vacation_cancel_reason" class="form-control" rows="4"></textarea>
                             </div>
+
                         </div>
 
                         <button type="submit" class="btn btn-success mt-4 w-100">บันทึกข้อมูล</button>
@@ -547,7 +544,7 @@ if (!$vacation) {
                                     field.style.display = 'block'; // Show
                                     field.querySelector('input').removeAttribute('disabled'); // Enable input
                                 });
-                            } else if (selectedType === '5') { // Cancel Leave
+                            } else if (selectedType === '6') { // Cancel Leave
                                 cancelReasonField.style.display = 'block';
                                 cancelReasonField.querySelector('textarea').removeAttribute('disabled');
                             }
