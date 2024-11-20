@@ -314,6 +314,7 @@ if (!$vacation) {
                                     <option value="2" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 2 ? 'selected' : '' ?>>ลาป่วย</option>
                                     <option value="3" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 3 ? 'selected' : '' ?>>ลาคลอดบุตร</option>
                                     <option value="4" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 4 ? 'selected' : '' ?>>ลากิจส่วนตัว</option>
+                                    <option value="5" <?= isset($vacation['typeVacation_id']) && $vacation['typeVacation_id'] == 4 ? 'selected' : '' ?>>ยกเลิกการลา</option>
                                 </select>
                             </div>
 
@@ -364,22 +365,10 @@ if (!$vacation) {
                                 </select>
                             </div>
 
-                            <!-- Row 3 -->
                             <div class="col-md-6">
                                 <label class="form-label">วันพักผ่อนสะสม:</label>
                                 <input type="number" name="vacation_accumulateDay" class="form-control">
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">สิทธิวันพักผ่อนประจำปี:</label>
-                                <input type="number" name="vacation_rightsDay" class="form-control">
-                            </div>
-
-                            <!-- Row 4 -->
-                            <div class="col-md-6">
-                                <label class="form-label">รวมเป็นกี่วัน:</label>
-                                <input type="number" name="vacation_sumDay" class="form-control">
-                            </div>
-
 
                             <div class="col-md-6">
                                 <label class="form-label"><span class="text-danger">*</span> ตั้งแต่วันที่:</label>
@@ -393,8 +382,6 @@ if (!$vacation) {
                                     readonly>
                             </div>
 
-
-                            <!-- Row 6 -->
                             <div class="col-md-6">
                                 <label class="form-label"><span class="text-danger">*</span> เบอร์โทรศัพท์:</label>
                                 <input type="tel" name="vacation_numPhone" class="form-control" pattern="[0-9]{10}"
@@ -402,23 +389,16 @@ if (!$vacation) {
                             </div>
 
                             <div class="col-md-6 replacement-fields">
-                                <label class="form-label"><span class="text-danger">*</span>
-                                    ชื่อผู้ปฏิบัติงานแทน:</label>
+                                <label class="form-label">ชื่อผู้ปฏิบัติงานแทน:</label>
                                 <input type="text" name="vacation_nameWorkinstead" class="form-control" maxlength="255">
                             </div>
-
-                            <!-- ตำแหน่งผู้ปฏิบัติงานแทน -->
                             <div class="col-md-6 replacement-fields">
                                 <label class="form-label">ตำแหน่งผู้ปฏิบัติงานแทน:</label>
                                 <input type="text" name="vacation_WorkinsteadRank" class="form-control" maxlength="255">
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label"><span class="text-danger">*</span> อนุญาตหรือไม่:</label>
-                                <select name="vacation_allow" class="form-select" required>
-                                    <option value="">เลือก</option>
-                                    <option value="อนุญาต">อนุญาต</option>
-                                    <option value="ไม่อนุญาต">ไม่อนุญาต</option>
-                                </select>
+                            <div class="col-md-12 cancel-reason-field">
+                                <label class="form-label">เหตุผลในการยกเลิก:</label>
+                                <textarea name="vacation_cancel_reason" class="form-control" rows="4"></textarea>
                             </div>
                         </div>
 
@@ -550,33 +530,56 @@ if (!$vacation) {
 
                     function toggleReplacementFields() {
                         const typeVacation = document.getElementById('typeVacation_id').value;
-                        const replacementFields = document.querySelectorAll('.replacement-fields');
+                        const replacementFields = document.querySelectorAll('.replacement-fields ');
 
                         if (typeVacation === "1") { // แสดงเฉพาะกรณีที่ typeVacation_id = 1
                             replacementFields.forEach(field => field.style.display = 'block');
                         } else {
                             replacementFields.forEach(field => field.style.display = 'none');
                         }
+
                     }
 
-                    function toggleReplacementFields() {
-                        const typeVacation = document.getElementById('typeVacation_id').value; // รับค่าของประเภทการลา
-                        const replacementFields = document.querySelectorAll('.replacement-fields'); // เลือกทุกช่องที่ต้องซ่อน/แสดง
-
-                        if (typeVacation === "1") { // กรณีที่เลือก "ลาพักผ่อน"
-                            replacementFields.forEach(field => field.style.display = 'block'); // แสดงช่องผู้แทน
-                        } else {
-                            replacementFields.forEach(field => field.style.display = 'none'); // ซ่อนช่องผู้แทน
-                        }
-                    }
-
-                    // เรียกใช้งานฟังก์ชัน toggleReplacementFields เมื่อเปลี่ยนค่าใน Select
                     document.addEventListener('DOMContentLoaded', function () {
                         const typeVacationDropdown = document.getElementById('typeVacation_id');
-                        typeVacationDropdown.addEventListener('change', toggleReplacementFields); // เรียก toggleReplacementFields เมื่อเปลี่ยนค่า
-                        toggleReplacementFields(); // เรียกครั้งแรกเพื่อปรับการแสดงผลเริ่มต้น
+                        const replacementFields = document.querySelectorAll('.replacement-fields');
+                        const cancelReasonField = document.querySelector('.cancel-reason-field');
+
+                        // Function to manage field visibility based on selected leave type
+                        function handleLeaveTypeChange() {
+                            const selectedType = typeVacationDropdown.value;
+
+                            // Reset all fields to default
+                            replacementFields.forEach(field => {
+                                field.style.display = 'none'; // Hide by default
+                                field.querySelector('input').value = ''; // Clear value
+                                field.querySelector('input').setAttribute('disabled', 'disabled'); // Disable input
+                            });
+
+                            cancelReasonField.style.display = 'none';
+                            cancelReasonField.querySelector('textarea').value = '';
+                            cancelReasonField.querySelector('textarea').setAttribute('disabled', 'disabled');
+
+                            // Show specific fields based on leave type
+                            if (selectedType === '1') { // Vacation Leave
+                                replacementFields.forEach(field => {
+                                    field.style.display = 'block'; // Show
+                                    field.querySelector('input').removeAttribute('disabled'); // Enable input
+                                });
+                            } else if (selectedType === '5') { // Cancel Leave
+                                cancelReasonField.style.display = 'block';
+                                cancelReasonField.querySelector('textarea').removeAttribute('disabled');
+                            }
+                        }
+
+                        // Attach event listener
+                        typeVacationDropdown.addEventListener('change', handleLeaveTypeChange);
+
+                        // Initialize fields on page load
+                        handleLeaveTypeChange();
                     });
                 </script>
+
             </body>
 
 
@@ -587,8 +590,6 @@ if (!$vacation) {
             <script src="assets/static/js/components/dark.js"></script>
             <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
             <script src="assets/compiled/js/app.js"></script>
-
-
 
 </body>
 
