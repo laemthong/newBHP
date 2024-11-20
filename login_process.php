@@ -9,13 +9,10 @@ include 'connect/connection.php';
 $username = $_POST['username'];
 $password = $_POST['password'];
 
-// Encrypt the password using MD5
-$hashed_password = md5($password);
-
 // Prepare SQL statement to check user credentials
-$sql = "SELECT officer_name FROM officer WHERE officer_login_name = ? AND officer_login_password_md5 = ?";
+$sql = "SELECT person_name FROM personnel WHERE person_id = ? AND person_phone = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ss", $username, $hashed_password);
+$stmt->bind_param("ss", $username, $password);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -26,7 +23,7 @@ if ($result->num_rows == 1) {
     
     // Store login status and user name in the session
     $_SESSION['login'] = $username;
-    $_SESSION['user_name'] = $user['officer_name']; // Store user name in session
+    $_SESSION['user_name'] = $user['person_name']; // Store user name in session
 
     // Redirect to the dashboard
     header("Location: dashboard.php");
