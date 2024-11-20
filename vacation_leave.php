@@ -297,7 +297,8 @@ if (!$vacation) {
             <body class="d-flex align-items-start justify-content-center" style="min-height: 100vh;">
                 <div class="container mt-4" style="max-width: 800px; margin-top: 20px;">
                     <h2 class="text-center .text-secondary mb-4">ระบบบันทึกข้อมูลการลา</h2>
-                    <form id="vacationForm" action="save_vacation.php" method="POST" onsubmit="return validateVacationForm()">
+                    <form id="vacationForm" action="save_vacation.php" method="POST"
+                        onsubmit="return validateVacationForm()">
                         <div class="row g-3">
                             <!-- Row 1 -->
                             <div class="col-md-6">
@@ -457,27 +458,92 @@ if (!$vacation) {
                         return isValid;
                     }
 
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // กำหนด Flatpickr สำหรับ "ตั้งแต่วันที่" ให้เลือกแบบช่วง (Range Mode)
+                    // ตั้งค่าการเชื่อมต่อ Google Calendar
+                    const CONFIG = {
+                        API_KEY: 'AIzaSyBMxClJ1BONjTrkf0YkktYJrAzuJ5rXRN8', // ใส่ API Key ของคุณ
+                        CALENDAR_ID: 'th.th#holiday@group.v.calendar.google.com', // ปฏิทินวันหยุดไทย
+                        BASE_URL: 'https://www.googleapis.com/calendar/v3/calendars'
+                    };
+
+                    // ฟังก์ชันดึงข้อมูลวันหยุด
+                    async function getHolidays(startDate, endDate) {
+                        try {
+                            // สร้าง URL สำหรับเรียก API
+                            const params = new URLSearchParams({
+                                key: CONFIG.API_KEY,
+                                timeMin: new Date(startDate).toISOString(),
+                                timeMax: new Date(endDate).toISOString(),
+                                singleEvents: true,
+                                orderBy: 'startTime'
+                            });
+
+                            const url = `${CONFIG.BASE_URL}/${encodeURIComponent(CONFIG.CALENDAR_ID)}/events?${params}`;
+
+                            // เรียกข้อมูลจาก API
+                            const response = await fetch(url);
+                            if (!response.ok) {
+                                throw new Error('ไม่สามารถดึงข้อมูลวันหยุดได้');
+                            }
+
+                            // แปลงข้อมูลที่ได้เป็นรายการวันหยุด
+                            const data = await response.json();
+                            return data.items.map(event => event.start.date);
+
+                        } catch (error) {
+                            console.error('เกิดข้อผิดพลาด:', error);
+                            return [];
+                        }
+                    }
+
+                    // ฟังก์ชันคำนวณวันทำงาน
+                    async function calculateWorkingDays(startDate, endDate) {
+                        try {
+                            // ดึงรายการวันหยุด
+                            const holidays = await getHolidays(startDate, endDate);
+
+                            let currentDate = new Date(startDate);
+                            const endDateTime = new Date(endDate);
+                            let workingDays = 0;
+
+                            // วนลูปนับวันทำงาน
+                            while (currentDate <= endDateTime) {
+                                const dayOfWeek = currentDate.getDay();
+                                const dateString = currentDate.toISOString().split('T')[0];
+
+                                // นับเฉพาะวันทำงาน (ไม่รวมเสาร์-อาทิตย์และวันหยุด)
+                                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !holidays.includes(dateString)) {
+                                    workingDays++;
+                                }
+
+                                currentDate.setDate(currentDate.getDate() + 1);
+                            }
+
+                            return workingDays;
+                        } catch (error) {
+                            console.error('เกิดข้อผิดพลาดในการคำนวณวันทำงาน:', error);
+                            return 0;
+                        }
+                    }
+
+                    // ตั้งค่า Date Picker
+                    document.addEventListener('DOMContentLoaded', function () {
                         flatpickr("#vacation_since", {
-                            mode: "range", // เปิดใช้งานเลือกช่วงวันที่
-                            dateFormat: "d/m/Y", // รูปแบบวันที่
-                            locale: "th", // ใช้ภาษาไทย
-                            minDate: "today", // ป้องกันการเลือกวันที่ย้อนหลัง
-                            onChange: function(selectedDates) {
-                                if (selectedDates.length === 2) { // ตรวจสอบว่าผู้ใช้เลือกครบสองวันที่
-                                    const startDate = selectedDates[0];
-                                    const endDate = selectedDates[1];
-                                    const diffTime = endDate - startDate;
-                                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // รวมวันแรก
-                                    document.getElementById('vacation_setDay').value = diffDays >= 0 ? diffDays : 0;
+                            mode: "range",
+                            dateFormat: "d/m/Y",
+                            locale: "th",
+                            onChange: async function (selectedDates) {
+                                if (selectedDates.length === 2) {
+                                    const workingDays = await calculateWorkingDays(selectedDates[0], selectedDates[1]);
+                                    document.getElementById('vacation_setDay').value = workingDays;
                                 } else {
-                                    document.getElementById('vacation_setDay').value = ''; // เคลียร์ค่าเมื่อเลือกไม่ครบ
+                                    document.getElementById('vacation_setDay').value = '';
                                 }
                             }
                         });
                     });
-                    document.addEventListener('DOMContentLoaded', function() {
+
+
+                    document.addEventListener('DOMContentLoaded', function () {
                         const today = new Date().toISOString().split('T')[0]; // แปลงวันที่ปัจจุบันเป็นรูปแบบ YYYY-MM-DD
                         document.getElementById('vacation_date').value = today; // ตั้งค่า value ให้กับ input
                     });
@@ -505,7 +571,7 @@ if (!$vacation) {
                     }
 
                     // เรียกใช้งานฟังก์ชัน toggleReplacementFields เมื่อเปลี่ยนค่าใน Select
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         const typeVacationDropdown = document.getElementById('typeVacation_id');
                         typeVacationDropdown.addEventListener('change', toggleReplacementFields); // เรียก toggleReplacementFields เมื่อเปลี่ยนค่า
                         toggleReplacementFields(); // เรียกครั้งแรกเพื่อปรับการแสดงผลเริ่มต้น

@@ -1,10 +1,13 @@
 <?php
 session_start();
+include 'connect/connection.php';
 $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้ใช้แสดงใน navbar
 
 $success_message = $_SESSION['success'] ?? null;
 $error_message = $_SESSION['error'] ?? null;
 unset($_SESSION['success'], $_SESSION['error']);
+$sql = "SELECT group_id, group_name FROM work_group";
+$result = $conn->query($sql);
 ?>
 
 
@@ -314,21 +317,16 @@ unset($_SESSION['success'], $_SESSION['error']);
                                 <label class="form-label">ปฏิบัติการที่:</label>
                                 <select name="person_formwork" class="form-select" required>
                                     <option value="">เลือกปฏิบัติการ</option>
-                                    <option value="องค์กรแพทย์">องค์กรแพทย์</option>
-                                    <option value="กลุ่มงานบริหารทั่วไป">กลุ่มงานบริหารทั่วไป</option>
-                                    <option value="เภสัชกรรมและคุ้มครองผู้บริโภค">เภสัชกรรมและคุ้มครองผู้บริโภค</option>
-                                    <option value="โภชนศาสตร์">โภชนศาสตร์</option>
-                                    <option value="แพทย์แผนไทยและแพทย์ทางเลือก">แพทย์แผนไทยและแพทย์ทางเลือก</option>
-                                    <option value="เวชศาสตร์ฟื้นฟู">เวชศาสตร์ฟื้นฟู</option>
-                                    <option value="ประกันสุขภาพ ยุทธศาสตร์ และสารสนเทศทางการแพทย์">ประกันสุขภาพ
-                                        ยุทธศาสตร์
-                                        และสารสนเทศทางการแพทย์</option>
-                                    <option value="เทคนิคการแพทย์">เทคนิคการแพทย์</option>
-                                    <option value="บริการด้านปฐมภูมิและองค์รวม">บริการด้านปฐมภูมิและองค์รวม</option>
-                                    <option value="ทันตกรรม">ทันตกรรม</option>
-                                    <option value="รังสีวิทยา">รังสีวิทยา</option>
-                                    <option value="จิตเวชและยาเสพติด">จิตเวชและยาเสพติด</option>
-                                    <option value="การพยาบาล">การพยาบาล</option>
+                                    <?php
+                                    if ($result->num_rows > 0) {
+                                        // วนลูปเพื่อสร้าง option
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo '<option value="' . $row["group_id"] . '">' . $row["group_name"] . '</option>';
+                                        }
+                                    } else {
+                                        echo '<option value="">ไม่มีข้อมูล</option>';
+                                    }
+                                    ?>
                                 </select>
                             </div>
 
