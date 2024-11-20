@@ -406,20 +406,7 @@ if (!$vacation) {
                     </form>
                 </div>
 
-                <script>
-                    function validateVacationForm() {
-                        const form = document.getElementById('vacationForm');
-                        let isValid = true;
 
-                        // ตรวจสอบเบอร์โทรศัพท์
-                        const phone = form['vacation_numPhone'];
-                        if (phone.value && !/^\d{10}$/.test(phone.value)) {
-                            alert('กรุณากรอกเบอร์โทรศัพท์ 10 หลัก');
-                            isValid = false;
-                        }
-                        return isValid;
-                    }
-                </script>
 
 
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -506,12 +493,12 @@ if (!$vacation) {
                     }
 
                     // ตั้งค่า Date Picker
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         flatpickr("#vacation_since", {
                             mode: "range",
                             dateFormat: "d/m/Y",
                             locale: "th",
-                            onChange: async function (selectedDates) {
+                            onChange: async function(selectedDates) {
                                 if (selectedDates.length === 2) {
                                     const workingDays = await calculateWorkingDays(selectedDates[0], selectedDates[1]);
                                     document.getElementById('vacation_setDay').value = workingDays;
@@ -523,7 +510,7 @@ if (!$vacation) {
                     });
 
 
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         const today = new Date().toISOString().split('T')[0]; // แปลงวันที่ปัจจุบันเป็นรูปแบบ YYYY-MM-DD
                         document.getElementById('vacation_date').value = today; // ตั้งค่า value ให้กับ input
                     });
