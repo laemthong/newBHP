@@ -6,41 +6,91 @@ include 'connect/connection.php';
 $records_per_page = 10;
 
 // ตรวจสอบหน้าปัจจุบันจาก URL
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $records_per_page;
 
 // ตรวจสอบว่ามีคำค้นหาหรือไม่
 $search_query = isset($_GET['search']) ? $_GET['search'] : '';
 
-// สร้างคำสั่ง SQL สำหรับดึงข้อมูลพร้อมเงื่อนไขการค้นหา
+// สร้างคำสั่ง SQL โดยใช้ `JOIN` เพื่อดึง group_name
 if ($search_query) {
-    // เพิ่มเงื่อนไขสำหรับค้นหา person_id
-    $sql = "SELECT * FROM personnel WHERE person_id LIKE '%$search_query%' 
-            OR person_name LIKE '%$search_query%' 
-            OR person_gender LIKE '%$search_query%' 
-            OR person_rank LIKE '%$search_query%' 
-            OR person_formwork LIKE '%$search_query%' 
-            OR person_level LIKE '%$search_query%' 
-            OR person_salary LIKE '%$search_query%' 
-            OR person_born LIKE '%$search_query%' 
-            OR person_phone LIKE '%$search_query%' 
-            LIMIT $offset, $records_per_page";
-    $total_records_sql = "SELECT COUNT(*) FROM personnel WHERE person_id LIKE '%$search_query%' 
-            OR person_name LIKE '%$search_query%' 
-            OR person_gender LIKE '%$search_query%' 
-            OR person_rank LIKE '%$search_query%' 
-            OR person_formwork LIKE '%$search_query%' 
-            OR person_level LIKE '%$search_query%' 
-            OR person_salary LIKE '%$search_query%' 
-            OR person_born LIKE '%$search_query%' 
-            OR person_phone LIKE '%$search_query%'";
+    $sql = "SELECT personnel.*, work_group.group_name 
+            FROM personnel 
+            LEFT JOIN work_group ON personnel.person_formwork = work_group.group_id 
+            WHERE person_id LIKE ? 
+            OR person_name LIKE ? 
+            OR person_gender LIKE ? 
+            OR person_rank LIKE ? 
+            OR work_group.group_name LIKE ? 
+            OR person_level LIKE ? 
+            OR person_salary LIKE ? 
+            OR person_born LIKE ? 
+            OR person_phone LIKE ? 
+            LIMIT ?, ?";
+    $total_records_sql = "SELECT COUNT(*) 
+                          FROM personnel 
+                          LEFT JOIN work_group ON personnel.person_formwork = work_group.group_id 
+                          WHERE person_id LIKE ? 
+                          OR person_name LIKE ? 
+                          OR person_gender LIKE ? 
+                          OR person_rank LIKE ? 
+                          OR work_group.group_name LIKE ? 
+                          OR person_level LIKE ? 
+                          OR person_salary LIKE ? 
+                          OR person_born LIKE ? 
+                          OR person_phone LIKE ?";
 } else {
-    $sql = "SELECT * FROM personnel LIMIT $offset, $records_per_page";
-    $total_records_sql = "SELECT COUNT(*) FROM personnel";
+    $sql = "SELECT personnel.*, work_group.group_name 
+            FROM personnel 
+            LEFT JOIN work_group ON personnel.person_formwork = work_group.group_id 
+            LIMIT ?, ?";
+    $total_records_sql = "SELECT COUNT(*) 
+                          FROM personnel 
+                          LEFT JOIN work_group ON personnel.person_formwork = work_group.group_id";
 }
 
-$result = $conn->query($sql);
-$total_records_result = $conn->query($total_records_sql);
+// เตรียม statement
+$stmt = $conn->prepare($sql);
+$total_stmt = $conn->prepare($total_records_sql);
+
+if ($search_query) {
+    // สร้างตัวแปรสำหรับ LIKE query
+    $like_query = "%$search_query%";
+    $stmt->bind_param(
+        "ssssssssii",
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $offset,
+        $records_per_page
+    );
+    $total_stmt->bind_param(
+        "sssssssss",
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query,
+        $like_query
+    );
+} else {
+    $stmt->bind_param("ii", $offset, $records_per_page);
+}
+
+// ดำเนินการ query
+$stmt->execute();
+$result = $stmt->get_result();
+
+$total_stmt->execute();
+$total_records_result = $total_stmt->get_result();
 $total_records = $total_records_result->fetch_row()[0];
 $total_pages = ceil($total_records / $records_per_page);
 
@@ -54,8 +104,12 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
     exit;
 }
 
-
+// ปิด statement และการเชื่อมต่อฐานข้อมูล
+$stmt->close();
+$total_stmt->close();
+$conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -434,7 +488,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                                     echo "<td>" . $row["person_name"] . "</td>";
                                                     echo "<td>" . $row["person_gender"] . "</td>";
                                                     echo "<td>" . $row["person_rank"] . "</td>";
-                                                    echo "<td>" . $row["person_formwork"] . "</td>";
+                                                    echo "<td>" . trim($row["group_name"]) . "</td>";
+
                                                     echo "<td>" . $row["person_level"] . "</td>";
                                                     echo "<td>" . $row["person_salary"] . "</td>";
                                                     echo "<td>" . $person_born . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่
