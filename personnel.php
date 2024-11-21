@@ -65,7 +65,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ban Phai Hospital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="icon" href="photo/รพ.png" type="image/png"><link rel="icon" href="photo/รพ.png" type="image/png">
+    <link rel="icon" href="photo/รพ.png" type="image/png">
+    <link rel="icon" href="photo/รพ.png" type="image/png">
     <link rel="stylesheet" href="./assets/compiled/css/app.css">
     <link rel="stylesheet" href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" href="./assets/compiled/css/iconly.css">
@@ -79,37 +80,51 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
             border-radius: 10px;
         }
 
-        .table th, .table td {
-        text-align: center; /* จัดข้อความให้อยู่กึ่งกลาง */
-        vertical-align: middle; /* จัดข้อความให้อยู่กลางแนวตั้ง */
-        white-space: nowrap; /* ป้องกันคำขาดบรรทัด */
-    }
+        .table th,
+        .table td {
+            text-align: center;
+            /* จัดข้อความให้อยู่กึ่งกลาง */
+            vertical-align: middle;
+            /* จัดข้อความให้อยู่กลางแนวตั้ง */
+            white-space: nowrap;
+            /* ป้องกันคำขาดบรรทัด */
+        }
 
-    .table th {
-        background-color: #0097e6; /* เปลี่ยนสีพื้นหลังหัวตาราง */
-        color: #ffffff; /* สีข้อความหัวตาราง */
-        font-size: 14px; /* ขนาดข้อความ */
-    }
+        .table th {
+            background-color: #0097e6;
+            /* เปลี่ยนสีพื้นหลังหัวตาราง */
+            color: #ffffff;
+            /* สีข้อความหัวตาราง */
+            font-size: 14px;
+            /* ขนาดข้อความ */
+        }
 
-    .table-responsive {
-        overflow-x: auto; /* เพิ่ม scroll bar เมื่อขนาดหน้าจอไม่พอ */
-    }
+        .table-responsive {
+            overflow-x: auto;
+            /* เพิ่ม scroll bar เมื่อขนาดหน้าจอไม่พอ */
+        }
 
-    .table {
-        border-collapse: separate;
-        border-spacing: 0;
-        width: 100%;
-    }
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
 
-    .table th:first-child, .table td:first-child {
-        border-top-left-radius: 10px; /* มุมซ้ายบน */
-        border-bottom-left-radius: 10px; /* มุมซ้ายล่าง */
-    }
+        .table th:first-child,
+        .table td:first-child {
+            border-top-left-radius: 10px;
+            /* มุมซ้ายบน */
+            border-bottom-left-radius: 10px;
+            /* มุมซ้ายล่าง */
+        }
 
-    .table th:last-child, .table td:last-child {
-        border-top-right-radius: 10px; /* มุมขวาบน */
-        border-bottom-right-radius: 10px; /* มุมขวาล่าง */
-    }   
+        .table th:last-child,
+        .table td:last-child {
+            border-top-right-radius: 10px;
+            /* มุมขวาบน */
+            border-bottom-right-radius: 10px;
+            /* มุมขวาล่าง */
+        }
 
         .custom-title {
             font-size: 24px;
@@ -186,8 +201,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                     <ul class="menu">
                         <li class="sidebar-title">เมนู</li>
 
-                        <li
-                            class="sidebar-item active ">
+                        <li class="sidebar-item active ">
                             <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>หน้าหลัก</span>
@@ -196,8 +210,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         </li>
 
-                        <li
-                            class="sidebar-item  has-sub">
+                        <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="fas fa-user-cog"></i>
                                 <span>บุคลากร</span>
@@ -226,8 +239,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         </li>
 
-                        <li
-                            class="sidebar-item  has-sub">
+                        <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="fa fa-address-card"></i>
                                 <span>การลา</span>
@@ -272,8 +284,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         </li>
 
-                        <li
-                            class="sidebar-item  has-sub">
+                        <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 <span>Layouts</span>
@@ -313,8 +324,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         <li class="sidebar-title">อื่นๆ</li>
 
-                        <li
-                            class="sidebar-item  has-sub">
+                        <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="	fas fa-cog"></i>
                                 <span>ตั้งค่า</span>
@@ -354,8 +364,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
 
                             </ul>
-                        <li
-                            class="sidebar-item activee ">
+                        <li class="sidebar-item activee ">
                             <a href="logout.php" class='sidebar-link'>
                                 <i class="	fas fa-power-off"></i>
                                 <span>ออกจากระบบ</span>
@@ -382,12 +391,14 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         <!-- การ์ดสำหรับตาราง -->
                         <div class="card shadow-sm">
-                            <div class="card-header bg-primary text-white" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                            <div class="card-header bg-primary text-white"
+                                style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                 <div class="d-flex justify-content-between align-items-center">
 
                                     <span class="custom-title">ข้อมูลบุคลากร</span>
                                     <div style="max-width: 300px;">
-                                        <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..." onkeyup="searchTable()">
+                                        <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..."
+                                            onkeyup="searchTable()">
                                     </div>
                                 </div>
                             </div>
@@ -414,6 +425,10 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                             <?php
                                             if ($result->num_rows > 0) {
                                                 while ($row = $result->fetch_assoc()) {
+                                                    // แปลงฟอร์แมตวันที่
+                                                    $person_born = date("d/m/Y", strtotime($row["person_born"]));
+                                                    $person_dateAccepting = date("d/m/Y", strtotime($row["person_dateAccepting"]));
+
                                                     echo "<tr>";
                                                     echo "<td>" . $row["person_id"] . "</td>";
                                                     echo "<td>" . $row["person_name"] . "</td>";
@@ -422,8 +437,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                                     echo "<td>" . $row["person_formwork"] . "</td>";
                                                     echo "<td>" . $row["person_level"] . "</td>";
                                                     echo "<td>" . $row["person_salary"] . "</td>";
-                                                    echo "<td>" . $row["person_born"] . "</td>";
-                                                    echo "<td>" . $row["person_dateAccepting"] . "</td>";
+                                                    echo "<td>" . $person_born . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่
+                                                    echo "<td>" . $person_dateAccepting . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่
                                                     echo "<td>" . $row["person_phone"] . "</td>";
                                                     echo "<td>";
                                                     echo "<div class='d-flex'>";
@@ -441,7 +456,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                     </table>
                                 </div>
                             </div>
-                            <div class="card-footer" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                            <div class="card-footer"
+                                style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination justify-content-center">
                                         <?php if ($page > 1): ?>
@@ -455,7 +471,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                         <?php endif; ?>
 
                                         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                            <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                                            <li class="page-item <?php if ($i == $page)
+                                                echo 'active'; ?>">
                                                 <a class="page-link"
                                                     href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
                                             </li>
@@ -478,19 +495,19 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
 
                     <script>
-                      function searchTable(page = 1) {
-    var search = document.getElementById("tableSearch").value; // ดึงค่าค้นหา
-    var url = `personnel.php?search=${encodeURIComponent(search)}&page=${page}&ajax=true`;
+                        function searchTable(page = 1) {
+                            var search = document.getElementById("tableSearch").value; // ดึงค่าค้นหา
+                            var url = `personnel.php?search=${encodeURIComponent(search)}&page=${page}&ajax=true`;
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            const tbody = document.querySelector("#personnelTable tbody");
-            tbody.innerHTML = ""; // ล้างข้อมูลเดิมในตาราง
+                            fetch(url)
+                                .then(response => response.json())
+                                .then(data => {
+                                    const tbody = document.querySelector("#personnelTable tbody");
+                                    tbody.innerHTML = ""; // ล้างข้อมูลเดิมในตาราง
 
-            // วนลูปเพื่อแสดงข้อมูลในตารางใหม่
-            data.data.forEach((row, index) => {
-                tbody.innerHTML += `
+                                    // วนลูปเพื่อแสดงข้อมูลในตารางใหม่
+                                    data.data.forEach((row, index) => {
+                                        tbody.innerHTML += `
                     <tr>
                         <td>${row.person_id}</td>
                         <td>${row.person_name}</td>
@@ -499,8 +516,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                         <td>${row.person_formwork}</td>
                         <td>${row.person_level}</td>
                         <td>${row.person_salary}</td>
-                        <td>${row.person_born}</td>
-                        <td>${row.person_dateAccepting}</td>
+                        <td>${formatDate(row.person_born)}</td>
+                        <td>${formatDate(row.person_dateAccepting)}</td>
                         <td>${row.person_phone}</td>
                         <td>
                             <div class='d-flex'>
@@ -510,55 +527,56 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                         </td>
                     </tr>
                 `;
-            });
+                                    });
 
-            // อัปเดต pagination พร้อมคำค้นหา
-            updatePagination(data.total_pages, page, search);
-        })
-        .catch(error => console.error('Error:', error));
-}
+                                    // อัปเดต pagination พร้อมคำค้นหา
+                                    updatePagination(data.total_pages, page, search);
+                                })
+                                .catch(error => console.error('Error:', error));
+                        }
 
 
-function updatePagination(totalPages, currentPage, search = "") {
-    const pagination = document.querySelector(".pagination");
-    pagination.innerHTML = ""; // ล้าง pagination เดิม
 
-    // ปุ่มไปหน้าก่อนหน้า
-    if (currentPage > 1) {
-        pagination.innerHTML += `
+                        function updatePagination(totalPages, currentPage, search = "") {
+                            const pagination = document.querySelector(".pagination");
+                            pagination.innerHTML = ""; // ล้าง pagination เดิม
+
+                            // ปุ่มไปหน้าก่อนหน้า
+                            if (currentPage > 1) {
+                                pagination.innerHTML += `
             <li class="page-item">
                 <a class="page-link" href="#" onclick="searchTable(${currentPage - 1})">&laquo;</a>
             </li>
         `;
-    }
+                            }
 
-    // สร้าง pagination
-    for (let i = 1; i <= totalPages; i++) {
-        pagination.innerHTML += `
+                            // สร้าง pagination
+                            for (let i = 1; i <= totalPages; i++) {
+                                pagination.innerHTML += `
             <li class="page-item ${i === currentPage ? 'active' : ''}">
                 <a class="page-link" href="#" onclick="searchTable(${i})">${i}</a>
             </li>
         `;
-    }
+                            }
 
-    // ปุ่มไปหน้าถัดไป
-    if (currentPage < totalPages) {
-        pagination.innerHTML += `
+                            // ปุ่มไปหน้าถัดไป
+                            if (currentPage < totalPages) {
+                                pagination.innerHTML += `
             <li class="page-item">
                 <a class="page-link" href="#" onclick="searchTable(${currentPage + 1})">&raquo;</a>
             </li>
         `;
-    }
+                            }
 
-    // // // ปุ่ม ">>" ไปหน้าสุดท้าย
-    //  if (currentPage < totalPages) {
-    //      pagination.innerHTML += `
-    //          <li class="page-item">
-    //             <a class="page-link" href="#" onclick="searchTable(${totalPages})">&raquo;&raquo;</a>
-    //         </li>
-    //      `;
-    //  }
-}
+                            // // // ปุ่ม ">>" ไปหน้าสุดท้าย
+                            //  if (currentPage < totalPages) {
+                            //      pagination.innerHTML += `
+                            //          <li class="page-item">
+                            //             <a class="page-link" href="#" onclick="searchTable(${totalPages})">&raquo;&raquo;</a>
+                            //         </li>
+                            //      `;
+                            //  }
+                        }
 
 
                         // เรียกใช้งานเมื่อมีการป้อนคำค้นหา
@@ -583,6 +601,16 @@ function updatePagination(totalPages, currentPage, search = "") {
                                 }
                             });
                         }
+                        function formatDate(dateString) {
+                            if (!dateString) return "-"; // ถ้าไม่มีค่าให้คืน "-"
+                            const date = new Date(dateString);
+                            if (isNaN(date)) return "-"; // ตรวจสอบความถูกต้องของวันที่
+                            const day = String(date.getDate()).padStart(2, '0');
+                            const month = String(date.getMonth() + 1).padStart(2, '0');
+                            const year = date.getFullYear();
+                            return `${day}/${month}/${year}`;
+                        }
+
                     </script>
                 </body>
 
