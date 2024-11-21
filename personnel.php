@@ -428,72 +428,68 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                                         <tbody>
                                             <?php
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    $person_born = $row["person_born"];
-                                                    $date_accepting = $row["person_dateAccepting"];
-
-                                                    // คำนวณวันที่เกษียณ, อายุปัจจุบัน, อายุราชการที่, และอายุราชการในวันเกษียณ
-                                                    $retirement_date = $current_age = $service_years = $service_years_at_retirement = "";
-
-                                                    if (!empty($person_born)) {
-                                                        // แปลง พ.ศ. เป็น ค.ศ.
-                                                        $person_born_converted = date('Y-m-d', strtotime($person_born . ' -543 years'));
-                                                        $birth_date = new DateTime($person_born_converted);
-
-                                                        // คำนวณวันที่เกษียณ
-                                                        $retirement_date_obj = clone $birth_date;
-                                                        $retirement_date_obj->modify('+60 years');
-                                                        $retirement_date = $retirement_date_obj->format('Y-m-d');
-
-                                                        // คำนวณอายุปัจจุบัน
-                                                        $current_date = new DateTime();
-                                                        $age_interval = $birth_date->diff($current_date);
-                                                        $current_age = $age_interval->y;
-                                                    }
-
-                                                    if (!empty($date_accepting)) {
-                                                        // แปลง พ.ศ. เป็น ค.ศ.
-                                                        $date_accepting_converted = date('Y-m-d', strtotime($date_accepting . ' -543 years'));
-                                                        $accept_date = new DateTime($date_accepting_converted);
-
-                                                        // คำนวณอายุราชการที่
-                                                        $service_interval = $accept_date->diff(new DateTime());
-                                                        $service_years = $service_interval->y . " ปี " . $service_interval->m . " เดือน";
-
-                                                        // คำนวณอายุราชการในวันเกษียณ
-                                                        if (!empty($retirement_date)) {
+                                                  if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                        $person_born = $row["person_born"];
+                                                        $date_accepting = $row["person_dateAccepting"];
+                                                
+                                                        // คำนวณวันที่เกษียณ, อายุปัจจุบัน, อายุราชการที่, และอายุราชการในวันเกษียณ
+                                                        $retirement_date = $current_age = $service_years = $service_years_at_retirement = "";
+                                                
+                                                        if (!empty($person_born)) {
+                                                            // แปลง พ.ศ. เป็น ค.ศ. และแปลงเป็น d/m/Y
+                                                            $person_born_converted = date('Y-m-d', strtotime($person_born . ' -543 years'));
+                                                            $birth_date = new DateTime($person_born_converted);
+                                                            $person_born_display = $birth_date->format('d/m/') . ($birth_date->format('Y') + 543);
+                                                
+                                                            // คำนวณวันที่เกษียณ
                                                             $retirement_date_obj = clone $birth_date;
                                                             $retirement_date_obj->modify('+60 years');
                                                             $retirement_date = $retirement_date_obj->format('d/m/') . ($retirement_date_obj->format('Y') + 543);
+                                                
+                                                            // คำนวณอายุปัจจุบัน
+                                                            $current_date = new DateTime();
+                                                            $age_interval = $birth_date->diff($current_date);
+                                                            $current_age = $age_interval->y;
                                                         }
+                                                
+                                                        if (!empty($date_accepting)) {
+                                                            // แปลง พ.ศ. เป็น ค.ศ. และแปลงเป็น d/m/Y
+                                                            $date_accepting_converted = date('Y-m-d', strtotime($date_accepting . ' -543 years'));
+                                                            $accept_date = new DateTime($date_accepting_converted);
+                                                            $date_accepting_display = $accept_date->format('d/m/') . ($accept_date->format('Y') + 543);
+                                                
+                                                            // คำนวณอายุราชการที่
+                                                            $service_interval = $accept_date->diff(new DateTime());
+                                                            $service_years = $service_interval->y . " ปี " . $service_interval->m . " เดือน";
+                                                        }
+                                                
+                                                        // สร้างแถวตารางพร้อมแสดงค่าที่คำนวณได้
+                                                        echo "<tr>";
+                                                        echo "<td>" . $row["person_id"] . "</td>";
+                                                        echo "<td>" . $row["person_name"] . "</td>";
+                                                        echo "<td>" . $row["person_gender"] . "</td>";
+                                                        echo "<td>" . $row["person_rank"] . "</td>";
+                                                        echo "<td>" . $row["person_formwork"] . "</td>";
+                                                        echo "<td>" . $row["person_level"] . "</td>";
+                                                        echo "<td>" . $row["person_salary"] . "</td>";
+                                                        echo "<td>" . (!empty($person_born_display) ? $person_born_display : "-") . "</td>";
+                                                        echo "<td>" . (!empty($date_accepting_display) ? $date_accepting_display : "-") . "</td>";
+                                                        echo "<td>" . $current_age . " ปี</td>";
+                                                        echo "<td>" . $retirement_date . "</td>";
+                                                        echo "<td>" . $service_years . "</td>";
+                                                        echo "<td>" . $service_years_at_retirement . "</td>";
+                                                        echo "<td>" . $row["person_phone"] . "</td>";
+                                                        echo "<td>";
+                                                        echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-warning btn-sm'>แก้ไข</a>";
+                                                        echo "<a href='#' onclick='confirmDelete(" . $row["person_id"] . ")' class='btn btn-danger btn-sm'>ลบ</a>";
+                                                        echo "</td>";
+                                                        echo "</tr>";
                                                     }
-
-                                                    // สร้างแถวตารางพร้อมแสดงค่าที่คำนวณได้
-                                                    echo "<tr>";
-                                                    echo "<td>" . $row["person_id"] . "</td>";
-                                                    echo "<td>" . $row["person_name"] . "</td>";
-                                                    echo "<td>" . $row["person_gender"] . "</td>";
-                                                    echo "<td>" . $row["person_rank"] . "</td>";
-                                                    echo "<td>" . $row["person_formwork"] . "</td>";
-                                                    echo "<td>" . $row["person_level"] . "</td>";
-                                                    echo "<td>" . $row["person_salary"] . "</td>";
-                                                    echo "<td>" . $row["person_born"] . "</td>";
-                                                    echo "<td>" . $row["person_dateAccepting"] . "</td>";
-                                                    echo "<td>" . $current_age . " ปี</td>";
-                                                    echo "<td>" . $retirement_date . "</td>";
-                                                    echo "<td>" . $service_years . "</td>";
-                                                    echo "<td>" . $service_years_at_retirement . "</td>";
-                                                    echo "<td>" . $row["person_phone"] . "</td>";
-                                                    echo "<td>";
-                                                    echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-warning btn-sm'>แก้ไข</a>";
-                                                    echo "<a href='#' onclick='confirmDelete(" . $row["person_id"] . ")' class='btn btn-danger btn-sm'>ลบ</a>";
-                                                    echo "</td>";
-                                                    echo "</tr>";
+                                                } else {
+                                                    echo "<tr><td colspan='15' class='text-center'>ไม่มีข้อมูล</td></tr>";
                                                 }
-                                            } else {
-                                                echo "<tr><td colspan='15' class='text-center'>ไม่มีข้อมูล</td></tr>";
-                                            }
+                                                
                                             ?>
                                         </tbody>
                                     </table>
