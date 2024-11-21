@@ -65,8 +65,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ban Phai Hospital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="icon" href="photo/รพ.png" type="image/png">
-    <link rel="icon" href="photo/รพ.png" type="image/png">
+    <link rel="icon" href="photo/รพ.png" type="image/png"><link rel="icon" href="photo/รพ.png" type="image/png">
     <link rel="stylesheet" href="./assets/compiled/css/app.css">
     <link rel="stylesheet" href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" href="./assets/compiled/css/iconly.css">
@@ -80,51 +79,37 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
             border-radius: 10px;
         }
 
-        .table th,
-        .table td {
-            text-align: center;
-            /* จัดข้อความให้อยู่กึ่งกลาง */
-            vertical-align: middle;
-            /* จัดข้อความให้อยู่กลางแนวตั้ง */
-            white-space: nowrap;
-            /* ป้องกันคำขาดบรรทัด */
-        }
+        .table th, .table td {
+        text-align: center; /* จัดข้อความให้อยู่กึ่งกลาง */
+        vertical-align: middle; /* จัดข้อความให้อยู่กลางแนวตั้ง */
+        white-space: nowrap; /* ป้องกันคำขาดบรรทัด */
+    }
 
-        .table th {
-            background-color: #0097e6;
-            /* เปลี่ยนสีพื้นหลังหัวตาราง */
-            color: #ffffff;
-            /* สีข้อความหัวตาราง */
-            font-size: 14px;
-            /* ขนาดข้อความ */
-        }
+    .table th {
+        background-color: #0097e6; /* เปลี่ยนสีพื้นหลังหัวตาราง */
+        color: #ffffff; /* สีข้อความหัวตาราง */
+        font-size: 14px; /* ขนาดข้อความ */
+    }
 
-        .table-responsive {
-            overflow-x: auto;
-            /* เพิ่ม scroll bar เมื่อขนาดหน้าจอไม่พอ */
-        }
+    .table-responsive {
+        overflow-x: auto; /* เพิ่ม scroll bar เมื่อขนาดหน้าจอไม่พอ */
+    }
 
-        .table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-        }
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
 
-        .table th:first-child,
-        .table td:first-child {
-            border-top-left-radius: 10px;
-            /* มุมซ้ายบน */
-            border-bottom-left-radius: 10px;
-            /* มุมซ้ายล่าง */
-        }
+    .table th:first-child, .table td:first-child {
+        border-top-left-radius: 10px; /* มุมซ้ายบน */
+        border-bottom-left-radius: 10px; /* มุมซ้ายล่าง */
+    }
 
-        .table th:last-child,
-        .table td:last-child {
-            border-top-right-radius: 10px;
-            /* มุมขวาบน */
-            border-bottom-right-radius: 10px;
-            /* มุมขวาล่าง */
-        }
+    .table th:last-child, .table td:last-child {
+        border-top-right-radius: 10px; /* มุมขวาบน */
+        border-bottom-right-radius: 10px; /* มุมขวาล่าง */
+    }   
 
         .custom-title {
             font-size: 24px;
@@ -201,7 +186,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                     <ul class="menu">
                         <li class="sidebar-title">เมนู</li>
 
-                        <li class="sidebar-item active ">
+                        <li
+                            class="sidebar-item active ">
                             <a href="dashboard.php" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>หน้าหลัก</span>
@@ -210,7 +196,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         </li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li
+                            class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="fas fa-user-cog"></i>
                                 <span>บุคลากร</span>
@@ -239,7 +226,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         </li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li
+                            class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="fa fa-address-card"></i>
                                 <span>การลา</span>
@@ -284,7 +272,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         </li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li
+                            class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 <span>Layouts</span>
@@ -324,7 +313,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         <li class="sidebar-title">อื่นๆ</li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li
+                            class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="	fas fa-cog"></i>
                                 <span>ตั้งค่า</span>
@@ -364,7 +354,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
 
                             </ul>
-                        <li class="sidebar-item activee ">
+                        <li
+                            class="sidebar-item activee ">
                             <a href="logout.php" class='sidebar-link'>
                                 <i class="	fas fa-power-off"></i>
                                 <span>ออกจากระบบ</span>
@@ -391,14 +382,12 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                         <!-- การ์ดสำหรับตาราง -->
                         <div class="card shadow-sm">
-                            <div class="card-header bg-primary text-white"
-                                style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                            <div class="card-header bg-primary text-white" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
                                 <div class="d-flex justify-content-between align-items-center">
 
                                     <span class="custom-title">ข้อมูลบุคลากร</span>
                                     <div style="max-width: 300px;">
-                                        <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..."
-                                            onkeyup="searchTable()">
+                                        <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..." onkeyup="searchTable()">
                                     </div>
                                 </div>
                             </div>
@@ -408,7 +397,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                     <table class="table table-bordered table-hover table-striped" id="personnelTable">
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>หมายเลขบัตรประชาชน</th>
+                                                <th>หมายเลขบัตรประชาชน 13 หลัก</th>
                                                 <th>ชื่อ-สกุล</th>
                                                 <th>เพศ</th>
                                                 <th>ตำแหน่ง</th>
@@ -417,60 +406,14 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                                 <th>เงินเดือน</th>
                                                 <th>วันเกิด</th>
                                                 <th>วันที่บรรจุ</th>
-                                                <th>อายุ (ปี)</th>
-                                                <th>วันที่เกษียณ</th>
-                                                <th>อายุราชการในวันเกษียณ</th>
-                                                <th>อายุราชการคงเหลือ</th>
                                                 <th>โทรศัพท์</th>
                                                 <th>แอคชั่น</th>
                                             </tr>
                                         </thead>
-
                                         <tbody>
                                             <?php
                                             if ($result->num_rows > 0) {
                                                 while ($row = $result->fetch_assoc()) {
-                                                    $person_born = $row["person_born"];
-                                                    $date_accepting = $row["person_dateAccepting"];
-
-                                                    // กำหนดค่าตัวแปร
-                                                    $retirement_date = $current_age = $service_remaining = $service_years_at_retirement = "";
-
-                                                    if (!empty($person_born)) {
-                                                        // แปลง พ.ศ. เป็น ค.ศ.
-                                                        $person_born_converted = date('Y-m-d', strtotime($person_born . ' -543 years'));
-                                                        $birth_date = new DateTime($person_born_converted);
-
-                                                        // คำนวณวันที่เกษียณราชการ (1 ตุลาคม ในปีที่อายุครบ 60)
-                                                        $retirement_date_obj = new DateTime();
-                                                        $retirement_date_obj->setDate($birth_date->format('Y') + 60, 10, 1);
-                                                        $retirement_date = $retirement_date_obj->format('d/m/') . ($retirement_date_obj->format('Y') + 543); // เพิ่ม 543 ให้ปี
-                                            
-                                                        // คำนวณอายุปัจจุบัน
-                                                        $current_date = new DateTime();
-                                                        $age_interval = $birth_date->diff($current_date);
-                                                        $current_age = $age_interval->y . " ปี " . $age_interval->m . " เดือน " . $age_interval->d . " วัน";
-                                                    }
-
-                                                    if (!empty($date_accepting)) {
-                                                        // แปลง พ.ศ. เป็น ค.ศ.
-                                                        $date_accepting_converted = date('Y-m-d', strtotime($date_accepting . ' -543 years'));
-                                                        $accept_date = new DateTime($date_accepting_converted);
-
-                                                        // คำนวณอายุราชการคงเหลือ
-                                                        if (!empty($retirement_date)) {
-                                                            $service_remaining_interval = $current_date->diff($retirement_date_obj);
-                                                            $service_remaining = $service_remaining_interval->y . " ปี " . $service_remaining_interval->m . " เดือน " . $service_remaining_interval->d . " วัน";
-                                                        }
-
-                                                        // คำนวณอายุราชการในวันเกษียณ
-                                                        if (!empty($retirement_date)) {
-                                                            $service_interval_retirement = $accept_date->diff($retirement_date_obj);
-                                                            $service_years_at_retirement = $service_interval_retirement->y . " ปี " . $service_interval_retirement->m . " เดือน " . $service_interval_retirement->d . " วัน";
-                                                        }
-                                                    }
-
-                                                    // แสดงข้อมูลในตาราง
                                                     echo "<tr>";
                                                     echo "<td>" . $row["person_id"] . "</td>";
                                                     echo "<td>" . $row["person_name"] . "</td>";
@@ -479,29 +422,26 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                                     echo "<td>" . $row["person_formwork"] . "</td>";
                                                     echo "<td>" . $row["person_level"] . "</td>";
                                                     echo "<td>" . $row["person_salary"] . "</td>";
-                                                    echo "<td>" . (!empty($person_born) ? date('d/m/Y', strtotime($person_born)) : '-') . "</td>";
-                                                    echo "<td>" . (!empty($date_accepting) ? date('d/m/Y', strtotime($date_accepting)) : '-') . "</td>";
-                                                    echo "<td>" . $current_age . "</td>";
-                                                    echo "<td>" . $retirement_date . "</td>";
-                                                    echo "<td>" . $service_years_at_retirement . "</td>";
-                                                    echo "<td>" . $service_remaining . "</td>";
+                                                    echo "<td>" . $row["person_born"] . "</td>";
+                                                    echo "<td>" . $row["person_dateAccepting"] . "</td>";
                                                     echo "<td>" . $row["person_phone"] . "</td>";
                                                     echo "<td>";
-                                                    echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-warning btn-sm'>แก้ไข</a>";
-                                                    echo "<a href='#' onclick='confirmDelete(" . $row["person_id"] . ")' class='btn btn-danger btn-sm'>ลบ</a>";
+                                                    echo "<div class='d-flex'>";
+                                                    echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-warning me-1'>แก้ไข</a>";
+                                                    echo "<a href='#' class='btn btn-sm btn-danger' onclick=\"confirmDelete(" . $row["person_id"] . ")\">ลบ</a>";
+                                                    echo "</div>";
                                                     echo "</td>";
                                                     echo "</tr>";
                                                 }
                                             } else {
-                                                echo "<tr><td colspan='15' class='text-center'>ไม่มีข้อมูล</td></tr>";
+                                                echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
                                             }
                                             ?>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="card-footer"
-                                style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                            <div class="card-footer" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination justify-content-center">
                                         <?php if ($page > 1): ?>
@@ -515,8 +455,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                         <?php endif; ?>
 
                                         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                            <li class="page-item <?php if ($i == $page)
-                                                echo 'active'; ?>">
+                                            <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
                                                 <a class="page-link"
                                                     href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
                                             </li>
@@ -539,19 +478,19 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
 
                     <script>
-                        function searchTable(page = 1) {
-                            var search = document.getElementById("tableSearch").value; // ดึงค่าค้นหา
-                            var url = `personnel.php?search=${encodeURIComponent(search)}&page=${page}&ajax=true`;
+                      function searchTable(page = 1) {
+    var search = document.getElementById("tableSearch").value; // ดึงค่าค้นหา
+    var url = `personnel.php?search=${encodeURIComponent(search)}&page=${page}&ajax=true`;
 
-                            fetch(url)
-                                .then(response => response.json())
-                                .then(data => {
-                                    const tbody = document.querySelector("#personnelTable tbody");
-                                    tbody.innerHTML = ""; // ล้างข้อมูลเดิมในตาราง
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector("#personnelTable tbody");
+            tbody.innerHTML = ""; // ล้างข้อมูลเดิมในตาราง
 
-                                    // วนลูปเพื่อแสดงข้อมูลในตารางใหม่
-                                    data.data.forEach((row, index) => {
-                                        tbody.innerHTML += `
+            // วนลูปเพื่อแสดงข้อมูลในตารางใหม่
+            data.data.forEach((row, index) => {
+                tbody.innerHTML += `
                     <tr>
                         <td>${row.person_id}</td>
                         <td>${row.person_name}</td>
@@ -561,6 +500,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                         <td>${row.person_level}</td>
                         <td>${row.person_salary}</td>
                         <td>${row.person_born}</td>
+                        <td>${row.person_dateAccepting}</td>
                         <td>${row.person_phone}</td>
                         <td>
                             <div class='d-flex'>
@@ -570,55 +510,55 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                         </td>
                     </tr>
                 `;
-                                    });
+            });
 
-                                    // อัปเดต pagination พร้อมคำค้นหา
-                                    updatePagination(data.total_pages, page, search);
-                                })
-                                .catch(error => console.error('Error:', error));
-                        }
+            // อัปเดต pagination พร้อมคำค้นหา
+            updatePagination(data.total_pages, page, search);
+        })
+        .catch(error => console.error('Error:', error));
+}
 
 
-                        function updatePagination(totalPages, currentPage, search = "") {
-                            const pagination = document.querySelector(".pagination");
-                            pagination.innerHTML = ""; // ล้าง pagination เดิม
+function updatePagination(totalPages, currentPage, search = "") {
+    const pagination = document.querySelector(".pagination");
+    pagination.innerHTML = ""; // ล้าง pagination เดิม
 
-                            // ปุ่มไปหน้าก่อนหน้า
-                            if (currentPage > 1) {
-                                pagination.innerHTML += `
+    // ปุ่มไปหน้าก่อนหน้า
+    if (currentPage > 1) {
+        pagination.innerHTML += `
             <li class="page-item">
                 <a class="page-link" href="#" onclick="searchTable(${currentPage - 1})">&laquo;</a>
             </li>
         `;
-                            }
+    }
 
-                            // สร้าง pagination
-                            for (let i = 1; i <= totalPages; i++) {
-                                pagination.innerHTML += `
+    // สร้าง pagination
+    for (let i = 1; i <= totalPages; i++) {
+        pagination.innerHTML += `
             <li class="page-item ${i === currentPage ? 'active' : ''}">
                 <a class="page-link" href="#" onclick="searchTable(${i})">${i}</a>
             </li>
         `;
-                            }
+    }
 
-                            // ปุ่มไปหน้าถัดไป
-                            if (currentPage < totalPages) {
-                                pagination.innerHTML += `
+    // ปุ่มไปหน้าถัดไป
+    if (currentPage < totalPages) {
+        pagination.innerHTML += `
             <li class="page-item">
                 <a class="page-link" href="#" onclick="searchTable(${currentPage + 1})">&raquo;</a>
             </li>
         `;
-                            }
+    }
 
-                            // // // ปุ่ม ">>" ไปหน้าสุดท้าย
-                            //  if (currentPage < totalPages) {
-                            //      pagination.innerHTML += `
-                            //          <li class="page-item">
-                            //             <a class="page-link" href="#" onclick="searchTable(${totalPages})">&raquo;&raquo;</a>
-                            //         </li>
-                            //      `;
-                            //  }
-                        }
+    // // // ปุ่ม ">>" ไปหน้าสุดท้าย
+    //  if (currentPage < totalPages) {
+    //      pagination.innerHTML += `
+    //          <li class="page-item">
+    //             <a class="page-link" href="#" onclick="searchTable(${totalPages})">&raquo;&raquo;</a>
+    //         </li>
+    //      `;
+    //  }
+}
 
 
                         // เรียกใช้งานเมื่อมีการป้อนคำค้นหา
