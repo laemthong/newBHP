@@ -527,7 +527,7 @@ $conn->close();
 
                                     <div class="col-md-6">
                                         <label for="person_specialQualification"
-                                            class="form-label">วุฒิและพรสวรรค์</label>
+                                            class="form-label">วุฒิเฉพาะทาง</label>
                                         <input type="text" class="form-control" id="person_specialQualification"
                                             name="person_specialQualification"
                                             value="<?php echo $row['person_specialQualification']; ?>">
