@@ -463,9 +463,9 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                                                         // คำนวณอายุราชการในวันเกษียณ
                                                         if (!empty($retirement_date)) {
-                                                            $retirement_date_obj = new DateTime($retirement_date);
-                                                            $service_interval_retirement = $accept_date->diff($retirement_date_obj);
-                                                            $service_years_at_retirement = $service_interval_retirement->y . " ปี " . $service_interval_retirement->m . " เดือน";
+                                                            $retirement_date_obj = clone $birth_date;
+                                                            $retirement_date_obj->modify('+60 years');
+                                                            $retirement_date = $retirement_date_obj->format('d/m/') . ($retirement_date_obj->format('Y') + 543);
                                                         }
                                                     }
 
