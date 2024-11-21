@@ -304,7 +304,7 @@ $result = $conn->query($sql);
                                     <option value="">เลือกเพศ</option>
                                     <option value="ชาย">ชาย</option>
                                     <option value="หญิง">หญิง</option>
-                                    
+
                                 </select>
                             </div>
 
@@ -359,87 +359,113 @@ $result = $conn->query($sql);
                                 <label class="form-label">ชื่อเล่น:</label>
                                 <input type="text" name="person_nickname" class="form-control" maxlength="255">
                             </div>
-
                             <div class="col-md-6">
-    <label class="form-label">วันเดือนปีเกิด:</label>
-    <div class="d-flex">
-        <!-- Dropdown สำหรับวัน -->
-        <select name="born_day" class="form-control me-2">
-            <option value="">วัน</option>
-            <?php for ($i = 1; $i <= 31; $i++) { ?>
-                <option value="<?= $i ?>"><?= $i ?></option>
-            <?php } ?>
-        </select>
+                                <label class="form-label">วันเดือนปีเกิด:</label>
+                                <div class="d-flex gap-2">
+                                    <!-- ช่องเลือกวันที่ -->
+                                    <select name="day" class="form-select" required>
+                                        <option value="">วัน</option>
+                                        <?php for ($i = 1; $i <= 31; $i++): ?>
+                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                        <?php endfor; ?>
+                                    </select>
 
-        <!-- Dropdown สำหรับเดือน -->
-        <select name="born_month" class="form-control me-2">
-            <option value="">เดือน</option>
-            <?php 
-            $months = [
-                "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", 
-                "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", 
-                "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
-            ];
-            foreach ($months as $index => $month) { ?>
-                <option value="<?= $index + 1 ?>"><?= $month ?></option>
-            <?php } ?>
-        </select>
+                                    <!-- ช่องเลือกเดือน -->
+                                    <select name="month" class="form-select" required>
+                                        <option value="">เดือน</option>
+                                        <?php
+                                        $months = [
+                                            "มกราคม",
+                                            "กุมภาพันธ์",
+                                            "มีนาคม",
+                                            "เมษายน",
+                                            "พฤษภาคม",
+                                            "มิถุนายน",
+                                            "กรกฎาคม",
+                                            "สิงหาคม",
+                                            "กันยายน",
+                                            "ตุลาคม",
+                                            "พฤศจิกายน",
+                                            "ธันวาคม"
+                                        ];
+                                        foreach ($months as $key => $month): ?>
+                                            <option value="<?= $key + 1 ?>"><?= $month ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
 
-        <!-- Dropdown สำหรับปี -->
-        <select name="born_year" class="form-control">
-            <option value="">ปี</option>
-            <?php 
-            $currentYear = date('Y') + 543; // เปลี่ยน ค.ศ. เป็น พ.ศ.
-            for ($i = $currentYear; $i >= $currentYear - 100; $i--) { ?>
-                <option value="<?= $i ?>"><?= $i ?></option>
-            <?php } ?>
-        </select>
-    </div>
-</div>
-
-
-                            <div class="col-md-6">
-                                <label class="form-label">เลขที่ตำแหน่ง:</label>
-                                <input type="number" name="person_positionNum" class="form-control">
+                                    <!-- ช่องเลือกปี -->
+                                    <select name="year" class="form-select" required>
+                                        <option value="">ปี</option>
+                                        <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
+                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </div>
                             </div>
 
-                           
                             <div class="col-md-6">
-    <label class="form-label">วันที่บรรจุ:</label>
-    <div class="d-flex">
-        <!-- Dropdown สำหรับวัน -->
-        <select name="person_dateAccepting_day" class="form-control me-2">
-            <option value="">วัน</option>
-            <?php for ($i = 1; $i <= 31; $i++) { ?>
-                <option value="<?= $i ?>"><?= $i ?></option>
-            <?php } ?>
-        </select>
+                                <label class="form-label">อายุราชการที่เหลือคือ:</label>
+                                <input type="text" name="service_remaining" class="form-control" maxlength="255" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">วันที่บรรจุ:</label>
+                                <div class="d-flex gap-2">
+                                    <!-- ช่องเลือกวันที่ -->
+                                    <select name="accept_day" class="form-select" required>
+                                        <option value="">วัน</option>
+                                        <?php for ($i = 1; $i <= 31; $i++): ?>
+                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                        <?php endfor; ?>
+                                    </select>
 
-        <!-- Dropdown สำหรับเดือน -->
-        <select name="person_dateAccepting_month" class="form-control me-2">
-            <option value="">เดือน</option>
-            <?php 
-            $months = [
-                "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", 
-                "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", 
-                "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
-            ];
-            foreach ($months as $index => $month) { ?>
-                <option value="<?= $index + 1 ?>"><?= $month ?></option>
-            <?php } ?>
-        </select>
+                                    <!-- ช่องเลือกเดือน -->
+                                    <select name="accept_month" class="form-select" required>
+                                        <option value="">เดือน</option>
+                                        <?php
+                                        $months = [
+                                            "มกราคม",
+                                            "กุมภาพันธ์",
+                                            "มีนาคม",
+                                            "เมษายน",
+                                            "พฤษภาคม",
+                                            "มิถุนายน",
+                                            "กรกฎาคม",
+                                            "สิงหาคม",
+                                            "กันยายน",
+                                            "ตุลาคม",
+                                            "พฤศจิกายน",
+                                            "ธันวาคม"
+                                        ];
+                                        foreach ($months as $key => $month): ?>
+                                            <option value="<?= $key + 1 ?>"><?= $month ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
 
-        <!-- Dropdown สำหรับปี -->
-        <select name="person_dateAccepting_year" class="form-control">
-            <option value="">ปี</option>
-            <?php 
-            $currentYear = date('Y') + 543; // แปลง ค.ศ. เป็น พ.ศ.
-            for ($i = $currentYear; $i >= $currentYear - 100; $i--) { ?>
-                <option value="<?= $i ?>"><?= $i ?></option>
-            <?php } ?>
-        </select>
-    </div>
-</div>
+                                    <!-- ช่องเลือกปี -->
+                                    <select name="accept_year" class="form-select" required>
+                                        <option value="">ปี</option>
+                                        <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
+                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                        <?php endfor; ?>
+                                    </select>   
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">อายุของคุณคือ:</label>
+                                <input type="text" name="age" class="form-control" maxlength="255" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">วันที่คุณเกษียณอายุราชการคือ:</label>
+                                <input type="text" name="retirement_date" class="form-control" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">อายุราชการในวันเกษียณของคุณคือ:</label>
+                                <input type="text" name="service_at_retirement" class="form-control" maxlength="255" readonly>
+                            </div>
+
+
 
                             <div class="col-md-6">
                                 <label class="form-label">ประเภทการจ้าง:</label>
@@ -456,6 +482,8 @@ $result = $conn->query($sql);
                                     <option value="ลูกจ้างรายคาบ">ลูกจ้างรายคาบ</option>
                                 </select>
                             </div>
+
+
 
                             <div class="col-md-6">
                                 <label class="form-label">เงินประจำตำแหน่ง:</label>
@@ -491,20 +519,14 @@ $result = $conn->query($sql);
                                     pattern="[0-9]{13}" title="กรุณากรอกเลขบัตร 13 หลัก">
                             </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">วันหมดอายุบัตรข้าราชการ:</label>
-                                <input type="text" name="person_CardExpired" class="form-control">
-                            </div>
-                        </div>
 
-                        <button type="submit" class="btn btn-success mt-4 w-100">บันทึกข้อมูล</button>
+
+                            <button type="submit" class="btn btn-success mt-4 w-100">บันทึกข้อมูล</button>
                     </form>
                 </div>
 
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
                 <script>
-
-
                     // ฟังก์ชันสำหรับตรวจสอบความถูกต้องของฟอร์ม
                     function validateForm() {
                         const form = document.getElementById('personnelForm');
@@ -541,10 +563,10 @@ $result = $conn->query($sql);
                     }
 
                     // ฟังก์ชันสำหรับจัดการการยืนยันก่อนบันทึก
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         const form = document.getElementById('personnelForm');
 
-                        form.addEventListener('submit', function (event) {
+                        form.addEventListener('submit', function(event) {
                             event.preventDefault(); // หยุดการส่งฟอร์มแบบปกติ
 
                             if (!validateForm()) {
@@ -570,6 +592,105 @@ $result = $conn->query($sql);
                             });
                         });
                     });
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Flatpickr สำหรับวันเดือนปีเกิด
+                        flatpickr("#dateBornPicker", {
+                            altInput: true,
+                            altFormat: "j F Y",
+                            dateFormat: "Y-m-d",
+                            locale: "th", // ใช้ภาษาไทย
+                        });
+
+                        // Flatpickr สำหรับวันที่บรรจุ
+                        flatpickr("#dateAcceptingPicker", {
+                            altInput: true,
+                            altFormat: "j F Y",
+                            dateFormat: "Y-m-d",
+                            locale: "th", // ใช้ภาษาไทย
+                        });
+                    });
+                    document.addEventListener('DOMContentLoaded', function () {
+    // อ้างอิงถึงฟิลด์
+    const dayField = document.querySelector('select[name="day"]');
+    const monthField = document.querySelector('select[name="month"]');
+    const yearField = document.querySelector('select[name="year"]');
+    const acceptDayField = document.querySelector('select[name="accept_day"]');
+    const acceptMonthField = document.querySelector('select[name="accept_month"]');
+    const acceptYearField = document.querySelector('select[name="accept_year"]');
+
+    const ageField = document.querySelector('input[name="age"]');
+    const retirementDateField = document.querySelector('input[name="retirement_date"]');
+    const serviceAtRetirementField = document.querySelector('input[name="service_at_retirement"]');
+    const serviceRemainingField = document.querySelector('input[name="service_remaining"]');
+
+    // คำนวณอายุ และอายุราชการที่เหลือ
+    function calculateDetails() {
+        const retirementAge = 60; // กำหนดอายุเกษียณราชการ
+        const currentDate = new Date(); // วันที่ปัจจุบัน
+
+        // รับค่าจากฟิลด์วันเดือนปีเกิด
+        const birthDay = parseInt(dayField.value);
+        const birthMonth = parseInt(monthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
+        const birthYear = parseInt(yearField.value);
+
+        // รับค่าจากฟิลด์วันที่บรรจุ
+        const acceptDay = parseInt(acceptDayField.value);
+        const acceptMonth = parseInt(acceptMonthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
+        const acceptYear = parseInt(acceptYearField.value);
+
+        if (!birthDay || !birthMonth || !birthYear || !acceptDay || !acceptMonth || !acceptYear) return;
+
+        const birthDate = new Date(birthYear - 543, birthMonth, birthDay); // แปลงเป็นปี ค.ศ.
+        const acceptDate = new Date(acceptYear - 543, acceptMonth, acceptDay); // แปลงเป็นปี ค.ศ.
+        const retirementDate = new Date(birthYear - 543 + retirementAge, 9, 30); // กำหนดวันที่เกษียณ (30 กันยายน)
+
+        // คำนวณอายุปัจจุบัน
+        const age = calculateAge(birthDate, currentDate);
+
+        // คำนวณอายุราชการในวันเกษียณ
+        const serviceAtRetirement = calculateAge(acceptDate, retirementDate);
+
+        // คำนวณอายุราชการที่เหลือ
+        const serviceRemaining = calculateAge(currentDate, retirementDate);
+
+        // อัปเดตค่าลงในฟิลด์
+        ageField.value = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
+        retirementDateField.value = `${retirementDate.getDate()} ตุลาคม ${retirementDate.getFullYear() + 543}`;
+        serviceAtRetirementField.value = `${serviceAtRetirement.years} ปี ${serviceAtRetirement.months} เดือน ${serviceAtRetirement.days} วัน`;
+        serviceRemainingField.value = `${serviceRemaining.years} ปี ${serviceRemaining.months} เดือน ${serviceRemaining.days} วัน`;
+    }
+
+    // ฟังก์ชันคำนวณช่วงเวลา
+    function calculateAge(startDate, endDate) {
+        const years = endDate.getFullYear() - startDate.getFullYear();
+        const months = endDate.getMonth() - startDate.getMonth();
+        const days = endDate.getDate() - startDate.getDate();
+
+        let calculatedYears = years;
+        let calculatedMonths = months;
+        let calculatedDays = days;
+
+        if (calculatedDays < 0) {
+            calculatedMonths--;
+            calculatedDays += 30; // ประมาณจำนวนวันในเดือน
+        }
+        if (calculatedMonths < 0) {
+            calculatedYears--;
+            calculatedMonths += 12;
+        }
+
+        return { years: calculatedYears, months: calculatedMonths, days: calculatedDays };
+    }
+
+    // เพิ่ม Event Listener
+    dayField.addEventListener('change', calculateDetails);
+    monthField.addEventListener('change', calculateDetails);
+    yearField.addEventListener('change', calculateDetails);
+    acceptDayField.addEventListener('change', calculateDetails);
+    acceptMonthField.addEventListener('change', calculateDetails);
+    acceptYearField.addEventListener('change', calculateDetails);
+});
+
                 </script>
 
 
