@@ -15,25 +15,25 @@ try {
         $person_salary = isset($_POST['person_salary']) ? floatval($_POST['person_salary']) : null;
         $person_nickname = $_POST['person_nickname'] ?? null;
 
-       // แปลงวันที่เกิด (person_born)
-$born_day = $_POST['day'] ?? null;
-$born_month = $_POST['month'] ?? null;
-$born_year_thai = $_POST['year'] ?? null;
-if ($born_day && $born_month && $born_year_thai) {
-    $person_born = sprintf("%04d-%02d-%02d", intval($born_year_thai), intval($born_month), intval($born_day));
-} else {
-    $person_born = null;
-}
+        // แปลงวันที่เกิด (person_born)
+        $born_day = $_POST['day'] ?? null;
+        $born_month = $_POST['month'] ?? null;
+        $born_year_thai = $_POST['year'] ?? null;
+        if ($born_day && $born_month && $born_year_thai) {
+            $person_born = sprintf("%04d-%02d-%02d", intval($born_year_thai - 543), intval($born_month), intval($born_day));
+        } else {
+            $person_born = null;
+        }
 
-// แปลงวันที่บรรจุ (person_dateAccepting)
-$accept_day = $_POST['accept_day'] ?? null;
-$accept_month = $_POST['accept_month'] ?? null;
-$accept_year_thai = $_POST['accept_year'] ?? null;
-if ($accept_day && $accept_month && $accept_year_thai) {
-    $person_dateAccepting = sprintf("%04d-%02d-%02d", intval($accept_year_thai), intval($accept_month), intval($accept_day));
-} else {
-    $person_dateAccepting = null;
-}
+        // แปลงวันที่บรรจุ (person_dateAccepting)
+        $accept_day = $_POST['accept_day'] ?? null;
+        $accept_month = $_POST['accept_month'] ?? null;
+        $accept_year_thai = $_POST['accept_year'] ?? null;
+        if ($accept_day && $accept_month && $accept_year_thai) {
+            $person_dateAccepting = sprintf("%04d-%02d-%02d", intval($accept_year_thai - 543), intval($accept_month), intval($accept_day));
+        } else {
+            $person_dateAccepting = null;
+        }
 
         // ข้อมูลเพิ่มเติม
         $person_positionNum = isset($_POST['person_positionNum']) ? intval($_POST['person_positionNum']) : null;
@@ -43,7 +43,22 @@ if ($accept_day && $accept_month && $accept_year_thai) {
         $person_specialQualification = $_POST['person_specialQualification'] ?? null;
         $person_blood = $_POST['person_blood'] ?? null;
         $person_cardNum = $_POST['person_cardNum'] ?? null;
-        $person_CardExpired = !empty($_POST['person_CardExpired']) ? date("Y-m-d", strtotime($_POST['person_CardExpired'])) : null;
+        // แปลงวันที่หมดอายุบัตร (person_CardExpired)
+        $Expired_day = $_POST['Expired_day'] ?? null;
+        $Expired_month = $_POST['Expired_month'] ?? null;
+        $Expired_year_thai = $_POST['Expired_year'] ?? null;
+        if ($Expired_day && $Expired_month && $Expired_year_thai) {
+            $person_CardExpired = sprintf("%04d-%02d-%02d", intval($Expired_year_thai - 543), intval($Expired_month), intval($Expired_day));
+        } else {
+            $person_CardExpired = null;
+        }
+
+
+        // ข้อมูลใหม่ที่เพิ่ม
+        $person_DocNumber = $_POST['person_DocNumber'] ?? null;
+        $person_SuppNumber = $_POST['person_SuppNumber'] ?? null;
+        $person_POSVNumber = $_POST['person_POSVNumber'] ?? null;
+
 
         // ตรวจสอบข้อมูลที่จำเป็น
         if (!$person_id || !$person_name || !$person_gender || !$person_born || !$person_dateAccepting) {
@@ -52,11 +67,12 @@ if ($accept_day && $accept_month && $accept_year_thai) {
 
         // SQL สำหรับเพิ่มข้อมูล
         $sql = "INSERT INTO personnel (
-                    person_id, person_name, person_gender, person_rank, person_formwork, person_level,
-                    person_salary, person_nickname, person_born, person_positionNum, person_dateAccepting,
-                    person_typeHire, person_positionAllowance, person_phone, person_specialQualification,
-                    person_blood, person_cardNum, person_CardExpired
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            person_id, person_name, person_gender, person_rank, person_formwork, person_level,
+            person_salary, person_nickname, person_born, person_positionNum, person_dateAccepting,
+            person_typeHire, person_positionAllowance, person_phone, person_specialQualification,
+            person_blood, person_cardNum, person_CardExpired, person_DocNumber, person_SuppNumber,
+            person_POSVNumber, person_CardExpired
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // เตรียมคำสั่ง SQL
         $stmt = $conn->prepare($sql);
@@ -67,7 +83,7 @@ if ($accept_day && $accept_month && $accept_year_thai) {
 
         // ผูกตัวแปรกับคำสั่ง SQL
         $stmt->bind_param(
-            "isssssdssisidsssss",
+            "isssssdssisidsssssss",
             $person_id,
             $person_name,
             $person_gender,
@@ -85,6 +101,10 @@ if ($accept_day && $accept_month && $accept_year_thai) {
             $person_specialQualification,
             $person_blood,
             $person_cardNum,
+            $person_CardExpired,
+            $person_DocNumber,
+            $person_SuppNumber,
+            $person_POSVNumber,
             $person_CardExpired
         );
 
@@ -98,8 +118,10 @@ if ($accept_day && $accept_month && $accept_year_thai) {
 } catch (Exception $e) {
     $_SESSION['error'] = $e->getMessage();
 } finally {
-    if (isset($stmt)) $stmt->close();
-    if (isset($conn)) $conn->close();
+    if (isset($stmt))
+        $stmt->close();
+    if (isset($conn))
+        $conn->close();
     header("Location: form_person.php");
     exit();
 }

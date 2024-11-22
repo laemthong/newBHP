@@ -310,7 +310,7 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">ตำแหน่ง:</label>
-                                <input type="text" name="person_rank" class="form-control" maxlength="255">
+                                <input type="text" name="person_rank" class="form-control" maxlength="255" required>
                             </div>
 
                             <div class="col-md-6">
@@ -347,17 +347,34 @@ $result = $conn->query($sql);
                                     <option value="ระดับปฏิบัติการ">ระดับปฏิบัติการ</option>
                                 </select>
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><span class="text-danger">*</span> เลข จ.18:</label>
+                                <input type="text" name="person_DocNumber" class="form-control" maxlength="255"
+                                    placeholder="กรอกเลขจ.18" required>
+                            </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label"><span class="text-danger">*</span> เลขที่ประกอบ:</label>
+                                <input type="text" name="person_SuppNumber" class="form-control" maxlength="255"
+                                    placeholder="กรอกเลขที่ประกอบ" required>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">หมายเลข พอ.ส.ว.:</label>
+                                <input type="text" name="person_POSVNumber" class="form-control" maxlength="255"
+                                    placeholder="กรอกหมายเลข พอ.ส.ว." required>
+                            </div>
 
 
                             <div class="col-md-6">
                                 <label class="form-label">เงินเดือน:</label>
-                                <input type="number" name="person_salary" class="form-control" step="0.01">
+                                <input type="number" name="person_salary" class="form-control" step="0.01" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">ชื่อเล่น:</label>
-                                <input type="text" name="person_nickname" class="form-control" maxlength="255">
+                                <input type="text" name="person_nickname" class="form-control" maxlength="255" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันเดือนปีเกิด:</label>
@@ -405,7 +422,8 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">อายุราชการที่เหลือคือ:</label>
-                                <input type="text" name="service_remaining" class="form-control" maxlength="255" readonly>
+                                <input type="text" name="service_remaining" class="form-control" maxlength="255"
+                                    readonly>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันที่บรรจุ:</label>
@@ -447,7 +465,7 @@ $result = $conn->query($sql);
                                         <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
                                             <option value="<?= $i ?>"><?= $i ?></option>
                                         <?php endfor; ?>
-                                    </select>   
+                                    </select>
                                 </div>
                             </div>
 
@@ -462,7 +480,8 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">อายุราชการในวันเกษียณของคุณคือ:</label>
-                                <input type="text" name="service_at_retirement" class="form-control" maxlength="255" readonly>
+                                <input type="text" name="service_at_retirement" class="form-control" maxlength="255"
+                                    readonly>
                             </div>
 
 
@@ -487,24 +506,25 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">เงินประจำตำแหน่ง:</label>
-                                <input type="number" name="person_positionAllowance" class="form-control" step="0.01">
+                                <input type="number" name="person_positionAllowance" class="form-control" step="0.01"
+                                    required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">เบอร์โทรศัพท์:</label>
                                 <input type="tel" name="person_phone" class="form-control" pattern="[0-9]{10}"
-                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก">
+                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">วุฒิพิเศษทางการ:</label>
                                 <input type="text" name="person_specialQualification" class="form-control"
-                                    maxlength="255">
+                                    maxlength="255" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">กรุ๊ปเลือด:</label>
-                                <select name="person_blood" class="form-select">
+                                <select name="person_blood" class="form-select" required>
                                     <option value="">เลือกกรุ๊ปเลือด</option>
                                     <option value="A">A</option>
                                     <option value="B">B</option>
@@ -517,6 +537,50 @@ $result = $conn->query($sql);
                                 <label class="form-label">เลขที่บัตรข้าราชการ:</label>
                                 <input type="text" name="person_cardNum" class="form-control" maxlength="13"
                                     pattern="[0-9]{13}" title="กรุณากรอกเลขบัตร 13 หลัก">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">วันที่หมดอายุบัตรราชการ:</label>
+                                <div class="d-flex gap-2">
+                                    <!-- ช่องเลือกวันที่ -->
+                                    <select name="Expired_day" class="form-select" required>
+                                        <option value="">วัน</option>
+                                        <?php for ($i = 1; $i <= 31; $i++): ?>
+                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                        <?php endfor; ?>
+                                    </select>
+
+                                    <!-- ช่องเลือกเดือน -->
+                                    <select name="Expired_month" class="form-select" required>
+                                        <option value="">เดือน</option>
+                                        <?php
+                                        $months = [
+                                            "มกราคม",
+                                            "กุมภาพันธ์",
+                                            "มีนาคม",
+                                            "เมษายน",
+                                            "พฤษภาคม",
+                                            "มิถุนายน",
+                                            "กรกฎาคม",
+                                            "สิงหาคม",
+                                            "กันยายน",
+                                            "ตุลาคม",
+                                            "พฤศจิกายน",
+                                            "ธันวาคม"
+                                        ];
+                                        foreach ($months as $key => $month): ?>
+                                            <option value="<?= $key + 1 ?>"><?= $month ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+
+                                    <!-- ช่องเลือกปี -->
+                                    <select name="Expired_year" class="form-select" required>
+                                        <option value="">ปี</option>
+                                        <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
+                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </div>
                             </div>
 
 
@@ -562,11 +626,27 @@ $result = $conn->query($sql);
                         return isValid;
                     }
 
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const form = document.querySelector("#personnelForm");
+
+                        form.addEventListener("submit", function (event) {
+                            const expiredDay = document.querySelector("[name='Expired_day']").value;
+                            const expiredMonth = document.querySelector("[name='Expired_month']").value;
+                            const expiredYear = document.querySelector("[name='Expired_year']").value;
+
+                            if (!expiredDay || !expiredMonth || !expiredYear) {
+                                event.preventDefault();
+                                alert("กรุณากรอกวันที่หมดอายุบัตรให้ครบถ้วน");
+                            }
+                        });
+                    });
+
+
                     // ฟังก์ชันสำหรับจัดการการยืนยันก่อนบันทึก
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         const form = document.getElementById('personnelForm');
 
-                        form.addEventListener('submit', function(event) {
+                        form.addEventListener('submit', function (event) {
                             event.preventDefault(); // หยุดการส่งฟอร์มแบบปกติ
 
                             if (!validateForm()) {
@@ -592,7 +672,7 @@ $result = $conn->query($sql);
                             });
                         });
                     });
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         // Flatpickr สำหรับวันเดือนปีเกิด
                         flatpickr("#dateBornPicker", {
                             altInput: true,
@@ -610,86 +690,108 @@ $result = $conn->query($sql);
                         });
                     });
                     document.addEventListener('DOMContentLoaded', function () {
-    // อ้างอิงถึงฟิลด์
-    const dayField = document.querySelector('select[name="day"]');
-    const monthField = document.querySelector('select[name="month"]');
-    const yearField = document.querySelector('select[name="year"]');
-    const acceptDayField = document.querySelector('select[name="accept_day"]');
-    const acceptMonthField = document.querySelector('select[name="accept_month"]');
-    const acceptYearField = document.querySelector('select[name="accept_year"]');
+                        // อ้างอิงถึงฟิลด์
+                        const dayField = document.querySelector('select[name="day"]');
+                        const monthField = document.querySelector('select[name="month"]');
+                        const yearField = document.querySelector('select[name="year"]');
+                        const acceptDayField = document.querySelector('select[name="accept_day"]');
+                        const acceptMonthField = document.querySelector('select[name="accept_month"]');
+                        const acceptYearField = document.querySelector('select[name="accept_year"]');
 
-    const ageField = document.querySelector('input[name="age"]');
-    const retirementDateField = document.querySelector('input[name="retirement_date"]');
-    const serviceAtRetirementField = document.querySelector('input[name="service_at_retirement"]');
-    const serviceRemainingField = document.querySelector('input[name="service_remaining"]');
+                        const ageField = document.querySelector('input[name="age"]');
+                        const retirementDateField = document.querySelector('input[name="retirement_date"]');
+                        const serviceAtRetirementField = document.querySelector('input[name="service_at_retirement"]');
+                        const serviceRemainingField = document.querySelector('input[name="service_remaining"]');
 
-    // คำนวณอายุ และอายุราชการที่เหลือ
-    function calculateDetails() {
-        const retirementAge = 60; // กำหนดอายุเกษียณราชการ
-        const currentDate = new Date(); // วันที่ปัจจุบัน
+                        // คำนวณอายุ และอายุราชการที่เหลือ
+                        function calculateDetails() {
+    const retirementAge = 60; // กำหนดอายุเกษียณราชการ
+    const currentDate = new Date(); // วันที่ปัจจุบัน
 
-        // รับค่าจากฟิลด์วันเดือนปีเกิด
-        const birthDay = parseInt(dayField.value);
-        const birthMonth = parseInt(monthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
-        const birthYear = parseInt(yearField.value);
+    // รับค่าจากฟิลด์วันเดือนปีเกิด
+    const birthDay = parseInt(dayField.value);
+    const birthMonth = parseInt(monthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
+    const birthYear = parseInt(yearField.value);
 
-        // รับค่าจากฟิลด์วันที่บรรจุ
-        const acceptDay = parseInt(acceptDayField.value);
-        const acceptMonth = parseInt(acceptMonthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
-        const acceptYear = parseInt(acceptYearField.value);
+    // รับค่าจากฟิลด์วันที่บรรจุ
+    const acceptDay = parseInt(acceptDayField.value);
+    const acceptMonth = parseInt(acceptMonthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
+    const acceptYear = parseInt(acceptYearField.value);
 
-        if (!birthDay || !birthMonth || !birthYear || !acceptDay || !acceptMonth || !acceptYear) return;
+    // Debugging
+    console.log("Birth Month After Adjustment:", birthMonth);
+    console.log("Accept Month After Adjustment:", acceptMonth);
 
-        const birthDate = new Date(birthYear - 543, birthMonth, birthDay); // แปลงเป็นปี ค.ศ.
-        const acceptDate = new Date(acceptYear - 543, acceptMonth, acceptDay); // แปลงเป็นปี ค.ศ.
-        const retirementDate = new Date(birthYear - 543 + retirementAge, 9, 30); // กำหนดวันที่เกษียณ (30 กันยายน)
-
-        // คำนวณอายุปัจจุบัน
-        const age = calculateAge(birthDate, currentDate);
-
-        // คำนวณอายุราชการในวันเกษียณ
-        const serviceAtRetirement = calculateAge(acceptDate, retirementDate);
-
-        // คำนวณอายุราชการที่เหลือ
-        const serviceRemaining = calculateAge(currentDate, retirementDate);
-
-        // อัปเดตค่าลงในฟิลด์
-        ageField.value = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
-        retirementDateField.value = `${retirementDate.getDate()} ตุลาคม ${retirementDate.getFullYear() + 543}`;
-        serviceAtRetirementField.value = `${serviceAtRetirement.years} ปี ${serviceAtRetirement.months} เดือน ${serviceAtRetirement.days} วัน`;
-        serviceRemainingField.value = `${serviceRemaining.years} ปี ${serviceRemaining.months} เดือน ${serviceRemaining.days} วัน`;
+    if (isNaN(birthDay) || isNaN(birthMonth) || isNaN(birthYear) || 
+        isNaN(acceptDay) || isNaN(acceptMonth) || isNaN(acceptYear)) {
+        console.error("ค่าที่รับมาไม่ถูกต้อง:", { birthDay, birthMonth, birthYear, acceptDay, acceptMonth, acceptYear });
+        return;
     }
 
-    // ฟังก์ชันคำนวณช่วงเวลา
-    function calculateAge(startDate, endDate) {
-        const years = endDate.getFullYear() - startDate.getFullYear();
-        const months = endDate.getMonth() - startDate.getMonth();
-        const days = endDate.getDate() - startDate.getDate();
+    const birthDate = new Date(birthYear - 543, birthMonth, birthDay);
+    const acceptDate = new Date(acceptYear - 543, acceptMonth, acceptDay);
+    const retirementDate = new Date(birthYear - 543 + retirementAge, 9, 30);
 
-        let calculatedYears = years;
-        let calculatedMonths = months;
-        let calculatedDays = days;
+    // Debugging
+    console.log("Birth Date:", birthDate);
+    console.log("Accept Date:", acceptDate);
 
-        if (calculatedDays < 0) {
-            calculatedMonths--;
-            calculatedDays += 30; // ประมาณจำนวนวันในเดือน
-        }
-        if (calculatedMonths < 0) {
-            calculatedYears--;
-            calculatedMonths += 12;
-        }
+    // คำนวณอายุปัจจุบัน
+    const age = calculateAge(birthDate, currentDate);
 
-        return { years: calculatedYears, months: calculatedMonths, days: calculatedDays };
-    }
+    // คำนวณอายุราชการในวันเกษียณ
+    const serviceAtRetirement = calculateAge(acceptDate, retirementDate);
 
-    // เพิ่ม Event Listener
-    dayField.addEventListener('change', calculateDetails);
-    monthField.addEventListener('change', calculateDetails);
-    yearField.addEventListener('change', calculateDetails);
-    acceptDayField.addEventListener('change', calculateDetails);
-    acceptMonthField.addEventListener('change', calculateDetails);
-    acceptYearField.addEventListener('change', calculateDetails);
-});
+    // คำนวณอายุราชการที่เหลือ
+    const serviceRemaining = calculateAge(currentDate, retirementDate);
+
+    // Debugging
+    console.log("Age:", age);
+    console.log("Service At Retirement:", serviceAtRetirement);
+    console.log("Service Remaining:", serviceRemaining);
+
+    // อัปเดตค่าลงในฟิลด์
+    ageField.value = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
+    retirementDateField.value = `${retirementDate.getDate()} ตุลาคม ${retirementDate.getFullYear() + 543}`;
+    serviceAtRetirementField.value = `${serviceAtRetirement.years} ปี ${serviceAtRetirement.months} เดือน ${serviceAtRetirement.days} วัน`;
+    serviceRemainingField.value = `${serviceRemaining.years} ปี ${serviceRemaining.months} เดือน ${serviceRemaining.days} วัน`;
+
+    console.log("Age Field Value:", ageField.value);
+    console.log("Retirement Date Field Value:", retirementDateField.value);
+    console.log("Service Remaining Field Value:", serviceRemainingField.value);
+}
+
+
+                        // ฟังก์ชันคำนวณช่วงเวลา
+                        function calculateAge(startDate, endDate) {
+                            const years = endDate.getFullYear() - startDate.getFullYear();
+                            const months = endDate.getMonth() - startDate.getMonth();
+                            const days = endDate.getDate() - startDate.getDate();
+
+                            let calculatedYears = years;
+                            let calculatedMonths = months;
+                            let calculatedDays = days;
+
+                            if (calculatedDays < 0) {
+                                calculatedMonths--;
+                                calculatedDays += 31; // ประมาณจำนวนวันในเดือน
+                            }
+                            if (calculatedMonths < 0) {
+                                calculatedYears--;
+                                calculatedMonths += 12;
+                            }
+
+                            return { years: calculatedYears, months: calculatedMonths, days: calculatedDays };
+                        }
+
+                        // เพิ่ม Event Listener
+                        dayField.addEventListener('change', calculateDetails);
+                        monthField.addEventListener('change', calculateDetails);
+                        yearField.addEventListener('change', calculateDetails);
+                        acceptDayField.addEventListener('change', calculateDetails);
+                        acceptMonthField.addEventListener('change', calculateDetails);
+                        acceptYearField.addEventListener('change', calculateDetails);
+                    });
 
                 </script>
 
