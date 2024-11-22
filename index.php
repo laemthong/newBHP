@@ -25,7 +25,7 @@
                         </a>
                     </div>
                     <h1 class="auth-title">Banphai Hospital</h1>
-                    <p class="auth-subtitle mb-5">เข้าสู่ระบบด้วยชื่อผู้ใช้และรหัสผ่าน</p>
+                    <p class="auth-subtitle mb-5">เข้าสู่ระบบด้วยหมายเลขบัตรประชาชน 13 หลักและหมายเลขเบอร์โทรศัพท์</p>
 
                     <!-- ฟอร์มการล็อกอิน -->
                     <form autocomplete="off" action="login_process.php" method="post">
