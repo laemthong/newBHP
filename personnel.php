@@ -426,8 +426,9 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                             if ($result->num_rows > 0) {
                                                 while ($row = $result->fetch_assoc()) {
                                                     // แปลงฟอร์แมตวันที่
-                                                    $person_born = date("d/m/Y", strtotime($row["person_born"]));
-                                                    $person_dateAccepting = date("d/m/Y", strtotime($row["person_dateAccepting"]));
+                                                    $person_born = date("d/m/", strtotime($row["person_born"])) . (date("Y", strtotime($row["person_born"])) + 543);
+                                                    $person_dateAccepting = date("d/m/", strtotime($row["person_dateAccepting"])) . (date("Y", strtotime($row["person_dateAccepting"])) + 543);
+
 
                                                     // แปลงค่าของ person_formwork เป็นข้อความ
                                                     $formwork_text = '';
@@ -490,8 +491,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                                     echo "<td>" . $formwork_text . "</td>"; // แสดงข้อความแทนตัวเลข
                                                     echo "<td>" . $row["person_level"] . "</td>";
                                                     echo "<td>" . $row["person_salary"] . "</td>";
-                                                    echo "<td>" . $person_born . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่
-                                                    echo "<td>" . $person_dateAccepting . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่
+                                                    echo "<td>" . $person_born . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่ (dd/mm/yyyy) เป็น พ.ศ.
+                                                    echo "<td>" . $person_dateAccepting . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่ (dd/mm/yyyy) เป็น พ.ศ.
                                                     echo "<td>" . $row["person_phone"] . "</td>";
                                                     echo "<td>";
                                                     echo "<div class='d-flex'>";
@@ -617,8 +618,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                         <td>${formatFormwork(row.person_formwork)}</td> <!-- แปลงตัวเลขเป็นข้อความ -->
                         <td>${row.person_level}</td>
                         <td>${row.person_salary}</td>
-                        <td>${formatDate(row.person_born)}</td> <!-- ฟอร์แมตวันที่ -->
-                        <td>${formatDate(row.person_dateAccepting)}</td> <!-- ฟอร์แมตวันที่ -->
+                        <td>${formatDate(row.person_born)}</td> <!-- ฟอร์แมตวันที่เป็น พ.ศ. -->
+    <td>${formatDate(row.person_dateAccepting)}</td> <!-- ฟอร์แมตวันที่เป็น พ.ศ. -->
                         <td>${row.person_phone}</td>
                         <td>
                             <div class='d-flex'>
@@ -708,9 +709,10 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                             if (isNaN(date)) return "-"; // ตรวจสอบความถูกต้องของวันที่
                             const day = String(date.getDate()).padStart(2, '0');
                             const month = String(date.getMonth() + 1).padStart(2, '0');
-                            const year = date.getFullYear();
+                            const year = date.getFullYear() + 543; // เพิ่ม 543 เพื่อเปลี่ยนเป็น พ.ศ.
                             return `${day}/${month}/${year}`;
                         }
+
 
                     </script>
                 </body>
