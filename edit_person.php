@@ -479,6 +479,29 @@ $conn->close();
                                 </div>
 
                                 <div class="col-md-6">
+    <label class="form-label">ปฏิบัติการที่:</label>
+    <select name="person_formwork" class="form-select" required>
+        <option value="">เลือกปฏิบัติการ</option>
+        <option value="1" <?php if ($row['person_formwork'] == '1') echo 'selected'; ?>>องค์กรแพทย์</option>
+        <option value="2" <?php if ($row['person_formwork'] == '2') echo 'selected'; ?>>กลุ่มงานบริหารทั่วไป</option>
+        <option value="3" <?php if ($row['person_formwork'] == '3') echo 'selected'; ?>>เภสัชกรรมและคุ้มครองผู้บริโภค</option>
+        <option value="4" <?php if ($row['person_formwork'] == '4') echo 'selected'; ?>>โภชนศาสตร์</option>
+        <option value="5" <?php if ($row['person_formwork'] == '5') echo 'selected'; ?>>แพทย์แผนไทยและแพทย์ทางเลือก</option>
+        <option value="6" <?php if ($row['person_formwork'] == '6') echo 'selected'; ?>>เวชศาสตร์ฟื้นฟู</option>
+        <option value="7" <?php if ($row['person_formwork'] == '7') echo 'selected'; ?>>ประกันสุขภาพ ยุทธศาสตร์ และสารสนเทศทางการแพทย์</option>
+        <option value="8" <?php if ($row['person_formwork'] == '8') echo 'selected'; ?>>เทคนิคการแพทย์</option>
+        <option value="9" <?php if ($row['person_formwork'] == '9') echo 'selected'; ?>>บริการด้านปฐมภูมิและองค์รวม</option>
+        <option value="10" <?php if ($row['person_formwork'] == '10') echo 'selected'; ?>>ทันตกรรม</option>
+        <option value="11" <?php if ($row['person_formwork'] == '11') echo 'selected'; ?>>รังสีวิทยา</option>
+        <option value="12" <?php if ($row['person_formwork'] == '12') echo 'selected'; ?>>จิตเวชและยาเสพติด</option>
+        <option value="13" <?php if ($row['person_formwork'] == '13') echo 'selected'; ?>>การพยาบาล</option>
+        <option value="14" <?php if ($row['person_formwork'] == '14') echo 'selected'; ?>>กลุ่มงานเวชศาสตร์และสุขศึกษา</option>
+        <option value="15" <?php if ($row['person_formwork'] == '15') echo 'selected'; ?>>สุขาภิบาลสิ่งแวดล้อม</option>
+    </select>
+</div>
+
+
+                                <div class="col-md-6">
                                     <label class="form-label">ประเภทการจ้าง:</label>
                                     <select name="person_typeHire" class="form-select" required>
                                         <option value="">เลือกประเภทการจ้าง</option>
