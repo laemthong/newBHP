@@ -43,6 +43,7 @@ try {
         $person_specialQualification = $_POST['person_specialQualification'] ?? null;
         $person_blood = $_POST['person_blood'] ?? null;
         $person_cardNum = $_POST['person_cardNum'] ?? null;
+        
         // แปลงวันที่หมดอายุบัตร (person_CardExpired)
         $Expired_day = $_POST['Expired_day'] ?? null;
         $Expired_month = $_POST['Expired_month'] ?? null;
@@ -85,7 +86,7 @@ try {
         
         // ผูกตัวแปรกับคำสั่ง SQL
         $stmt->bind_param(
-            "sssssssdssssssssssss",
+            "ssssssssssssssssssss",
             $person_id, $person_name, $person_gender, $person_rank, $person_formwork,
             $person_level, $person_salary, $person_nickname, $person_born,
             $person_dateAccepting, $person_typeHire, $person_positionAllowance,
@@ -114,3 +115,5 @@ try {
     exit();
 }
 ?>
+
+
