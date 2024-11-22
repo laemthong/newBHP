@@ -599,11 +599,12 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
 
                                     // ฟังก์ชันฟอร์แมตวันที่
                                     function formatDate(dateString) {
-                                        if (!dateString) return '-';
+                                        if (!dateString) return "-"; // ถ้าไม่มีค่าให้คืน "-"
                                         const date = new Date(dateString);
-                                        const day = date.getDate().toString().padStart(2, '0');
-                                        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                                        const year = date.getFullYear();
+                                        if (isNaN(date)) return "-"; // ตรวจสอบความถูกต้องของวันที่
+                                        const day = String(date.getDate()).padStart(2, '0');
+                                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                                        const year = date.getFullYear() + 543; // เพิ่ม 543 เพื่อเปลี่ยนเป็น พ.ศ.
                                         return `${day}/${month}/${year}`;
                                     }
 
@@ -619,7 +620,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                         <td>${row.person_level}</td>
                         <td>${row.person_salary}</td>
                         <td>${formatDate(row.person_born)}</td> <!-- ฟอร์แมตวันที่เป็น พ.ศ. -->
-    <td>${formatDate(row.person_dateAccepting)}</td> <!-- ฟอร์แมตวันที่เป็น พ.ศ. -->
+                        <td>${formatDate(row.person_dateAccepting)}</td> <!-- ฟอร์แมตวันที่เป็น พ.ศ. -->
                         <td>${row.person_phone}</td>
                         <td>
                             <div class='d-flex'>
