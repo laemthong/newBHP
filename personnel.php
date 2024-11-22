@@ -429,12 +429,65 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                                     $person_born = date("d/m/Y", strtotime($row["person_born"]));
                                                     $person_dateAccepting = date("d/m/Y", strtotime($row["person_dateAccepting"]));
 
+                                                    // แปลงค่าของ person_formwork เป็นข้อความ
+                                                    $formwork_text = '';
+                                                    switch ($row["person_formwork"]) {
+                                                        case '1':
+                                                            $formwork_text = 'องค์กรแพทย์';
+                                                            break;
+                                                        case '2':
+                                                            $formwork_text = 'กลุ่มงานบริหารทั่วไป';
+                                                            break;
+                                                        case '3':
+                                                            $formwork_text = 'เกษตรกรรมและคุ้มครองผู้บริโภค';
+                                                            break;
+                                                        case '4':
+                                                            $formwork_text = 'โภชนศาสตร์';
+                                                            break;
+                                                        case '5':
+                                                            $formwork_text = 'แพทย์แผนไทยและแพทย์ทางเลือก';
+                                                            break;
+                                                        case '6':
+                                                            $formwork_text = 'เวชศาสตร์ฟื้นฟู';
+                                                            break;
+                                                        case '7':
+                                                            $formwork_text = 'ประกันสุขภาพ ยุทธศาสตร์ และเทคโนโลยีสารสนเทศ';
+                                                            break;
+                                                        case '8':
+                                                            $formwork_text = 'เทคนิคการแพทย์';
+                                                            break;
+                                                        case '9':
+                                                            $formwork_text = 'บริการด้านปฐมภูมิและองค์รวม';
+                                                            break;
+                                                        case '10':
+                                                            $formwork_text = 'ทันตกรรม';
+                                                            break;
+                                                        case '11':
+                                                            $formwork_text = 'จักษุวิทยา';
+                                                            break;
+                                                        case '12':
+                                                            $formwork_text = 'จิตเวชและยาเสพติด';
+                                                            break;
+                                                        case '13':
+                                                            $formwork_text = 'การพยาบาล';
+                                                            break;
+                                                        case '14':
+                                                            $formwork_text = 'กลุ่มงานอาชีวะและยาเสพติด';
+                                                            break;
+                                                        case '15':
+                                                            $formwork_text = 'สุขภาพจิตจิต';
+                                                            break;
+                                                        default:
+                                                            $formwork_text = 'ไม่ทราบข้อมูล';
+                                                    }
+
+
                                                     echo "<tr>";
                                                     echo "<td>" . $row["person_id"] . "</td>";
                                                     echo "<td>" . $row["person_name"] . "</td>";
                                                     echo "<td>" . $row["person_gender"] . "</td>";
                                                     echo "<td>" . $row["person_rank"] . "</td>";
-                                                    echo "<td>" . $row["person_formwork"] . "</td>";
+                                                    echo "<td>" . $formwork_text . "</td>"; // แสดงข้อความแทนตัวเลข
                                                     echo "<td>" . $row["person_level"] . "</td>";
                                                     echo "<td>" . $row["person_salary"] . "</td>";
                                                     echo "<td>" . $person_born . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่
@@ -505,19 +558,67 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                     const tbody = document.querySelector("#personnelTable tbody");
                                     tbody.innerHTML = ""; // ล้างข้อมูลเดิมในตาราง
 
+                                    // ฟังก์ชันแปลงตัวเลข person_formwork เป็นข้อความ
+                                    function formatFormwork(formwork) {
+                                        switch (formwork) {
+                                            case '1':
+                                                return 'องค์กรแพทย์';
+                                            case '2':
+                                                return 'กลุ่มงานบริหารทั่วไป';
+                                            case '3':
+                                                return 'เกษตรกรรมและคุ้มครองผู้บริโภค';
+                                            case '4':
+                                                return 'โภชนศาสตร์';
+                                            case '5':
+                                                return 'แพทย์แผนไทยและแพทย์ทางเลือก';
+                                            case '6':
+                                                return 'เวชศาสตร์ฟื้นฟู';
+                                            case '7':
+                                                return 'ประกันสุขภาพ ยุทธศาสตร์ และเทคโนโลยีสารสนเทศ';
+                                            case '8':
+                                                return 'เทคนิคการแพทย์';
+                                            case '9':
+                                                return 'บริการด้านปฐมภูมิและองค์รวม';
+                                            case '10':
+                                                return 'ทันตกรรม';
+                                            case '11':
+                                                return 'จักษุวิทยา';
+                                            case '12':
+                                                return 'จิตเวชและยาเสพติด';
+                                            case '13':
+                                                return 'การพยาบาล';
+                                            case '14':
+                                                return 'กลุ่มงานอาชีวะและยาเสพติด';
+                                            case '15':
+                                                return 'สุขภาพจิตจิต';
+                                            default:
+                                                return 'ไม่ทราบข้อมูล';
+                                        }
+                                    }
+
+                                    // ฟังก์ชันฟอร์แมตวันที่
+                                    function formatDate(dateString) {
+                                        if (!dateString) return '-';
+                                        const date = new Date(dateString);
+                                        const day = date.getDate().toString().padStart(2, '0');
+                                        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                                        const year = date.getFullYear();
+                                        return `${day}/${month}/${year}`;
+                                    }
+
                                     // วนลูปเพื่อแสดงข้อมูลในตารางใหม่
-                                    data.data.forEach((row, index) => {
+                                    data.data.forEach((row) => {
                                         tbody.innerHTML += `
                     <tr>
                         <td>${row.person_id}</td>
                         <td>${row.person_name}</td>
                         <td>${row.person_gender}</td>
                         <td>${row.person_rank}</td>
-                        <td>${row.person_formwork}</td>
+                        <td>${formatFormwork(row.person_formwork)}</td> <!-- แปลงตัวเลขเป็นข้อความ -->
                         <td>${row.person_level}</td>
                         <td>${row.person_salary}</td>
-                        <td>${formatDate(row.person_born)}</td>
-                        <td>${formatDate(row.person_dateAccepting)}</td>
+                        <td>${formatDate(row.person_born)}</td> <!-- ฟอร์แมตวันที่ -->
+                        <td>${formatDate(row.person_dateAccepting)}</td> <!-- ฟอร์แมตวันที่ -->
                         <td>${row.person_phone}</td>
                         <td>
                             <div class='d-flex'>
@@ -528,12 +629,12 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                     </tr>
                 `;
                                     });
-
-                                    // อัปเดต pagination พร้อมคำค้นหา
-                                    updatePagination(data.total_pages, page, search);
                                 })
-                                .catch(error => console.error('Error:', error));
+                                .catch(error => {
+                                    console.error('Error fetching data:', error);
+                                });
                         }
+
 
 
 
