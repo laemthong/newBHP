@@ -348,7 +348,7 @@ $conn->close();
         </div>
         <div id="main">
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
+                document.addEventListener('DOMContentLoaded', function () {
                     // อ้างอิงถึงฟิลด์
                     const dayField = document.querySelector('select[name="day"]');
                     const monthField = document.querySelector('select[name="month"]');
@@ -464,11 +464,11 @@ $conn->close();
                                     <select name="person_gender" class="form-select" required>
                                         <option value="">เลือกเพศ</option>
                                         <option value="ชาย" <?php if ($row['person_gender'] == 'ชาย')
-                                                                echo 'selected'; ?>>ชาย</option>
+                                            echo 'selected'; ?>>ชาย</option>
                                         <option value="หญิง" <?php if ($row['person_gender'] == 'หญิง')
-                                                                    echo 'selected'; ?>>หญิง</option>
+                                            echo 'selected'; ?>>หญิง</option>
                                         <option value="อื่นๆ" <?php if ($row['person_gender'] == 'อื่นๆ')
-                                                                    echo 'selected'; ?>>อื่นๆ</option>
+                                            echo 'selected'; ?>>อื่นๆ</option>
                                     </select>
                                 </div>
 
@@ -479,26 +479,56 @@ $conn->close();
                                 </div>
 
                                 <div class="col-md-6">
-    <label class="form-label">ปฏิบัติการที่:</label>
-    <select name="person_formwork" class="form-select" required>
-        <option value="">เลือกปฏิบัติการ</option>
-        <option value="1" <?php if ($row['person_formwork'] == '1') echo 'selected'; ?>>องค์กรแพทย์</option>
-        <option value="2" <?php if ($row['person_formwork'] == '2') echo 'selected'; ?>>กลุ่มงานบริหารทั่วไป</option>
-        <option value="3" <?php if ($row['person_formwork'] == '3') echo 'selected'; ?>>เภสัชกรรมและคุ้มครองผู้บริโภค</option>
-        <option value="4" <?php if ($row['person_formwork'] == '4') echo 'selected'; ?>>โภชนศาสตร์</option>
-        <option value="5" <?php if ($row['person_formwork'] == '5') echo 'selected'; ?>>แพทย์แผนไทยและแพทย์ทางเลือก</option>
-        <option value="6" <?php if ($row['person_formwork'] == '6') echo 'selected'; ?>>เวชศาสตร์ฟื้นฟู</option>
-        <option value="7" <?php if ($row['person_formwork'] == '7') echo 'selected'; ?>>ประกันสุขภาพ ยุทธศาสตร์ และสารสนเทศทางการแพทย์</option>
-        <option value="8" <?php if ($row['person_formwork'] == '8') echo 'selected'; ?>>เทคนิคการแพทย์</option>
-        <option value="9" <?php if ($row['person_formwork'] == '9') echo 'selected'; ?>>บริการด้านปฐมภูมิและองค์รวม</option>
-        <option value="10" <?php if ($row['person_formwork'] == '10') echo 'selected'; ?>>ทันตกรรม</option>
-        <option value="11" <?php if ($row['person_formwork'] == '11') echo 'selected'; ?>>รังสีวิทยา</option>
-        <option value="12" <?php if ($row['person_formwork'] == '12') echo 'selected'; ?>>จิตเวชและยาเสพติด</option>
-        <option value="13" <?php if ($row['person_formwork'] == '13') echo 'selected'; ?>>การพยาบาล</option>
-        <option value="14" <?php if ($row['person_formwork'] == '14') echo 'selected'; ?>>กลุ่มงานเวชศาสตร์และสุขศึกษา</option>
-        <option value="15" <?php if ($row['person_formwork'] == '15') echo 'selected'; ?>>สุขาภิบาลสิ่งแวดล้อม</option>
-    </select>
-</div>
+                                    <label class="form-label">ปฏิบัติการที่:</label>
+                                    <select name="person_formwork" class="form-select" required>
+                                        <option value="">เลือกปฏิบัติการ</option>
+                                        <option value="1" <?php if ($row['person_formwork'] == '1')
+                                            echo 'selected'; ?>>
+                                            องค์กรแพทย์</option>
+                                        <option value="2" <?php if ($row['person_formwork'] == '2')
+                                            echo 'selected'; ?>>
+                                            กลุ่มงานบริหารทั่วไป</option>
+                                        <option value="3" <?php if ($row['person_formwork'] == '3')
+                                            echo 'selected'; ?>>
+                                            เภสัชกรรมและคุ้มครองผู้บริโภค</option>
+                                        <option value="4" <?php if ($row['person_formwork'] == '4')
+                                            echo 'selected'; ?>>
+                                            โภชนศาสตร์</option>
+                                        <option value="5" <?php if ($row['person_formwork'] == '5')
+                                            echo 'selected'; ?>>
+                                            แพทย์แผนไทยและแพทย์ทางเลือก</option>
+                                        <option value="6" <?php if ($row['person_formwork'] == '6')
+                                            echo 'selected'; ?>>
+                                            เวชศาสตร์ฟื้นฟู</option>
+                                        <option value="7" <?php if ($row['person_formwork'] == '7')
+                                            echo 'selected'; ?>>
+                                            ประกันสุขภาพ ยุทธศาสตร์ และสารสนเทศทางการแพทย์</option>
+                                        <option value="8" <?php if ($row['person_formwork'] == '8')
+                                            echo 'selected'; ?>>
+                                            เทคนิคการแพทย์</option>
+                                        <option value="9" <?php if ($row['person_formwork'] == '9')
+                                            echo 'selected'; ?>>
+                                            บริการด้านปฐมภูมิและองค์รวม</option>
+                                        <option value="10" <?php if ($row['person_formwork'] == '10')
+                                            echo 'selected'; ?>>
+                                            ทันตกรรม</option>
+                                        <option value="11" <?php if ($row['person_formwork'] == '11')
+                                            echo 'selected'; ?>>
+                                            รังสีวิทยา</option>
+                                        <option value="12" <?php if ($row['person_formwork'] == '12')
+                                            echo 'selected'; ?>>
+                                            จิตเวชและยาเสพติด</option>
+                                        <option value="13" <?php if ($row['person_formwork'] == '13')
+                                            echo 'selected'; ?>>
+                                            การพยาบาล</option>
+                                        <option value="14" <?php if ($row['person_formwork'] == '14')
+                                            echo 'selected'; ?>>
+                                            กลุ่มงานเวชศาสตร์และสุขศึกษา</option>
+                                        <option value="15" <?php if ($row['person_formwork'] == '15')
+                                            echo 'selected'; ?>>
+                                            สุขาภิบาลสิ่งแวดล้อม</option>
+                                    </select>
+                                </div>
 
 
                                 <div class="col-md-6">
@@ -506,29 +536,29 @@ $conn->close();
                                     <select name="person_typeHire" class="form-select" required>
                                         <option value="">เลือกประเภทการจ้าง</option>
                                         <option value="ข้าราชการ" <?php if ($row['person_typeHire'] == 'ข้าราชการ')
-                                                                        echo 'selected'; ?>>ข้าราชการ</option>
+                                            echo 'selected'; ?>>ข้าราชการ</option>
                                         <option value="จ้างเหมาบริการ" <?php if ($row['person_typeHire'] == 'จ้างเหมาบริการ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             จ้างเหมาบริการ</option>
                                         <option value="จ้างเหมาบุคคล" <?php if ($row['person_typeHire'] == 'จ้างเหมาบุคคล')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             จ้างเหมาบุคคล</option>
                                         <option value="พนักงานกระทรวง" <?php if ($row['person_typeHire'] == 'พนักงานกระทรวง')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             พนักงานกระทรวง</option>
                                         <option value="พนักงานราชการ" <?php if ($row['person_typeHire'] == 'พนักงานราชการ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             พนักงานราชการ</option>
                                         <option value="ลูกจ้างชั่วคราว (รายเดือน)" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราว (รายเดือน)')
-                                                                                        echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
+                                            echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
                                         <option value="ลูกจ้างชั่วคราวรายวัน" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราวรายวัน')
-                                                                                    echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ลูกจ้างชั่วคราวรายวัน</option>
                                         <option value="ลูกจ้างประจำ" <?php if ($row['person_typeHire'] == 'ลูกจ้างประจำ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ลูกจ้างประจำ</option>
                                         <option value="ลูกจ้างรายคาบ" <?php if ($row['person_typeHire'] == 'ลูกจ้างรายคาบ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ลูกจ้างรายคาบ</option>
                                     </select>
                                 </div>
@@ -538,30 +568,30 @@ $conn->close();
                                     <select name="person_level" class="form-select" required>
                                         <option value="">เลือกระดับ</option>
                                         <option value="ระดับทักษะพิเศษ" <?php if ($row['person_level'] == 'ระดับทักษะพิเศษ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ระดับทักษะพิเศษ</option>
                                         <option value="ระดับอาวุโส" <?php if ($row['person_level'] == 'ระดับอาวุโส')
-                                                                        echo 'selected'; ?>>ระดับอาวุโส</option>
+                                            echo 'selected'; ?>>ระดับอาวุโส</option>
                                         <option value="ระดับชำนาญงาน" <?php if ($row['person_level'] == 'ระดับชำนาญงาน')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ระดับชำนาญงาน</option>
                                         <option value="ระดับปฏิบัติงาน" <?php if ($row['person_level'] == 'ระดับปฏิบัติงาน')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ระดับปฏิบัติงาน</option>
                                         <option value="พลเรือน (ประเภทวิชาการ)" <?php if ($row['person_level'] == 'พลเรือน (ประเภทวิชาการ)')
-                                                                                    echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             พลเรือน (ประเภทวิชาการ)</option>
                                         <option value="ระดับเชี่ยวชาญ" <?php if ($row['person_level'] == 'ระดับเชี่ยวชาญ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ระดับเชี่ยวชาญ</option>
                                         <option value="ระดับชำนาญการพิเศษ" <?php if ($row['person_level'] == 'ระดับชำนาญการพิเศษ')
-                                                                                echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ระดับชำนาญการพิเศษ</option>
                                         <option value="ระดับชำนาญการ" <?php if ($row['person_level'] == 'ระดับชำนาญการ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ระดับชำนาญการ</option>
                                         <option value="ระดับปฏิบัติการ" <?php if ($row['person_level'] == 'ระดับปฏิบัติการ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ระดับปฏิบัติการ</option>
                                     </select>
                                 </div>
@@ -687,29 +717,29 @@ $conn->close();
                                     <select name="person_typeHire" class="form-select" required>
                                         <option value="">เลือกประเภทการจ้าง</option>
                                         <option value="ข้าราชการ" <?php if ($row['person_typeHire'] == 'ข้าราชการ')
-                                                                        echo 'selected'; ?>>ข้าราชการ</option>
+                                            echo 'selected'; ?>>ข้าราชการ</option>
                                         <option value="จ้างเหมาบริการ" <?php if ($row['person_typeHire'] == 'จ้างเหมาบริการ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             จ้างเหมาบริการ</option>
                                         <option value="จ้างเหมาบุคคล" <?php if ($row['person_typeHire'] == 'จ้างเหมาบุคคล')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             จ้างเหมาบุคคล</option>
                                         <option value="พนักงานกระทรวง" <?php if ($row['person_typeHire'] == 'พนักงานกระทรวง')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             พนักงานกระทรวง</option>
                                         <option value="พนักงานราชการ" <?php if ($row['person_typeHire'] == 'พนักงานราชการ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             พนักงานราชการ</option>
                                         <option value="ลูกจ้างชั่วคราว (รายเดือน)" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราว (รายเดือน)')
-                                                                                        echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
+                                            echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
                                         <option value="ลูกจ้างชั่วคราวรายวัน" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราวรายวัน')
-                                                                                    echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ลูกจ้างชั่วคราวรายวัน</option>
                                         <option value="ลูกจ้างประจำ" <?php if ($row['person_typeHire'] == 'ลูกจ้างประจำ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ลูกจ้างประจำ</option>
                                         <option value="ลูกจ้างรายคาบ" <?php if ($row['person_typeHire'] == 'ลูกจ้างรายคาบ')
-                                                                            echo 'selected'; ?>>
+                                            echo 'selected'; ?>>
                                             ลูกจ้างรายคาบ</option>
                                     </select>
                                 </div>
@@ -740,15 +770,15 @@ $conn->close();
                                     <select name="person_blood" class="form-select">
                                         <option value="">เลือกกรุ๊ปเลือด</option>
                                         <option value="A" <?php if ($row['person_blood'] == 'A')
-                                                                echo 'selected'; ?>>A
+                                            echo 'selected'; ?>>A
                                         </option>
                                         <option value="B" <?php if ($row['person_blood'] == 'B')
-                                                                echo 'selected'; ?>>B
+                                            echo 'selected'; ?>>B
                                         </option>
                                         <option value="AB" <?php if ($row['person_blood'] == 'AB')
-                                                                echo 'selected'; ?>>AB</option>
+                                            echo 'selected'; ?>>AB</option>
                                         <option value="O" <?php if ($row['person_blood'] == 'O')
-                                                                echo 'selected'; ?>>O
+                                            echo 'selected'; ?>>O
                                         </option>
                                     </select>
                                 </div>
