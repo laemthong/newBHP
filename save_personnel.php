@@ -86,7 +86,7 @@ try {
         
         // ผูกตัวแปรกับคำสั่ง SQL
         $stmt->bind_param(
-            "ssssssssssssssssssss",
+            "ssssssssssssssssssss", //ssss
             $person_id, $person_name, $person_gender, $person_rank, $person_formwork,
             $person_level, $person_salary, $person_nickname, $person_born,
             $person_dateAccepting, $person_typeHire, $person_positionAllowance,
