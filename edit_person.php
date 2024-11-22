@@ -29,9 +29,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $level = $_POST['person_level'];
     $salary = $_POST['person_salary'];
     $nickname = $_POST['person_nickname'];
-    $born = $_POST['person_born'];
-    $positionNum = $_POST['person_positionNum'];
-    $dateAccepting = $_POST['person_dateAccepting'];
+
+    // รวมค่าวันเดือนปีเกิด
+    $day = $_POST['day'];
+    $month = $_POST['month'];
+    $year = $_POST['year'];
+    $born = ($year - 543) . "-" . str_pad($month, 2, '0', STR_PAD_LEFT) . "-" . str_pad($day, 2, '0', STR_PAD_LEFT);
+
+    // รวมค่าวันที่บรรจุ
+    $accept_day = $_POST['accept_day'];
+    $accept_month = $_POST['accept_month'];
+    $accept_year = $_POST['accept_year'];
+    $dateAccepting = ($accept_year - 543) . "-" . str_pad($accept_month, 2, '0', STR_PAD_LEFT) . "-" . str_pad($accept_day, 2, '0', STR_PAD_LEFT);
+
     $typeHire = $_POST['person_typeHire'];
     $yearBorn = intval(date("Y", strtotime($born)));
     $yearAccepting = intval(date("Y", strtotime($dateAccepting)));
@@ -40,7 +50,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $specialQualification = $_POST['person_specialQualification'];
     $blood = $_POST['person_blood'];
     $cardNum = $_POST['person_cardNum'];
-    $cardExpired = $_POST['person_CardExpired'];
+
+    // รวมค่าของวันที่หมดอายุบัตรราชการ
+    $Expired_day = $_POST['Expired_day'];
+    $Expired_month = $_POST['Expired_month'];
+    $Expired_year = $_POST['Expired_year'];
+    $cardExpired = ($Expired_year - 543) . "-" . str_pad($Expired_month, 2, '0', STR_PAD_LEFT) . "-" . str_pad($Expired_day, 2, '0', STR_PAD_LEFT);
+    function calculateDateDiff($startDate, $endDate)
+    {
+        $start = new DateTime($startDate);
+        $end = new DateTime($endDate);
+        $diff = $start->diff($end);
+
+        return [
+            'years' => $diff->y,
+            'months' => $diff->m,
+            'days' => $diff->d
+        ];
+    }
+
+    $currentDate = new DateTime();
+    $birthDate = new DateTime($row['person_born']);
+    $retirementDate = new DateTime($birthDate->format('Y') + 60 . '-09-30');
+    $acceptDate = new DateTime($row['person_dateAccepting']);
+
+    $age = calculateDateDiff($birthDate->format('Y-m-d'), $currentDate->format('Y-m-d'));
+    $serviceAtRetirement = calculateDateDiff($acceptDate->format('Y-m-d'), $retirementDate->format('Y-m-d'));
+    $serviceRemaining = calculateDateDiff($currentDate->format('Y-m-d'), $retirementDate->format('Y-m-d'));
 
     // อัพเดตข้อมูลในฐานข้อมูล
     $sql = "UPDATE personnel SET 
@@ -52,7 +88,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 person_salary = '$salary', 
                 person_nickname = '$nickname', 
                 person_born = '$born', 
-                person_positionNum = '$positionNum', 
                 person_dateAccepting = '$dateAccepting', 
                 person_typeHire = '$typeHire', 
                 person_yearBorn = '$yearBorn', 
@@ -68,10 +103,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->query($sql) === TRUE) {
         echo "แก้ไขข้อมูลสำเร็จ";
         header("Location: personnel.php"); // กลับไปยังหน้าแสดงตาราง
+        exit();
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 }
+
 
 $conn->close();
 ?>
@@ -85,19 +122,24 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ban Phai Hospital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="icon" href="photo/รพ.png" type="image/png"><link rel="icon" href="photo/รพ.png" type="image/png">
+    <link rel="icon" href="photo/รพ.png" type="image/png">
+    <link rel="icon" href="photo/รพ.png" type="image/png">
     <link rel="stylesheet" href="./assets/compiled/css/app.css">
     <link rel="stylesheet" href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" href="./assets/compiled/css/iconly.css">
     <style>
         .sidebar-item.activee {
-            background-color: transparent; /* ลบสีพื้นหลัง */
-            color: inherit; /* ใช้สีของข้อความตามสีพื้นฐาน */
-            box-shadow: none; /* ลบเงาของปุ่ม */
+            background-color: transparent;
+            /* ลบสีพื้นหลัง */
+            color: inherit;
+            /* ใช้สีของข้อความตามสีพื้นฐาน */
+            box-shadow: none;
+            /* ลบเงาของปุ่ม */
         }
-        
+
         .sidebar-item.activee a {
-            color: inherit; /* ใช้สีของข้อความตามสีพื้นฐาน */
+            color: inherit;
+            /* ใช้สีของข้อความตามสีพื้นฐาน */
         }
     </style>
 
@@ -153,638 +195,643 @@ $conn->close();
                     </div>
                 </div>
                 <div class="sidebar-menu">
-        <ul class="menu">
-            <li class="sidebar-title">เมนู</li>
-            
-            <li
-                class="sidebar-item active ">
-                <a href="dashboard.php" class='sidebar-link'>
-                    <i class="bi bi-grid-fill"></i>
-                    <span>หน้าหลัก</span>
-                </a>
-                
+                    <ul class="menu">
+                        <li class="sidebar-title">เมนู</li>
 
-            </li>
-            
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-             <i class="fas fa-user-cog"></i>
-                 <span>บุคลากร</span>
-                </a>
+                        <li class="sidebar-item active ">
+                            <a href="dashboard.php" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span>หน้าหลัก</span>
+                            </a>
 
-                <ul class="submenu ">
-                    
-                    <li class="submenu-item  ">
-                        <a href="personnel.php" class="submenu-link">แสดงข้อมูลบุคลากร</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="personnel_edit.php" class="submenu-link">เพิ่ม / ลบ / แก้ไข </a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="component-badge.html" class="submenu-link">Badge</a>
-                        
-                    </li>
-                    
-                  
-                </ul>
-                
 
-            </li>
-            
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-                    <i class="fa fa-address-card"></i>
-                    <span>การลา</span>
-                </a>
-                
-                <ul class="submenu ">
-                    
-                    <li class="submenu-item  ">
-                        <a href="vacation_leave.php" class="submenu-link">ลาพักผ่อน</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-divider.html" class="submenu-link">ลาป่วย</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-date-picker.html" class="submenu-link">Date Picker</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-sweetalert.html" class="submenu-link">Sweet Alert</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-toastify.html" class="submenu-link">Toastify</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="extra-component-rating.html" class="submenu-link">Rating</a>
-                        
-                    </li>
-                    
-                </ul>
-                
+                        </li>
 
-            </li>
-            
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-                    <i class="bi bi-grid-1x2-fill"></i>
-                    <span>Layouts</span>
-                </a>
-                
-                <ul class="submenu ">
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-default.html" class="submenu-link">Default Layout</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-vertical-1-column.html" class="submenu-link">1 Column</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-vertical-navbar.html" class="submenu-link">Vertical Navbar</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-rtl.html" class="submenu-link">RTL Layout</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="layout-horizontal.html" class="submenu-link">Horizontal Menu</a>
-                        
-                    </li>
-                    
-                </ul>
-                
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="fas fa-user-cog"></i>
+                                <span>บุคลากร</span>
+                            </a>
 
-            </li>
-            
-            <li class="sidebar-title">อื่นๆ</li>
-            
-            <li
-                class="sidebar-item  has-sub">
-                <a href="#" class='sidebar-link'>
-                    <i class="	fas fa-cog"></i>
-                    <span>ตั้งค่า</span>
-                </a>
-                
-                <ul class="submenu ">
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-input.html" class="submenu-link">Input</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-input-group.html" class="submenu-link">Input Group</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-select.html" class="submenu-link">Select</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-radio.html" class="submenu-link">Radio</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-checkbox.html" class="submenu-link">Checkbox</a>
-                        
-                    </li>
-                    
-                    <li class="submenu-item  ">
-                        <a href="form-element-textarea.html" class="submenu-link">Textarea</a>
-                        
-                    </li>
-                    
-                    
-                </ul>
-                <li
-                class="sidebar-item activee ">
-                <a href="logout.php" class='sidebar-link'>
-                    <i class="	fas fa-power-off"></i>
-                    <span>ออกจากระบบ</span>
-                </a>
-                
+                            <ul class="submenu ">
 
-            </li>
+                                <li class="submenu-item  ">
+                                    <a href="personnel.php" class="submenu-link">แสดงข้อมูลบุคลากร</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="personnel_edit.php" class="submenu-link">เพิ่ม / ลบ / แก้ไข </a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="component-badge.html" class="submenu-link">Badge</a>
+
+                                </li>
+
+
+                            </ul>
+
+
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="fa fa-address-card"></i>
+                                <span>การลา</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                                <li class="submenu-item  ">
+                                    <a href="vacation_leave.php" class="submenu-link">ลาพักผ่อน</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="extra-component-divider.html" class="submenu-link">ลาป่วย</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="extra-component-date-picker.html" class="submenu-link">Date Picker</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="extra-component-sweetalert.html" class="submenu-link">Sweet Alert</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="extra-component-toastify.html" class="submenu-link">Toastify</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="extra-component-rating.html" class="submenu-link">Rating</a>
+
+                                </li>
+
+                            </ul>
+
+
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>Layouts</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-default.html" class="submenu-link">Default Layout</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-vertical-1-column.html" class="submenu-link">1 Column</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-vertical-navbar.html" class="submenu-link">Vertical Navbar</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-rtl.html" class="submenu-link">RTL Layout</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="layout-horizontal.html" class="submenu-link">Horizontal Menu</a>
+
+                                </li>
+
+                            </ul>
+
+
+                        </li>
+
+                        <li class="sidebar-title">อื่นๆ</li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="	fas fa-cog"></i>
+                                <span>ตั้งค่า</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-input.html" class="submenu-link">Input</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-input-group.html" class="submenu-link">Input Group</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-select.html" class="submenu-link">Select</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-radio.html" class="submenu-link">Radio</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-checkbox.html" class="submenu-link">Checkbox</a>
+
+                                </li>
+
+                                <li class="submenu-item  ">
+                                    <a href="form-element-textarea.html" class="submenu-link">Textarea</a>
+
+                                </li>
+
+
+                            </ul>
+                        <li class="sidebar-item activee ">
+                            <a href="logout.php" class='sidebar-link'>
+                                <i class="	fas fa-power-off"></i>
+                                <span>ออกจากระบบ</span>
+                            </a>
+
+
+                        </li>
 
                     </ul>
                 </div>
             </div>
         </div>
         <div id="main">
-        <script>
-                  document.addEventListener('DOMContentLoaded', function () {
-                        // อ้างอิงถึงฟิลด์
-                        const dayField = document.querySelector('select[name="day"]');
-                        const monthField = document.querySelector('select[name="month"]');
-                        const yearField = document.querySelector('select[name="year"]');
-                        const acceptDayField = document.querySelector('select[name="accept_day"]');
-                        const acceptMonthField = document.querySelector('select[name="accept_month"]');
-                        const acceptYearField = document.querySelector('select[name="accept_year"]');
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // อ้างอิงถึงฟิลด์
+                    const dayField = document.querySelector('select[name="day"]');
+                    const monthField = document.querySelector('select[name="month"]');
+                    const yearField = document.querySelector('select[name="year"]');
+                    const acceptDayField = document.querySelector('select[name="accept_day"]');
+                    const acceptMonthField = document.querySelector('select[name="accept_month"]');
+                    const acceptYearField = document.querySelector('select[name="accept_year"]');
 
-                        const ageField = document.querySelector('input[name="age"]');
-                        const retirementDateField = document.querySelector('input[name="retirement_date"]');
-                        const serviceAtRetirementField = document.querySelector('input[name="service_at_retirement"]');
-                        const serviceRemainingField = document.querySelector('input[name="service_remaining"]');
+                    const ageField = document.querySelector('input[name="age"]');
+                    const retirementDateField = document.querySelector('input[name="retirement_date"]');
+                    const serviceAtRetirementField = document.querySelector('input[name="service_at_retirement"]');
+                    const serviceRemainingField = document.querySelector('input[name="service_remaining"]');
 
-                        // คำนวณอายุ และอายุราชการที่เหลือ
-                        function calculateDetails() {
-    const retirementAge = 60; // กำหนดอายุเกษียณราชการ
-    const currentDate = new Date(); // วันที่ปัจจุบัน
+                    // คำนวณอายุ และอายุราชการที่เหลือ
+                    function calculateDetails() {
+                        const retirementAge = 60; // กำหนดอายุเกษียณราชการ
+                        const currentDate = new Date(); // วันที่ปัจจุบัน
 
-    // รับค่าจากฟิลด์วันเดือนปีเกิด
-    const birthDay = parseInt(dayField.value);
-    const birthMonth = parseInt(monthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
-    const birthYear = parseInt(yearField.value);
+                        // รับค่าจากฟิลด์วันเดือนปีเกิด
+                        const birthDay = parseInt(dayField.value) || 1; // ถ้าไม่มีค่าให้ใช้ค่าเริ่มต้น
+                        const birthMonth = (parseInt(monthField.value) || 1) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
+                        const birthYear = parseInt(yearField.value) || (new Date().getFullYear() + 543); // ใช้ปีปัจจุบันถ้าไม่มีค่า
 
-    // รับค่าจากฟิลด์วันที่บรรจุ
-    const acceptDay = parseInt(acceptDayField.value);
-    const acceptMonth = parseInt(acceptMonthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
-    const acceptYear = parseInt(acceptYearField.value);
+                        // รับค่าจากฟิลด์วันที่บรรจุ
+                        const acceptDay = parseInt(acceptDayField.value) || 1;
+                        const acceptMonth = (parseInt(acceptMonthField.value) || 1) - 1;
+                        const acceptYear = parseInt(acceptYearField.value) || (new Date().getFullYear() + 543);
 
-    // Debugging
-    console.log("Birth Month After Adjustment:", birthMonth);
-    console.log("Accept Month After Adjustment:", acceptMonth);
+                        // ตั้งค่าเริ่มต้นให้กับ select fields ถ้ายังไม่มีค่า
+                        if (!dayField.value) dayField.value = '1';
+                        if (!monthField.value) monthField.value = '1';
+                        if (!yearField.value) yearField.value = (new Date().getFullYear() + 543).toString();
+                        if (!acceptDayField.value) acceptDayField.value = '1';
+                        if (!acceptMonthField.value) acceptMonthField.value = '1';
+                        if (!acceptYearField.value) acceptYearField.value = (new Date().getFullYear() + 543).toString();
 
-    if (isNaN(birthDay) || isNaN(birthMonth) || isNaN(birthYear) || 
-        isNaN(acceptDay) || isNaN(acceptMonth) || isNaN(acceptYear)) {
-        console.error("ค่าที่รับมาไม่ถูกต้อง:", { birthDay, birthMonth, birthYear, acceptDay, acceptMonth, acceptYear });
-        return;
-    }
+                        const birthDate = new Date(birthYear - 543, birthMonth, birthDay);
+                        const acceptDate = new Date(acceptYear - 543, acceptMonth, acceptDay);
+                        const retirementDate = new Date(birthYear - 543 + retirementAge, 9, 30); // เกษียณ 30 กันยายน
 
-    const birthDate = new Date(birthYear - 543, birthMonth, birthDay);
-    const acceptDate = new Date(acceptYear - 543, acceptMonth, acceptDay);
-    const retirementDate = new Date(birthYear - 543 + retirementAge, 9, 30);
+                        // คำนวณอายุปัจจุบัน
+                        const age = calculateAge(birthDate, currentDate);
 
-    // Debugging
-    console.log("Birth Date:", birthDate);
-    console.log("Accept Date:", acceptDate);
+                        // คำนวณอายุราชการในวันเกษียณ
+                        const serviceAtRetirement = calculateAge(acceptDate, retirementDate);
 
-    // คำนวณอายุปัจจุบัน
-    const age = calculateAge(birthDate, currentDate);
+                        // คำนวณอายุราชการที่เหลือ
+                        const serviceRemaining = calculateAge(currentDate, retirementDate);
 
-    // คำนวณอายุราชการในวันเกษียณ
-    const serviceAtRetirement = calculateAge(acceptDate, retirementDate);
+                        // อัปเดตค่าลงในฟิลด์
+                        if (ageField) ageField.value = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
+                        if (retirementDateField) retirementDateField.value = `${retirementDate.getDate()} ตุลาคม ${retirementDate.getFullYear() + 543}`;
+                        if (serviceAtRetirementField) serviceAtRetirementField.value = `${serviceAtRetirement.years} ปี ${serviceAtRetirement.months} เดือน ${serviceAtRetirement.days} วัน`;
+                        if (serviceRemainingField) serviceRemainingField.value = `${serviceRemaining.years} ปี ${serviceRemaining.months} เดือน ${serviceRemaining.days} วัน`;
+                    }
 
-    // คำนวณอายุราชการที่เหลือ
-    const serviceRemaining = calculateAge(currentDate, retirementDate);
+                    // ฟังก์ชันคำนวณช่วงเวลา
+                    function calculateAge(startDate, endDate) {
+                        const years = endDate.getFullYear() - startDate.getFullYear();
+                        const months = endDate.getMonth() - startDate.getMonth();
+                        const days = endDate.getDate() - startDate.getDate();
 
-    // Debugging
-    console.log("Age:", age);
-    console.log("Service At Retirement:", serviceAtRetirement);
-    console.log("Service Remaining:", serviceRemaining);
+                        let calculatedYears = years;
+                        let calculatedMonths = months;
+                        let calculatedDays = days;
 
-    // อัปเดตค่าลงในฟิลด์
-    ageField.value = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
-    retirementDateField.value = `${retirementDate.getDate()} ตุลาคม ${retirementDate.getFullYear() + 543}`;
-    serviceAtRetirementField.value = `${serviceAtRetirement.years} ปี ${serviceAtRetirement.months} เดือน ${serviceAtRetirement.days} วัน`;
-    serviceRemainingField.value = `${serviceRemaining.years} ปี ${serviceRemaining.months} เดือน ${serviceRemaining.days} วัน`;
-
-    console.log("Age Field Value:", ageField.value);
-    console.log("Retirement Date Field Value:", retirementDateField.value);
-    console.log("Service Remaining Field Value:", serviceRemainingField.value);
-}
-
-
-                        // ฟังก์ชันคำนวณช่วงเวลา
-                        function calculateAge(startDate, endDate) {
-                            const years = endDate.getFullYear() - startDate.getFullYear();
-                            const months = endDate.getMonth() - startDate.getMonth();
-                            const days = endDate.getDate() - startDate.getDate();
-
-                            let calculatedYears = years;
-                            let calculatedMonths = months;
-                            let calculatedDays = days;
-
-                            if (calculatedDays < 0) {
-                                calculatedMonths--;
-                                calculatedDays += 31; // ประมาณจำนวนวันในเดือน
-                            }
-                            if (calculatedMonths < 0) {
-                                calculatedYears--;
-                                calculatedMonths += 12;
-                            }
-
-                            return { years: calculatedYears, months: calculatedMonths, days: calculatedDays };
+                        if (calculatedDays < 0) {
+                            calculatedMonths--;
+                            calculatedDays += 31; // ประมาณจำนวนวันในเดือน
+                        }
+                        if (calculatedMonths < 0) {
+                            calculatedYears--;
+                            calculatedMonths += 12;
                         }
 
-                        // เพิ่ม Event Listener
-                        dayField.addEventListener('change', calculateDetails);
-                        monthField.addEventListener('change', calculateDetails);
-                        yearField.addEventListener('change', calculateDetails);
-                        acceptDayField.addEventListener('change', calculateDetails);
-                        acceptMonthField.addEventListener('change', calculateDetails);
-                        acceptYearField.addEventListener('change', calculateDetails);
-                    });
+                        return { years: calculatedYears, months: calculatedMonths, days: calculatedDays };
+                    }
+
+                    // เรียกใช้ฟังก์ชันคำนวณทันทีที่โหลดหน้า
+                    calculateDetails();
+
+                    // เพิ่ม Event Listener สำหรับการเปลี่ยนแปลงค่า
+                    dayField?.addEventListener('change', calculateDetails);
+                    monthField?.addEventListener('change', calculateDetails);
+                    yearField?.addEventListener('change', calculateDetails);
+                    acceptDayField?.addEventListener('change', calculateDetails);
+                    acceptMonthField?.addEventListener('change', calculateDetails);
+                    acceptYearField?.addEventListener('change', calculateDetails);
+                });
 
 
-             </script>
-                
+            </script>
 
-                <body class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
-                <div class="container mt-4" style="max-width: 800px;">
-                    <h2 class="text-center .text-secondary mb-4">แก้ไขข้อมูลบุคลากร</h2>
-                    <form id="personnelForm" action="save_personnel.php" method="POST" onsubmit="return validateForm()">
-                        <div class="row g-3">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label"><span class="text-danger">*</span> หมายเลขบัตรประชาชน 13
-                                    หลัก:</label>
-                                <input type="number" name="person_id" class="form-control" required>
-                            </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label"><span class="text-danger">*</span> ชื่อ - สกุล:</label>
-                                <input type="text" name="person_name" class="form-control" maxlength="255" required>
-                            </div>
+            <body class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+                <div class="container my-5 d-flex justify-content-center">
+                    <div style="max-width: 600px; width: 100%;">
+                        <h2 class="text-center mb-4">แก้ไขข้อมูลบุคคล</h2>
+                        <form action="edit_person.php" method="post">
+                            <input type="hidden" name="person_id" value="<?php echo $row['person_id']; ?>">
 
-                            <div class="col-md-6">
-                                <label class="form-label"><span class="text-danger">*</span> เพศ:</label>
-                                <select name="person_gender" class="form-select" required>
-                                    <option value="">เลือกเพศ</option>
-                                    <option value="ชาย">ชาย</option>
-                                    <option value="หญิง">หญิง</option>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="person_name" class="form-label">ชื่อ-สกุล</label>
+                                    <input type="text" class="form-control" id="person_name" name="person_name"
+                                        value="<?php echo $row['person_name']; ?>" required>
+                                </div>
 
-                                </select>
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label"><span class="text-danger">*</span> เพศ:</label>
+                                    <select name="person_gender" class="form-select" required>
+                                        <option value="">เลือกเพศ</option>
+                                        <option value="ชาย" <?php if ($row['person_gender'] == 'ชาย')
+                                            echo 'selected'; ?>>ชาย</option>
+                                        <option value="หญิง" <?php if ($row['person_gender'] == 'หญิง')
+                                            echo 'selected'; ?>>หญิง</option>
+                                        <option value="อื่นๆ" <?php if ($row['person_gender'] == 'อื่นๆ')
+                                            echo 'selected'; ?>>อื่นๆ</option>
+                                    </select>
+                                </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">ตำแหน่ง:</label>
-                                <input type="text" name="person_rank" class="form-control" maxlength="255" required>
-                            </div>
+                                <div class="col-md-6">
+                                    <label for="person_rank" class="form-label">ตำแหน่ง</label>
+                                    <input type="text" class="form-control" id="person_rank" name="person_rank"
+                                        value="<?php echo $row['person_rank']; ?>" required>
+                                </div>
 
-                            <div class="col-md-6">
-                                        <label class="form-label">ปฏิบัติการที่:</label>
-                                        <select name="person_formwork" class="form-select" required>
-                                            <option value="">เลือกปฏิบัติการ</option>
-                                            <option value="องค์กรแพทย์" <?php if ($row['person_formwork'] == 'องค์กรแพทย์')
-                                                echo 'selected'; ?>>องค์กรแพทย์
-                                            </option>
-                                            <option value="กลุ่มงานบริหารทั่วไป" <?php if ($row['person_formwork'] == 'กลุ่มงานบริหารทั่วไป')
-                                                echo 'selected'; ?>>
-                                                กลุ่มงานบริหารทั่วไป</option>
-                                            <option value="เภสัชกรรมและคุ้มครองผู้บริโภค" <?php if ($row['person_formwork'] == 'เภสัชกรรมและคุ้มครองผู้บริโภค')
-                                                echo 'selected'; ?>>เภสัชกรรมและคุ้มครองผู้บริโภค</option>
-                                            <option value="โภชนศาสตร์" <?php if ($row['person_formwork'] == 'โภชนศาสตร์')
-                                                echo 'selected'; ?>>โภชนศาสตร์</option>
-                                            <option value="แพทย์แผนไทยและแพทย์ทางเลือก" <?php if ($row['person_formwork'] == 'แพทย์แผนไทยและแพทย์ทางเลือก')
-                                                echo 'selected'; ?>>แพทย์แผนไทยและแพทย์ทางเลือก</option>
-                                            <option value="เวชศาสตร์ฟื้นฟู" <?php if ($row['person_formwork'] == 'เวชศาสตร์ฟื้นฟู')
-                                                echo 'selected'; ?>>
-                                                เวชศาสตร์ฟื้นฟู</option>
-                                            <option value="ประกันสุขภาพ ยุทธศาสตร์ และสารสนเทศทางการแพทย์" <?php if ($row['person_formwork'] == 'ประกันสุขภาพ ยุทธศาสตร์ และสารสนเทศทางการแพทย์')
-                                                echo 'selected'; ?>>ประกันสุขภาพ ยุทธศาสตร์
-                                                และสารสนเทศทางการแพทย์</option>
-                                            <option value="เทคนิคการแพทย์" <?php if ($row['person_formwork'] == 'เทคนิคการแพทย์')
-                                                echo 'selected'; ?>>
-                                                เทคนิคการแพทย์</option>
-                                            <option value="บริการด้านปฐมภูมิและองค์รวม" <?php if ($row['person_formwork'] == 'บริการด้านปฐมภูมิและองค์รวม')
-                                                echo 'selected'; ?>>บริการด้านปฐมภูมิและองค์รวม</option>
-                                            <option value="ทันตกรรม" <?php if ($row['person_formwork'] == 'ทันตกรรม')
-                                                echo 'selected'; ?>>ทันตกรรม</option>
-                                            <option value="รังสีวิทยา" <?php if ($row['person_formwork'] == 'รังสีวิทยา')
-                                                echo 'selected'; ?>>รังสีวิทยา</option>
-                                            <option value="จิตเวชและยาเสพติด" <?php if ($row['person_formwork'] == 'จิตเวชและยาเสพติด')
-                                                echo 'selected'; ?>>
-                                                จิตเวชและยาเสพติด</option>
-                                            <option value="การพยาบาล" <?php if ($row['person_formwork'] == 'การพยาบาล')
-                                                echo 'selected'; ?>>การพยาบาล</option>
+                                <div class="col-md-6">
+                                    <label class="form-label">ประเภทการจ้าง:</label>
+                                    <select name="person_typeHire" class="form-select" required>
+                                        <option value="">เลือกประเภทการจ้าง</option>
+                                        <option value="ข้าราชการ" <?php if ($row['person_typeHire'] == 'ข้าราชการ')
+                                            echo 'selected'; ?>>ข้าราชการ</option>
+                                        <option value="จ้างเหมาบริการ" <?php if ($row['person_typeHire'] == 'จ้างเหมาบริการ')
+                                            echo 'selected'; ?>>
+                                            จ้างเหมาบริการ</option>
+                                        <option value="จ้างเหมาบุคคล" <?php if ($row['person_typeHire'] == 'จ้างเหมาบุคคล')
+                                            echo 'selected'; ?>>
+                                            จ้างเหมาบุคคล</option>
+                                        <option value="พนักงานกระทรวง" <?php if ($row['person_typeHire'] == 'พนักงานกระทรวง')
+                                            echo 'selected'; ?>>
+                                            พนักงานกระทรวง</option>
+                                        <option value="พนักงานราชการ" <?php if ($row['person_typeHire'] == 'พนักงานราชการ')
+                                            echo 'selected'; ?>>
+                                            พนักงานราชการ</option>
+                                        <option value="ลูกจ้างชั่วคราว (รายเดือน)" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราว (รายเดือน)')
+                                            echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
+                                        <option value="ลูกจ้างชั่วคราวรายวัน" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราวรายวัน')
+                                            echo 'selected'; ?>>
+                                            ลูกจ้างชั่วคราวรายวัน</option>
+                                        <option value="ลูกจ้างประจำ" <?php if ($row['person_typeHire'] == 'ลูกจ้างประจำ')
+                                            echo 'selected'; ?>>
+                                            ลูกจ้างประจำ</option>
+                                        <option value="ลูกจ้างรายคาบ" <?php if ($row['person_typeHire'] == 'ลูกจ้างรายคาบ')
+                                            echo 'selected'; ?>>
+                                            ลูกจ้างรายคาบ</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">ระดับข้าราชการ:</label>
+                                    <select name="person_level" class="form-select" required>
+                                        <option value="">เลือกระดับ</option>
+                                        <option value="ระดับทักษะพิเศษ" <?php if ($row['person_level'] == 'ระดับทักษะพิเศษ')
+                                            echo 'selected'; ?>>
+                                            ระดับทักษะพิเศษ</option>
+                                        <option value="ระดับอาวุโส" <?php if ($row['person_level'] == 'ระดับอาวุโส')
+                                            echo 'selected'; ?>>ระดับอาวุโส</option>
+                                        <option value="ระดับชำนาญงาน" <?php if ($row['person_level'] == 'ระดับชำนาญงาน')
+                                            echo 'selected'; ?>>
+                                            ระดับชำนาญงาน</option>
+                                        <option value="ระดับปฏิบัติงาน" <?php if ($row['person_level'] == 'ระดับปฏิบัติงาน')
+                                            echo 'selected'; ?>>
+                                            ระดับปฏิบัติงาน</option>
+                                        <option value="พลเรือน (ประเภทวิชาการ)" <?php if ($row['person_level'] == 'พลเรือน (ประเภทวิชาการ)')
+                                            echo 'selected'; ?>>
+                                            พลเรือน (ประเภทวิชาการ)</option>
+                                        <option value="ระดับเชี่ยวชาญ" <?php if ($row['person_level'] == 'ระดับเชี่ยวชาญ')
+                                            echo 'selected'; ?>>
+                                            ระดับเชี่ยวชาญ</option>
+                                        <option value="ระดับชำนาญการพิเศษ" <?php if ($row['person_level'] == 'ระดับชำนาญการพิเศษ')
+                                            echo 'selected'; ?>>
+                                            ระดับชำนาญการพิเศษ</option>
+                                        <option value="ระดับชำนาญการ" <?php if ($row['person_level'] == 'ระดับชำนาญการ')
+                                            echo 'selected'; ?>>
+                                            ระดับชำนาญการ</option>
+                                        <option value="ระดับปฏิบัติการ" <?php if ($row['person_level'] == 'ระดับปฏิบัติการ')
+                                            echo 'selected'; ?>>
+                                            ระดับปฏิบัติการ</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="person_DocNumber" class="form-label">เลขจ.18</label>
+                                    <input type="number" class="form-control" id="person_DocNumber"
+                                        name="person_DocNumber" value="<?php echo $row['person_DocNumber']; ?>">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="person_SuppNumber" class="form-label">เลขที่ประกอบ:</label>
+                                    <input type="number" class="form-control" id="person_SuppNumber"
+                                        name="person_SuppNumber" value="<?php echo $row['person_SuppNumber']; ?>">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="person_POSVNumber" class="form-label">หมายเลข พอ.ส.ว.::</label>
+                                    <input type="number" class="form-control" id="person_POSVNumber"
+                                        name="person_POSVNumber" value="<?php echo $row['person_POSVNumber']; ?>">
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <label for="person_salary" class="form-label">เงินเดือน</label>
+                                    <input type="number" class="form-control" id="person_salary" name="person_salary"
+                                        value="<?php echo $row['person_salary']; ?>" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="person_nickname" class="form-label">ชื่อเล่น</label>
+                                    <input type="text" class="form-control" id="person_nickname" name="person_nickname"
+                                        value="<?php echo $row['person_nickname']; ?>">
+                                </div>
+                                <!-- วันเกิด -->
+                                <div class="col-md-6">
+                                    <label class="form-label">วันเดือนปีเกิด:</label>
+                                    <div class="d-flex gap-2">
+                                        <select name="day" class="form-select" required>
+                                            <option value="">วัน</option>
+                                            <?php for ($i = 1; $i <= 31; $i++): ?>
+                                                <option value="<?= $i ?>" <?= $i == date('j', strtotime($row['person_born'])) ? 'selected' : '' ?>>
+                                                    <?= $i ?>
+                                                </option>
+                                            <?php endfor; ?>
+                                        </select>
+                                        <select name="month" class="form-select" required>
+                                            <option value="">เดือน</option>
+                                            <?php
+                                            $months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+                                            foreach ($months as $key => $month): ?>
+                                                <option value="<?= $key + 1 ?>" <?= $key + 1 == date('n', strtotime($row['person_born'])) ? 'selected' : '' ?>>
+                                                    <?= $month ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <select name="year" class="form-select" required>
+                                            <option value="">ปี</option>
+                                            <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
+                                                <option value="<?= $i ?>" <?= $i == date('Y', strtotime($row['person_born'])) + 543 ? 'selected' : '' ?>>
+                                                    <?= $i ?>
+                                                </option>
+                                            <?php endfor; ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">อายุราชการที่เหลือคือ:</label>
+                                    <input type="text" name="service_remaining" class="form-control" maxlength="255"
+                                        readonly>
+                                </div>
+                                <!-- วันที่บรรจุ -->
+                                <div class="col-md-6">
+                                    <label class="form-label">วันที่บรรจุ:</label>
+                                    <div class="d-flex gap-2">
+                                        <select name="accept_day" class="form-select" required>
+                                            <option value="">วัน</option>
+                                            <?php for ($i = 1; $i <= 31; $i++): ?>
+                                                <option value="<?= $i ?>" <?= $i == date('j', strtotime($row['person_dateAccepting'])) ? 'selected' : '' ?>>
+                                                    <?= $i ?>
+                                                </option>
+                                            <?php endfor; ?>
+                                        </select>
+                                        <select name="accept_month" class="form-select" required>
+                                            <option value="">เดือน</option>
+                                            <?php foreach ($months as $key => $month): ?>
+                                                <option value="<?= $key + 1 ?>" <?= $key + 1 == date('n', strtotime($row['person_dateAccepting'])) ? 'selected' : '' ?>>
+                                                    <?= $month ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <select name="accept_year" class="form-select" required>
+                                            <option value="">ปี</option>
+                                            <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
+                                                <option value="<?= $i ?>" <?= $i == date('Y', strtotime($row['person_dateAccepting'])) + 543 ? 'selected' : '' ?>>
+                                                    <?= $i ?>
+                                                </option>
+                                            <?php endfor; ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">อายุของคุณคือ:</label>
+                                    <input type="text" name="age" class="form-control" maxlength="255" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">วันที่คุณเกษียณอายุราชการคือ:</label>
+                                    <input type="text" name="retirement_date" class="form-control" readonly>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">อายุราชการในวันเกษียณของคุณคือ:</label>
+                                    <input type="text" name="service_at_retirement" class="form-control" maxlength="255"
+                                        readonly>
+                                </div>
+
+
+
+                                <div class="col-md-6">
+                                    <label class="form-label">ประเภทการจ้าง:</label>
+                                    <select name="person_typeHire" class="form-select" required>
+                                        <option value="">เลือกประเภทการจ้าง</option>
+                                        <option value="ข้าราชการ" <?php if ($row['person_typeHire'] == 'ข้าราชการ')
+                                            echo 'selected'; ?>>ข้าราชการ</option>
+                                        <option value="จ้างเหมาบริการ" <?php if ($row['person_typeHire'] == 'จ้างเหมาบริการ')
+                                            echo 'selected'; ?>>
+                                            จ้างเหมาบริการ</option>
+                                        <option value="จ้างเหมาบุคคล" <?php if ($row['person_typeHire'] == 'จ้างเหมาบุคคล')
+                                            echo 'selected'; ?>>
+                                            จ้างเหมาบุคคล</option>
+                                        <option value="พนักงานกระทรวง" <?php if ($row['person_typeHire'] == 'พนักงานกระทรวง')
+                                            echo 'selected'; ?>>
+                                            พนักงานกระทรวง</option>
+                                        <option value="พนักงานราชการ" <?php if ($row['person_typeHire'] == 'พนักงานราชการ')
+                                            echo 'selected'; ?>>
+                                            พนักงานราชการ</option>
+                                        <option value="ลูกจ้างชั่วคราว (รายเดือน)" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราว (รายเดือน)')
+                                            echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
+                                        <option value="ลูกจ้างชั่วคราวรายวัน" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราวรายวัน')
+                                            echo 'selected'; ?>>
+                                            ลูกจ้างชั่วคราวรายวัน</option>
+                                        <option value="ลูกจ้างประจำ" <?php if ($row['person_typeHire'] == 'ลูกจ้างประจำ')
+                                            echo 'selected'; ?>>
+                                            ลูกจ้างประจำ</option>
+                                        <option value="ลูกจ้างรายคาบ" <?php if ($row['person_typeHire'] == 'ลูกจ้างรายคาบ')
+                                            echo 'selected'; ?>>
+                                            ลูกจ้างรายคาบ</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="person_positionAllowance" class="form-label">เงินประจำตำแหน่ง</label>
+                                    <input type="number" class="form-control" id="person_positionAllowance"
+                                        name="person_positionAllowance"
+                                        value="<?php echo $row['person_positionAllowance']; ?>">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="person_phone" class="form-label">เบอร์โทรศัพท์</label>
+                                    <input type="text" class="form-control" id="person_phone" name="person_phone"
+                                        value="<?php echo $row['person_phone']; ?>">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="person_specialQualification" class="form-label">วุฒิเฉพาะทาง</label>
+                                    <input type="text" class="form-control" id="person_specialQualification"
+                                        name="person_specialQualification"
+                                        value="<?php echo $row['person_specialQualification']; ?>">
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <label class="form-label">กรุ๊ปเลือด:</label>
+                                    <select name="person_blood" class="form-select">
+                                        <option value="">เลือกกรุ๊ปเลือด</option>
+                                        <option value="A" <?php if ($row['person_blood'] == 'A')
+                                            echo 'selected'; ?>>A
+                                        </option>
+                                        <option value="B" <?php if ($row['person_blood'] == 'B')
+                                            echo 'selected'; ?>>B
+                                        </option>
+                                        <option value="AB" <?php if ($row['person_blood'] == 'AB')
+                                            echo 'selected'; ?>>AB</option>
+                                        <option value="O" <?php if ($row['person_blood'] == 'O')
+                                            echo 'selected'; ?>>O
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="person_cardNum" class="form-label">เลขบัตรข้าราชการ</label>
+                                    <input type="text" class="form-control" id="person_cardNum" name="person_cardNum"
+                                        value="<?php echo $row['person_cardNum']; ?>">
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <label class="form-label">วันหมดอายุบัตรข้าราชการ:</label>
+                                    <div class="a-flex gap-2">
+                                        <select name="Expired_day" class="form-select" required>
+                                            <option value="">วัน</option>
+                                            <?php
+                                            $expired_date = isset($row['person_CardExpired']) ? explode('-', $row['person_CardExpired']) : null;
+                                            $expired_day = $expired_date ? (int) $expired_date[2] : null; // แยกค่าของวัน
+                                            for ($i = 1; $i <= 31; $i++): ?>
+                                                <option value="<?= $i ?>" <?= $i == $expired_day ? 'selected' : '' ?>>
+                                                    <?= $i ?>
+                                                </option>
+                                            <?php endfor; ?>
+                                        </select>
+
+                                        <!-- ช่องเลือกเดือน -->
+                                        <select name="Expired_month" class="form-select" required>
+                                            <option value="">เดือน</option>
+                                            <?php
+                                            $expired_month = $expired_date ? (int) $expired_date[1] : null; // แยกค่าของเดือน
+                                            $months = [
+                                                "มกราคม",
+                                                "กุมภาพันธ์",
+                                                "มีนาคม",
+                                                "เมษายน",
+                                                "พฤษภาคม",
+                                                "มิถุนายน",
+                                                "กรกฎาคม",
+                                                "สิงหาคม",
+                                                "กันยายน",
+                                                "ตุลาคม",
+                                                "พฤศจิกายน",
+                                                "ธันวาคม"
+                                            ];
+                                            foreach ($months as $key => $month): ?>
+                                                <option value="<?= $key + 1 ?>" <?= ($key + 1) == $expired_month ? 'selected' : '' ?>>
+                                                    <?= $month ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+
+                                        <!-- ช่องเลือกปี -->
+                                        <select name="Expired_year" class="form-select" required>
+                                            <option value="">ปี</option>
+                                            <?php
+                                            $expired_year = $expired_date ? (int) $expired_date[0] + 543 : null; // แยกค่าปีและแปลงเป็น พ.ศ.
+                                            for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
+                                                <option value="<?= $i ?>" <?= $i == $expired_year ? 'selected' : '' ?>>
+                                                    <?= $i ?>
+                                                </option>
+                                            <?php endfor; ?>
                                         </select>
                                     </div>
 
 
-                            <div class="col-md-6">
-                                <label class="form-label">ระดับข้าราชการ:</label>
-                                <select name="person_level" class="form-select" required>
-                                    <option value="">เลือกระดับ</option>
-                                    <option value="ระดับทักษะพิเศษ">ระดับทักษะพิเศษ</option>
-                                    <option value="ระดับอาวุโส">ระดับอาวุโส</option>
-                                    <option value="ระดับชำนาญงาน">ระดับชำนาญงาน</option>
-                                    <option value="ระดับปฏิบัติงาน">ระดับปฏิบัติงาน</option>
-                                    <option value="พลเรือน (ประเภทวิชาการ)">พลเรือน (ประเภทวิชาการ)</option>
-                                    <option value="ระดับเชี่ยวชาญ">ระดับเชี่ยวชาญ</option>
-                                    <option value="ระดับชำนาญการพิเศษ">ระดับชำนาญการพิเศษ</option>
-                                    <option value="ระดับชำนาญการ">ระดับชำนาญการ</option>
-                                    <option value="ระดับปฏิบัติการ">ระดับปฏิบัติการ</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label"><span class="text-danger">*</span> เลข จ.18:</label>
-                                <input type="text" name="person_DocNumber" class="form-control" maxlength="255"
-                                    placeholder="กรอกเลขจ.18" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label"><span class="text-danger">*</span> เลขที่ประกอบ:</label>
-                                <input type="text" name="person_SuppNumber" class="form-control" maxlength="255"
-                                    placeholder="กรอกเลขที่ประกอบ" required>
-
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">หมายเลข พอ.ส.ว.:</label>
-                                <input type="text" name="person_POSVNumber" class="form-control" maxlength="255"
-                                    placeholder="กรอกหมายเลข พอ.ส.ว." required>
-                            </div>
 
 
-                            <div class="col-md-6">
-                                <label class="form-label">เงินเดือน:</label>
-                                <input type="number" name="person_salary" class="form-control" step="0.01" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">ชื่อเล่น:</label>
-                                <input type="text" name="person_nickname" class="form-control" maxlength="255" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">วันเดือนปีเกิด:</label>
-                                <div class="d-flex gap-2">
-                                    <!-- ช่องเลือกวันที่ -->
-                                    <select name="day" class="form-select" required>
-                                        <option value="">วัน</option>
-                                        <?php for ($i = 1; $i <= 31; $i++): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-
-                                    <!-- ช่องเลือกเดือน -->
-                                    <select name="month" class="form-select" required>
-                                        <option value="">เดือน</option>
-                                        <?php
-                                        $months = [
-                                            "มกราคม",
-                                            "กุมภาพันธ์",
-                                            "มีนาคม",
-                                            "เมษายน",
-                                            "พฤษภาคม",
-                                            "มิถุนายน",
-                                            "กรกฎาคม",
-                                            "สิงหาคม",
-                                            "กันยายน",
-                                            "ตุลาคม",
-                                            "พฤศจิกายน",
-                                            "ธันวาคม"
-                                        ];
-                                        foreach ($months as $key => $month): ?>
-                                            <option value="<?= $key + 1 ?>"><?= $month ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-
-                                    <!-- ช่องเลือกปี -->
-                                    <select name="year" class="form-select" required>
-                                        <option value="">ปี</option>
-                                        <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">อายุราชการที่เหลือคือ:</label>
-                                <input type="text" name="service_remaining" class="form-control" maxlength="255"
-                                    readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">วันที่บรรจุ:</label>
-                                <div class="d-flex gap-2">
-                                    <!-- ช่องเลือกวันที่ -->
-                                    <select name="accept_day" class="form-select" required>
-                                        <option value="">วัน</option>
-                                        <?php for ($i = 1; $i <= 31; $i++): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-
-                                    <!-- ช่องเลือกเดือน -->
-                                    <select name="accept_month" class="form-select" required>
-                                        <option value="">เดือน</option>
-                                        <?php
-                                        $months = [
-                                            "มกราคม",
-                                            "กุมภาพันธ์",
-                                            "มีนาคม",
-                                            "เมษายน",
-                                            "พฤษภาคม",
-                                            "มิถุนายน",
-                                            "กรกฎาคม",
-                                            "สิงหาคม",
-                                            "กันยายน",
-                                            "ตุลาคม",
-                                            "พฤศจิกายน",
-                                            "ธันวาคม"
-                                        ];
-                                        foreach ($months as $key => $month): ?>
-                                            <option value="<?= $key + 1 ?>"><?= $month ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-
-                                    <!-- ช่องเลือกปี -->
-                                    <select name="accept_year" class="form-select" required>
-                                        <option value="">ปี</option>
-                                        <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">อายุของคุณคือ:</label>
-                                <input type="text" name="age" class="form-control" maxlength="255" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">วันที่คุณเกษียณอายุราชการคือ:</label>
-                                <input type="text" name="retirement_date" class="form-control" readonly>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">อายุราชการในวันเกษียณของคุณคือ:</label>
-                                <input type="text" name="service_at_retirement" class="form-control" maxlength="255"
-                                    readonly>
-                            </div>
-
-
-
-                            <div class="col-md-6">
-                                <label class="form-label">ประเภทการจ้าง:</label>
-                                <select name="person_typeHire" class="form-select" required>
-                                    <option value="">เลือกประเภทการจ้าง</option>
-                                    <option value="ข้าราชการ">ข้าราชการ</option>
-                                    <option value="จ้างเหมาบริการ">จ้างเหมาบริการ</option>
-                                    <option value="จ้างเหมาบุคคล">จ้างเหมาบุคคล</option>
-                                    <option value="พนักงานกระทรวง">พนักงานกระทรวง</option>
-                                    <option value="พนักงานราชการ">พนักงานราชการ</option>
-                                    <option value="ลูกจ้างชั่วคราว (รายเดือน)">ลูกจ้างชั่วคราว (รายเดือน)</option>
-                                    <option value="ลูกจ้างชั่วคราวรายวัน">ลูกจ้างชั่วคราวรายวัน</option>
-                                    <option value="ลูกจ้างประจำ">ลูกจ้างประจำ</option>
-                                    <option value="ลูกจ้างรายคาบ">ลูกจ้างรายคาบ</option>
-                                </select>
-                            </div>
-
-
-
-                            <div class="col-md-6">
-                                <label class="form-label">เงินประจำตำแหน่ง:</label>
-                                <input type="number" name="person_positionAllowance" class="form-control" step="0.01"
-                                    required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">เบอร์โทรศัพท์:</label>
-                                <input type="tel" name="person_phone" class="form-control" pattern="[0-9]{10}"
-                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">วุฒิพิเศษทางการ:</label>
-                                <input type="text" name="person_specialQualification" class="form-control"
-                                    maxlength="255" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">กรุ๊ปเลือด:</label>
-                                <select name="person_blood" class="form-select" required>
-                                    <option value="">เลือกกรุ๊ปเลือด</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="AB">AB</option>
-                                    <option value="O">O</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">เลขที่บัตรข้าราชการ:</label>
-                                <input type="text" name="person_cardNum" class="form-control" maxlength="13"
-                                    pattern="[0-9]{13}" title="กรุณากรอกเลขบัตร 13 หลัก">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">วันที่หมดอายุบัตรราชการ:</label>
-                                <div class="d-flex gap-2">
-                                    <!-- ช่องเลือกวันที่ -->
-                                    <select name="Expired_day" class="form-select" required>
-                                        <option value="">วัน</option>
-                                        <?php for ($i = 1; $i <= 31; $i++): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-
-                                    <!-- ช่องเลือกเดือน -->
-                                    <select name="Expired_month" class="form-select" required>
-                                        <option value="">เดือน</option>
-                                        <?php
-                                        $months = [
-                                            "มกราคม",
-                                            "กุมภาพันธ์",
-                                            "มีนาคม",
-                                            "เมษายน",
-                                            "พฤษภาคม",
-                                            "มิถุนายน",
-                                            "กรกฎาคม",
-                                            "สิงหาคม",
-                                            "กันยายน",
-                                            "ตุลาคม",
-                                            "พฤศจิกายน",
-                                            "ธันวาคม"
-                                        ];
-                                        foreach ($months as $key => $month): ?>
-                                            <option value="<?= $key + 1 ?>"><?= $month ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-
-                                    <!-- ช่องเลือกปี -->
-                                    <select name="Expired_year" class="form-select" required>
-                                        <option value="">ปี</option>
-                                        <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                                <div class="text-center mt-4">
-                                    <button type="submit" class="btn btn-success">บันทึกการแก้ไข</button>
-                                    <a href="personnel.php" class="btn btn-secondary">ยกเลิก</a>
-                                </div>
-                            </form>
-                        </div>
+                                    <div class="text-center mt-4">
+                                        <button type="submit" class="btn btn-success">บันทึกการแก้ไข</button>
+                                        <a href="personnel.php" class="btn btn-secondary">ยกเลิก</a>
+                                    </div>
+                        </form>
                     </div>
+                </div>
         </div>
 
 </body>
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/static/js/components/dark.js"></script>
-        <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-        <script src="assets/compiled/js/app.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/static/js/components/dark.js"></script>
+<script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="assets/compiled/js/app.js"></script>
 </body>
 
 </html>
