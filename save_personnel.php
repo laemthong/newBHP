@@ -67,46 +67,34 @@ try {
 
         // SQL สำหรับเพิ่มข้อมูล
         $sql = "INSERT INTO personnel (
-            person_id, person_name, person_gender, person_rank, person_formwork, person_level,
-            person_salary, person_nickname, person_born, person_positionNum, person_dateAccepting,
-            person_typeHire, person_positionAllowance, person_phone, person_specialQualification,
-            person_blood, person_cardNum, person_CardExpired, person_DocNumber, person_SuppNumber,
-            person_POSVNumber, person_CardExpired
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+            person_id, person_name, person_gender, person_rank, person_formwork,
+            person_level, person_salary, person_nickname, person_born,
+            person_dateAccepting, person_typeHire, person_positionAllowance,
+            person_phone, person_specialQualification, person_blood,
+            person_cardNum, person_CardExpired, person_DocNumber,
+            person_SuppNumber, person_POSVNumber
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        
         // เตรียมคำสั่ง SQL
         $stmt = $conn->prepare($sql);
-
+        
         if (!$stmt) {
             throw new Exception("การเตรียมคำสั่ง SQL ล้มเหลว: " . $conn->error);
         }
-
+        
         // ผูกตัวแปรกับคำสั่ง SQL
         $stmt->bind_param(
-            "isssssdssisidsssssss",
-            $person_id,
-            $person_name,
-            $person_gender,
-            $person_rank,
-            $person_formwork,
-            $person_level,
-            $person_salary,
-            $person_nickname,
-            $person_born,
-            $person_positionNum,
-            $person_dateAccepting,
-            $person_typeHire,
-            $person_positionAllowance,
-            $person_phone,
-            $person_specialQualification,
-            $person_blood,
-            $person_cardNum,
-            $person_CardExpired,
-            $person_DocNumber,
-            $person_SuppNumber,
-            $person_POSVNumber,
-            $person_CardExpired
+            "sssssssdssssssssssss",
+            $person_id, $person_name, $person_gender, $person_rank, $person_formwork,
+            $person_level, $person_salary, $person_nickname, $person_born,
+            $person_dateAccepting, $person_typeHire, $person_positionAllowance,
+            $person_phone, $person_specialQualification, $person_blood,
+            $person_cardNum, $person_CardExpired, $person_DocNumber,
+            $person_SuppNumber, $person_POSVNumber
         );
+        
+        
 
         // ดำเนินการบันทึกข้อมูล
         if ($stmt->execute()) {
