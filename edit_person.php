@@ -11,7 +11,7 @@ if (isset($_GET['id'])) {
     $result = $conn->query($sql);
 
     // ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือไม่
-    if ($result->num_rows > 0) {
+    if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
     } else {
         echo "ไม่พบข้อมูล";
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['person_name'];
     $gender = $_POST['person_gender'];
     $rank = $_POST['person_rank'];
-    $formwork = $_POST['person_formwork'];
+    $formwork = isset($_POST['person_formwork']) ? $_POST['person_formwork'] : ''; // ตรวจสอบ key
     $level = $_POST['person_level'];
     $salary = $_POST['person_salary'];
     $nickname = $_POST['person_nickname'];
@@ -43,8 +43,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dateAccepting = ($accept_year - 543) . "-" . str_pad($accept_month, 2, '0', STR_PAD_LEFT) . "-" . str_pad($accept_day, 2, '0', STR_PAD_LEFT);
 
     $typeHire = $_POST['person_typeHire'];
-    $yearBorn = intval(date("Y", strtotime($born)));
-    $yearAccepting = intval(date("Y", strtotime($dateAccepting)));
     $positionAllowance = $_POST['person_positionAllowance'];
     $phone = $_POST['person_phone'];
     $specialQualification = $_POST['person_specialQualification'];
@@ -56,27 +54,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Expired_month = $_POST['Expired_month'];
     $Expired_year = $_POST['Expired_year'];
     $cardExpired = ($Expired_year - 543) . "-" . str_pad($Expired_month, 2, '0', STR_PAD_LEFT) . "-" . str_pad($Expired_day, 2, '0', STR_PAD_LEFT);
-    function calculateDateDiff($startDate, $endDate)
-    {
-        $start = new DateTime($startDate);
-        $end = new DateTime($endDate);
-        $diff = $start->diff($end);
-
-        return [
-            'years' => $diff->y,
-            'months' => $diff->m,
-            'days' => $diff->d
-        ];
-    }
-
-    $currentDate = new DateTime();
-    $birthDate = new DateTime($row['person_born']);
-    $retirementDate = new DateTime($birthDate->format('Y') + 60 . '-09-30');
-    $acceptDate = new DateTime($row['person_dateAccepting']);
-
-    $age = calculateDateDiff($birthDate->format('Y-m-d'), $currentDate->format('Y-m-d'));
-    $serviceAtRetirement = calculateDateDiff($acceptDate->format('Y-m-d'), $retirementDate->format('Y-m-d'));
-    $serviceRemaining = calculateDateDiff($currentDate->format('Y-m-d'), $retirementDate->format('Y-m-d'));
 
     // อัพเดตข้อมูลในฐานข้อมูล
     $sql = "UPDATE personnel SET 
@@ -90,8 +67,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 person_born = '$born', 
                 person_dateAccepting = '$dateAccepting', 
                 person_typeHire = '$typeHire', 
-                person_yearBorn = '$yearBorn', 
-                person_yearAccepting = '$yearAccepting', 
                 person_positionAllowance = '$positionAllowance', 
                 person_phone = '$phone', 
                 person_specialQualification = '$specialQualification', 
@@ -102,13 +77,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($conn->query($sql) === TRUE) {
         echo "แก้ไขข้อมูลสำเร็จ";
-        header("Location: personnel.php"); // กลับไปยังหน้าแสดงตาราง
+        header("Location: personnel.php");
         exit();
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 }
-
 
 $conn->close();
 ?>
@@ -374,7 +348,7 @@ $conn->close();
         </div>
         <div id="main">
             <script>
-                document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('DOMContentLoaded', function() {
                     // อ้างอิงถึงฟิลด์
                     const dayField = document.querySelector('select[name="day"]');
                     const monthField = document.querySelector('select[name="month"]');
@@ -450,7 +424,11 @@ $conn->close();
                             calculatedMonths += 12;
                         }
 
-                        return { years: calculatedYears, months: calculatedMonths, days: calculatedDays };
+                        return {
+                            years: calculatedYears,
+                            months: calculatedMonths,
+                            days: calculatedDays
+                        };
                     }
 
                     // เรียกใช้ฟังก์ชันคำนวณทันทีที่โหลดหน้า
@@ -464,8 +442,6 @@ $conn->close();
                     acceptMonthField?.addEventListener('change', calculateDetails);
                     acceptYearField?.addEventListener('change', calculateDetails);
                 });
-
-
             </script>
 
 
@@ -488,11 +464,11 @@ $conn->close();
                                     <select name="person_gender" class="form-select" required>
                                         <option value="">เลือกเพศ</option>
                                         <option value="ชาย" <?php if ($row['person_gender'] == 'ชาย')
-                                            echo 'selected'; ?>>ชาย</option>
+                                                                echo 'selected'; ?>>ชาย</option>
                                         <option value="หญิง" <?php if ($row['person_gender'] == 'หญิง')
-                                            echo 'selected'; ?>>หญิง</option>
+                                                                    echo 'selected'; ?>>หญิง</option>
                                         <option value="อื่นๆ" <?php if ($row['person_gender'] == 'อื่นๆ')
-                                            echo 'selected'; ?>>อื่นๆ</option>
+                                                                    echo 'selected'; ?>>อื่นๆ</option>
                                     </select>
                                 </div>
 
@@ -507,29 +483,29 @@ $conn->close();
                                     <select name="person_typeHire" class="form-select" required>
                                         <option value="">เลือกประเภทการจ้าง</option>
                                         <option value="ข้าราชการ" <?php if ($row['person_typeHire'] == 'ข้าราชการ')
-                                            echo 'selected'; ?>>ข้าราชการ</option>
+                                                                        echo 'selected'; ?>>ข้าราชการ</option>
                                         <option value="จ้างเหมาบริการ" <?php if ($row['person_typeHire'] == 'จ้างเหมาบริการ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             จ้างเหมาบริการ</option>
                                         <option value="จ้างเหมาบุคคล" <?php if ($row['person_typeHire'] == 'จ้างเหมาบุคคล')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             จ้างเหมาบุคคล</option>
                                         <option value="พนักงานกระทรวง" <?php if ($row['person_typeHire'] == 'พนักงานกระทรวง')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             พนักงานกระทรวง</option>
                                         <option value="พนักงานราชการ" <?php if ($row['person_typeHire'] == 'พนักงานราชการ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             พนักงานราชการ</option>
                                         <option value="ลูกจ้างชั่วคราว (รายเดือน)" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราว (รายเดือน)')
-                                            echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
+                                                                                        echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
                                         <option value="ลูกจ้างชั่วคราวรายวัน" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราวรายวัน')
-                                            echo 'selected'; ?>>
+                                                                                    echo 'selected'; ?>>
                                             ลูกจ้างชั่วคราวรายวัน</option>
                                         <option value="ลูกจ้างประจำ" <?php if ($row['person_typeHire'] == 'ลูกจ้างประจำ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ลูกจ้างประจำ</option>
                                         <option value="ลูกจ้างรายคาบ" <?php if ($row['person_typeHire'] == 'ลูกจ้างรายคาบ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ลูกจ้างรายคาบ</option>
                                     </select>
                                 </div>
@@ -539,30 +515,30 @@ $conn->close();
                                     <select name="person_level" class="form-select" required>
                                         <option value="">เลือกระดับ</option>
                                         <option value="ระดับทักษะพิเศษ" <?php if ($row['person_level'] == 'ระดับทักษะพิเศษ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ระดับทักษะพิเศษ</option>
                                         <option value="ระดับอาวุโส" <?php if ($row['person_level'] == 'ระดับอาวุโส')
-                                            echo 'selected'; ?>>ระดับอาวุโส</option>
+                                                                        echo 'selected'; ?>>ระดับอาวุโส</option>
                                         <option value="ระดับชำนาญงาน" <?php if ($row['person_level'] == 'ระดับชำนาญงาน')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ระดับชำนาญงาน</option>
                                         <option value="ระดับปฏิบัติงาน" <?php if ($row['person_level'] == 'ระดับปฏิบัติงาน')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ระดับปฏิบัติงาน</option>
                                         <option value="พลเรือน (ประเภทวิชาการ)" <?php if ($row['person_level'] == 'พลเรือน (ประเภทวิชาการ)')
-                                            echo 'selected'; ?>>
+                                                                                    echo 'selected'; ?>>
                                             พลเรือน (ประเภทวิชาการ)</option>
                                         <option value="ระดับเชี่ยวชาญ" <?php if ($row['person_level'] == 'ระดับเชี่ยวชาญ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ระดับเชี่ยวชาญ</option>
                                         <option value="ระดับชำนาญการพิเศษ" <?php if ($row['person_level'] == 'ระดับชำนาญการพิเศษ')
-                                            echo 'selected'; ?>>
+                                                                                echo 'selected'; ?>>
                                             ระดับชำนาญการพิเศษ</option>
                                         <option value="ระดับชำนาญการ" <?php if ($row['person_level'] == 'ระดับชำนาญการ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ระดับชำนาญการ</option>
                                         <option value="ระดับปฏิบัติการ" <?php if ($row['person_level'] == 'ระดับปฏิบัติการ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ระดับปฏิบัติการ</option>
                                     </select>
                                 </div>
@@ -688,29 +664,29 @@ $conn->close();
                                     <select name="person_typeHire" class="form-select" required>
                                         <option value="">เลือกประเภทการจ้าง</option>
                                         <option value="ข้าราชการ" <?php if ($row['person_typeHire'] == 'ข้าราชการ')
-                                            echo 'selected'; ?>>ข้าราชการ</option>
+                                                                        echo 'selected'; ?>>ข้าราชการ</option>
                                         <option value="จ้างเหมาบริการ" <?php if ($row['person_typeHire'] == 'จ้างเหมาบริการ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             จ้างเหมาบริการ</option>
                                         <option value="จ้างเหมาบุคคล" <?php if ($row['person_typeHire'] == 'จ้างเหมาบุคคล')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             จ้างเหมาบุคคล</option>
                                         <option value="พนักงานกระทรวง" <?php if ($row['person_typeHire'] == 'พนักงานกระทรวง')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             พนักงานกระทรวง</option>
                                         <option value="พนักงานราชการ" <?php if ($row['person_typeHire'] == 'พนักงานราชการ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             พนักงานราชการ</option>
                                         <option value="ลูกจ้างชั่วคราว (รายเดือน)" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราว (รายเดือน)')
-                                            echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
+                                                                                        echo 'selected'; ?>>ลูกจ้างชั่วคราว (รายเดือน)</option>
                                         <option value="ลูกจ้างชั่วคราวรายวัน" <?php if ($row['person_typeHire'] == 'ลูกจ้างชั่วคราวรายวัน')
-                                            echo 'selected'; ?>>
+                                                                                    echo 'selected'; ?>>
                                             ลูกจ้างชั่วคราวรายวัน</option>
                                         <option value="ลูกจ้างประจำ" <?php if ($row['person_typeHire'] == 'ลูกจ้างประจำ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ลูกจ้างประจำ</option>
                                         <option value="ลูกจ้างรายคาบ" <?php if ($row['person_typeHire'] == 'ลูกจ้างรายคาบ')
-                                            echo 'selected'; ?>>
+                                                                            echo 'selected'; ?>>
                                             ลูกจ้างรายคาบ</option>
                                     </select>
                                 </div>
@@ -741,15 +717,15 @@ $conn->close();
                                     <select name="person_blood" class="form-select">
                                         <option value="">เลือกกรุ๊ปเลือด</option>
                                         <option value="A" <?php if ($row['person_blood'] == 'A')
-                                            echo 'selected'; ?>>A
+                                                                echo 'selected'; ?>>A
                                         </option>
                                         <option value="B" <?php if ($row['person_blood'] == 'B')
-                                            echo 'selected'; ?>>B
+                                                                echo 'selected'; ?>>B
                                         </option>
                                         <option value="AB" <?php if ($row['person_blood'] == 'AB')
-                                            echo 'selected'; ?>>AB</option>
+                                                                echo 'selected'; ?>>AB</option>
                                         <option value="O" <?php if ($row['person_blood'] == 'O')
-                                            echo 'selected'; ?>>O
+                                                                echo 'selected'; ?>>O
                                         </option>
                                     </select>
                                 </div>
@@ -760,9 +736,10 @@ $conn->close();
                                         value="<?php echo $row['person_cardNum']; ?>">
                                 </div>
 
-                                <div class="d-flex gap-2">
+                                <div class="col-md-6">
                                     <label class="form-label">วันหมดอายุบัตรข้าราชการ:</label>
-                                    <div class="a-flex gap-2">
+                                    <div class="d-flex gap-2">
+                                        <!-- ช่องเลือกวัน -->
                                         <select name="Expired_day" class="form-select" required>
                                             <option value="">วัน</option>
                                             <?php
@@ -805,7 +782,7 @@ $conn->close();
                                         <select name="Expired_year" class="form-select" required>
                                             <option value="">ปี</option>
                                             <?php
-                                            $expired_year = $expired_date ? (int) $expired_date[0] + 543 : null; // แยกค่าปีและแปลงเป็น พ.ศ.
+                                            $expired_year = $expired_date ? (int) $expired_date[0] + 543 : null; // แปลงปี ค.ศ. เป็น พ.ศ.
                                             for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
                                                 <option value="<?= $i ?>" <?= $i == $expired_year ? 'selected' : '' ?>>
                                                     <?= $i ?>
@@ -813,14 +790,15 @@ $conn->close();
                                             <?php endfor; ?>
                                         </select>
                                     </div>
+                                </div>
 
 
 
 
-                                    <div class="text-center mt-4">
-                                        <button type="submit" class="btn btn-success">บันทึกการแก้ไข</button>
-                                        <a href="personnel.php" class="btn btn-secondary">ยกเลิก</a>
-                                    </div>
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn btn-success">บันทึกการแก้ไข</button>
+                                    <a href="personnel.php" class="btn btn-secondary">ยกเลิก</a>
+                                </div>
                         </form>
                     </div>
                 </div>
