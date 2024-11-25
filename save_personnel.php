@@ -36,7 +36,6 @@ try {
         }
 
         // ข้อมูลเพิ่มเติม
-        $person_positionNum = isset($_POST['person_positionNum']) ? intval($_POST['person_positionNum']) : null;
         $person_typeHire = $_POST['person_typeHire'] ?? null;
         $person_positionAllowance = isset($_POST['person_positionAllowance']) ? floatval($_POST['person_positionAllowance']) : null;
         $person_phone = $_POST['person_phone'] ?? null;
@@ -54,12 +53,20 @@ try {
             $person_CardExpired = null;
         }
 
-
         // ข้อมูลใหม่ที่เพิ่ม
         $person_DocNumber = $_POST['person_DocNumber'] ?? null;
         $person_SuppNumber = $_POST['person_SuppNumber'] ?? null;
         $person_POSVNumber = $_POST['person_POSVNumber'] ?? null;
 
+        // ตรวจสอบการอัปโหลดรูปภาพ
+        $person_image = null;
+        if (isset($_FILES['person_image']) && $_FILES['person_image']['error'] === UPLOAD_ERR_OK) {
+            $person_image = file_get_contents($_FILES['person_image']['tmp_name']);
+            // ตรวจสอบว่ารูปภาพถูกอ่านสำเร็จ
+            if (!$person_image) {
+                throw new Exception("ไม่สามารถอ่านไฟล์รูปภาพที่อัปโหลดได้");
+            }
+        }
 
         // ตรวจสอบข้อมูลที่จำเป็น
         if (!$person_id || !$person_name || !$person_gender || !$person_born || !$person_dateAccepting) {
@@ -73,29 +80,26 @@ try {
             person_dateAccepting, person_typeHire, person_positionAllowance,
             person_phone, person_specialQualification, person_blood,
             person_cardNum, person_CardExpired, person_DocNumber,
-            person_SuppNumber, person_POSVNumber
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        
+            person_SuppNumber, person_POSVNumber, person_image
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         // เตรียมคำสั่ง SQL
         $stmt = $conn->prepare($sql);
         
         if (!$stmt) {
             throw new Exception("การเตรียมคำสั่ง SQL ล้มเหลว: " . $conn->error);
         }
-        
+
         // ผูกตัวแปรกับคำสั่ง SQL
         $stmt->bind_param(
-            "ssssssssssssssssssss", //ssss
+            "sssssssssssssssssssss", // เพิ่ม "s" สำหรับ BLOB
             $person_id, $person_name, $person_gender, $person_rank, $person_formwork,
             $person_level, $person_salary, $person_nickname, $person_born,
             $person_dateAccepting, $person_typeHire, $person_positionAllowance,
             $person_phone, $person_specialQualification, $person_blood,
             $person_cardNum, $person_CardExpired, $person_DocNumber,
-            $person_SuppNumber, $person_POSVNumber
+            $person_SuppNumber, $person_POSVNumber, $person_image
         );
-        
-        
 
         // ดำเนินการบันทึกข้อมูล
         if ($stmt->execute()) {
@@ -107,13 +111,9 @@ try {
 } catch (Exception $e) {
     $_SESSION['error'] = $e->getMessage();
 } finally {
-    if (isset($stmt))
-        $stmt->close();
-    if (isset($conn))
-        $conn->close();
+    if (isset($stmt)) $stmt->close();
+    if (isset($conn)) $conn->close();
     header("Location: form_person.php");
     exit();
 }
 ?>
-
-

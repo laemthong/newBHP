@@ -582,6 +582,11 @@ $result = $conn->query($sql);
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label">อัปโหลดรูปภาพ:</label>
+                                <input type="file" name="person_image" class="form-control" accept="image/*">
+                            </div>
+
 
 
 
@@ -626,10 +631,10 @@ $result = $conn->query($sql);
                         return isValid;
                     }
 
-                    document.addEventListener("DOMContentLoaded", function () {
+                    document.addEventListener("DOMContentLoaded", function() {
                         const form = document.querySelector("#personnelForm");
 
-                        form.addEventListener("submit", function (event) {
+                        form.addEventListener("submit", function(event) {
                             const expiredDay = document.querySelector("[name='Expired_day']").value;
                             const expiredMonth = document.querySelector("[name='Expired_month']").value;
                             const expiredYear = document.querySelector("[name='Expired_year']").value;
@@ -643,10 +648,10 @@ $result = $conn->query($sql);
 
 
                     // ฟังก์ชันสำหรับจัดการการยืนยันก่อนบันทึก
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         const form = document.getElementById('personnelForm');
 
-                        form.addEventListener('submit', function (event) {
+                        form.addEventListener('submit', function(event) {
                             event.preventDefault(); // หยุดการส่งฟอร์มแบบปกติ
 
                             if (!validateForm()) {
@@ -672,7 +677,7 @@ $result = $conn->query($sql);
                             });
                         });
                     });
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         // Flatpickr สำหรับวันเดือนปีเกิด
                         flatpickr("#dateBornPicker", {
                             altInput: true,
@@ -689,7 +694,7 @@ $result = $conn->query($sql);
                             locale: "th", // ใช้ภาษาไทย
                         });
                     });
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener('DOMContentLoaded', function() {
                         // อ้างอิงถึงฟิลด์
                         const dayField = document.querySelector('select[name="day"]');
                         const monthField = document.querySelector('select[name="month"]');
@@ -705,61 +710,68 @@ $result = $conn->query($sql);
 
                         // คำนวณอายุ และอายุราชการที่เหลือ
                         function calculateDetails() {
-    const retirementAge = 60; // กำหนดอายุเกษียณราชการ
-    const currentDate = new Date(); // วันที่ปัจจุบัน
+                            const retirementAge = 60; // กำหนดอายุเกษียณราชการ
+                            const currentDate = new Date(); // วันที่ปัจจุบัน
 
-    // รับค่าจากฟิลด์วันเดือนปีเกิด
-    const birthDay = parseInt(dayField.value);
-    const birthMonth = parseInt(monthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
-    const birthYear = parseInt(yearField.value);
+                            // รับค่าจากฟิลด์วันเดือนปีเกิด
+                            const birthDay = parseInt(dayField.value);
+                            const birthMonth = parseInt(monthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
+                            const birthYear = parseInt(yearField.value);
 
-    // รับค่าจากฟิลด์วันที่บรรจุ
-    const acceptDay = parseInt(acceptDayField.value);
-    const acceptMonth = parseInt(acceptMonthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
-    const acceptYear = parseInt(acceptYearField.value);
+                            // รับค่าจากฟิลด์วันที่บรรจุ
+                            const acceptDay = parseInt(acceptDayField.value);
+                            const acceptMonth = parseInt(acceptMonthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
+                            const acceptYear = parseInt(acceptYearField.value);
 
-    // Debugging
-    console.log("Birth Month After Adjustment:", birthMonth);
-    console.log("Accept Month After Adjustment:", acceptMonth);
+                            // Debugging
+                            console.log("Birth Month After Adjustment:", birthMonth);
+                            console.log("Accept Month After Adjustment:", acceptMonth);
 
-    if (isNaN(birthDay) || isNaN(birthMonth) || isNaN(birthYear) || 
-        isNaN(acceptDay) || isNaN(acceptMonth) || isNaN(acceptYear)) {
-        console.error("ค่าที่รับมาไม่ถูกต้อง:", { birthDay, birthMonth, birthYear, acceptDay, acceptMonth, acceptYear });
-        return;
-    }
+                            if (isNaN(birthDay) || isNaN(birthMonth) || isNaN(birthYear) ||
+                                isNaN(acceptDay) || isNaN(acceptMonth) || isNaN(acceptYear)) {
+                                console.error("ค่าที่รับมาไม่ถูกต้อง:", {
+                                    birthDay,
+                                    birthMonth,
+                                    birthYear,
+                                    acceptDay,
+                                    acceptMonth,
+                                    acceptYear
+                                });
+                                return;
+                            }
 
-    const birthDate = new Date(birthYear - 543, birthMonth, birthDay);
-    const acceptDate = new Date(acceptYear - 543, acceptMonth, acceptDay);
-    const retirementDate = new Date(birthYear - 543 + retirementAge, 9, 30);
+                            const birthDate = new Date(birthYear - 543, birthMonth, birthDay);
+                            const acceptDate = new Date(acceptYear - 543, acceptMonth, acceptDay);
+                            const retirementDate = new Date(birthYear - 543 + retirementAge, 9, 30);
 
-    // Debugging
-    console.log("Birth Date:", birthDate);
-    console.log("Accept Date:", acceptDate);
+                            // Debugging
+                            console.log("Birth Date:", birthDate);
+                            console.log("Accept Date:", acceptDate);
 
-    // คำนวณอายุปัจจุบัน
-    const age = calculateAge(birthDate, currentDate);
+                            // คำนวณอายุปัจจุบัน
+                            const age = calculateAge(birthDate, currentDate);
 
-    // คำนวณอายุราชการในวันเกษียณ
-    const serviceAtRetirement = calculateAge(acceptDate, retirementDate);
+                            // คำนวณอายุราชการในวันเกษียณ
+                            const serviceAtRetirement = calculateAge(acceptDate, retirementDate);
 
-    // คำนวณอายุราชการที่เหลือ
-    const serviceRemaining = calculateAge(currentDate, retirementDate);
+                            // คำนวณอายุราชการที่เหลือ
+                            const serviceRemaining = calculateAge(currentDate, retirementDate);
 
-    // Debugging
-    console.log("Age:", age);
-    console.log("Service At Retirement:", serviceAtRetirement);
-    console.log("Service Remaining:", serviceRemaining);
+                            // Debugging
+                            console.log("Age:", age);
+                            console.log("Service At Retirement:", serviceAtRetirement);
+                            console.log("Service Remaining:", serviceRemaining);
 
-    // อัปเดตค่าลงในฟิลด์
-    ageField.value = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
-    retirementDateField.value = `${retirementDate.getDate()} ตุลาคม ${retirementDate.getFullYear() + 543}`;
-    serviceAtRetirementField.value = `${serviceAtRetirement.years} ปี ${serviceAtRetirement.months} เดือน ${serviceAtRetirement.days} วัน`;
-    serviceRemainingField.value = `${serviceRemaining.years} ปี ${serviceRemaining.months} เดือน ${serviceRemaining.days} วัน`;
+                            // อัปเดตค่าลงในฟิลด์
+                            ageField.value = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
+                            retirementDateField.value = `${retirementDate.getDate()} ตุลาคม ${retirementDate.getFullYear() + 543}`;
+                            serviceAtRetirementField.value = `${serviceAtRetirement.years} ปี ${serviceAtRetirement.months} เดือน ${serviceAtRetirement.days} วัน`;
+                            serviceRemainingField.value = `${serviceRemaining.years} ปี ${serviceRemaining.months} เดือน ${serviceRemaining.days} วัน`;
 
-    console.log("Age Field Value:", ageField.value);
-    console.log("Retirement Date Field Value:", retirementDateField.value);
-    console.log("Service Remaining Field Value:", serviceRemainingField.value);
-}
+                            console.log("Age Field Value:", ageField.value);
+                            console.log("Retirement Date Field Value:", retirementDateField.value);
+                            console.log("Service Remaining Field Value:", serviceRemainingField.value);
+                        }
 
 
                         // ฟังก์ชันคำนวณช่วงเวลา
@@ -781,7 +793,11 @@ $result = $conn->query($sql);
                                 calculatedMonths += 12;
                             }
 
-                            return { years: calculatedYears, months: calculatedMonths, days: calculatedDays };
+                            return {
+                                years: calculatedYears,
+                                months: calculatedMonths,
+                                days: calculatedDays
+                            };
                         }
 
                         // เพิ่ม Event Listener
@@ -792,7 +808,6 @@ $result = $conn->query($sql);
                         acceptMonthField.addEventListener('change', calculateDetails);
                         acceptYearField.addEventListener('change', calculateDetails);
                     });
-
                 </script>
 
 

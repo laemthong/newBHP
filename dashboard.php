@@ -1,6 +1,13 @@
 <?php
 session_start();
 $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้ใช้แสดงใน navbar
+
+include 'connect/connection.php';
+
+$sql = "SELECT COUNT(*) as total FROM personnel";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$totalPersonnel = $row['total'];
 ?>
 
 
@@ -12,7 +19,8 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ban Phai Hospital</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="icon" href="photo/รพ.png" type="image/png"><link rel="icon" href="photo/รพ.png" type="image/png">
+    <link rel="icon" href="photo/รพ.png" type="image/png">
+    <link rel="icon" href="photo/รพ.png" type="image/png">
     <link rel="stylesheet" href="./assets/compiled/css/app.css">
     <link rel="stylesheet" href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" href="./assets/compiled/css/iconly.css">
@@ -281,6 +289,7 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
                 <section class="row">
                     <div class="col-12 col-lg-9">
                         <div class="row">
+                            
                             <div class="col-6 col-lg-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body px-4 py-4-5">
@@ -288,12 +297,12 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
                                             <div
                                                 class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
                                                 <div class="stats-icon purple mb-2">
-                                                    <i class="iconly-boldShow"></i>
+                                                    <i class="iconly-boldProfile"></i>
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Profile Views</h6>
-                                                <h6 class="font-extrabold mb-0">112.000</h6>
+                                                <h6 class="text-muted font-semibold">บุคลากร</h6>
+                                                <h6 class="font-extrabold mb-0"><?php echo number_format($totalPersonnel); ?> คน</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -487,7 +496,7 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
                             <div class="card-body py-4 px-4">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
-                                        <i class='far fa-user' style='font-size:24px'></i>
+                                        <img src="./photo/p.jpg" alt="User Image" style="width: 50px; height: 50px; border-radius: 50%;">
                                     </div>
                                     <div class="ms-3 name">
                                         <h5 class="font-bold"><?= htmlspecialchars($userName); ?> </h5>
@@ -495,6 +504,7 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
                                 </div>
                             </div>
                         </div>
+
                         <div class="card">
                             <div class="card-header">
                                 <h4>Recent Messages</h4>
