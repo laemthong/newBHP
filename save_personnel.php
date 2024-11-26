@@ -26,6 +26,13 @@ try {
         $person_POSVNumber = $_POST['person_POSVNumber'];
         $person_image = null;
 
+        if (!empty($_POST['Expired_year'])) {
+            $person_CardExpired = convertThaiDateToMySQLDate($_POST['Expired_day'], $_POST['Expired_month'], $_POST['Expired_year']);
+        } else {
+            $person_CardExpired = null; // หรือกำหนดค่าเริ่มต้น
+        }
+        
+
         // ตรวจสอบและจัดการอัปโหลดรูปภาพ
         if (isset($_FILES['person_image']) && $_FILES['person_image']['error'] === UPLOAD_ERR_OK) {
             $person_image = file_get_contents($_FILES['person_image']['tmp_name']);
