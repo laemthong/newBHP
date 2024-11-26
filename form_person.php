@@ -5,7 +5,8 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
 
 $success_message = $_SESSION['success'] ?? null;
 $error_message = $_SESSION['error'] ?? null;
-unset($_SESSION['success'], $_SESSION['error']);
+unset($_SESSION['success'], $_SESSION['error']); // ล้างข้อความหลังแสดงแล้ว
+
 $sql = "SELECT group_id, group_name FROM work_group";
 $result = $conn->query($sql);
 ?>
@@ -285,17 +286,19 @@ $result = $conn->query($sql);
             <body class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
                 <div class="container mt-4" style="max-width: 800px;">
                     <h2 class="text-center .text-secondary mb-4">ระบบบันทึกข้อมูลบุคลากร</h2>
-                    <form id="personnelForm" action="save_personnel.php" method="POST" onsubmit="return validateForm()">
+                    <form id="personnelForm" action="save_personnel.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label"><span class="text-danger">*</span> หมายเลขบัตรประชาชน 13
                                     หลัก:</label>
-                                <input type="number" name="person_id" class="form-control" required>
+                                <input type="number" name="person_id" class="form-control"  placeholder="กรอกหมายเลขบัตรประชาชน 13
+                                    หลัก" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><span class="text-danger">*</span> ชื่อ - สกุล:</label>
-                                <input type="text" name="person_name" class="form-control" maxlength="255" required>
+                                <input type="text" name="person_name" class="form-control" maxlength="255" placeholder="กรอกชื่อ - สกุล" required>
                             </div>
 
                             <div class="col-md-6">
@@ -310,7 +313,7 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">ตำแหน่ง:</label>
-                                <input type="text" name="person_rank" class="form-control" maxlength="255" required>
+                                <input type="text" name="person_rank" class="form-control" maxlength="255"  placeholder="กรอกตำแหน่ง" required>
                             </div>
 
                             <div class="col-md-6">
@@ -369,18 +372,18 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">เงินเดือน:</label>
-                                <input type="number" name="person_salary" class="form-control" step="0.01" required>
+                                <input type="number" name="person_salary" class="form-control" step="0.01"placeholder="กรอกเงินเดือน" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">ชื่อเล่น:</label>
-                                <input type="text" name="person_nickname" class="form-control" maxlength="255" required>
+                                <input type="text" name="person_nickname" class="form-control" maxlength="255"placeholder="กรอกชื่อเล่น" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันเดือนปีเกิด:</label>
                                 <div class="d-flex gap-2">
                                     <!-- ช่องเลือกวันที่ -->
-                                    <select name="day" class="form-select" required>
+                                    <select name="day" class="form-select" " required>
                                         <option value="">วัน</option>
                                         <?php for ($i = 1; $i <= 31; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?></option>
@@ -417,13 +420,14 @@ $result = $conn->query($sql);
                                             <option value="<?= $i ?>"><?= $i ?></option>
                                         <?php endfor; ?>
                                     </select>
+                                    
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">อายุราชการที่เหลือคือ:</label>
                                 <input type="text" name="service_remaining" class="form-control" maxlength="255"
-                                    readonly>
+                                placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ"readonly>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันที่บรรจุ:</label>
@@ -471,17 +475,18 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">อายุของคุณคือ:</label>
-                                <input type="text" name="age" class="form-control" maxlength="255" readonly>
+                                <input type="text" name="age" class="form-control" maxlength="255" placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันที่คุณเกษียณอายุราชการคือ:</label>
-                                <input type="text" name="retirement_date" class="form-control" readonly>
+                                <input type="text" name="retirement_date" class="form-control" placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">อายุราชการในวันเกษียณของคุณคือ:</label>
                                 <input type="text" name="service_at_retirement" class="form-control" maxlength="255"
-                                    readonly>
+                                placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
+                                    
                             </div>
 
 
@@ -506,20 +511,20 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">เงินประจำตำแหน่ง:</label>
-                                <input type="number" name="person_positionAllowance" class="form-control" step="0.01"
+                                <input type="number" name="person_positionAllowance" class="form-control" step="0.01" placeholder="กรอกเงินประจำตำแหน่ง"
                                     required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">เบอร์โทรศัพท์:</label>
                                 <input type="tel" name="person_phone" class="form-control" pattern="[0-9]{10}"
-                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก" required>
+                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก"placeholder="กรอกเบอร์โทรศัพท์" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">วุฒิพิเศษทางการ:</label>
                                 <input type="text" name="person_specialQualification" class="form-control"
-                                    maxlength="255" required>
+                                    maxlength="255" placeholder="กรอกวุฒิพิเศษทางการ" required>
                             </div>
 
                             <div class="col-md-6">
@@ -536,7 +541,7 @@ $result = $conn->query($sql);
                             <div class="col-md-6">
                                 <label class="form-label">เลขที่บัตรข้าราชการ:</label>
                                 <input type="text" name="person_cardNum" class="form-control" maxlength="13"
-                                    pattern="[0-9]{13}" title="กรุณากรอกเลขบัตร 13 หลัก">
+                                    pattern="[0-9]{13}" title="กรุณากรอกเลขบัตร 13 หลัก" placeholder="กรอกเลขที่บัตรข้าราชการ">
                             </div>
 
                             <div class="col-md-6">
@@ -582,6 +587,7 @@ $result = $conn->query($sql);
                                     </select>
                                 </div>
                             </div>
+                                            
                             <div class="col-md-6">
                                 <label class="form-label">อัปโหลดรูปภาพ:</label>
                                 <input type="file" name="person_image" class="form-control" accept="image/*">
@@ -647,7 +653,7 @@ $result = $conn->query($sql);
                     });
 
 
-                    // ฟังก์ชันสำหรับจัดการการยืนยันก่อนบันทึก
+
                     document.addEventListener('DOMContentLoaded', function() {
                         const form = document.getElementById('personnelForm');
 
@@ -670,7 +676,16 @@ $result = $conn->query($sql);
                                 cancelButtonText: 'ยกเลิก'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    form.submit(); // ส่งฟอร์มเมื่อผู้ใช้ยืนยัน
+                                    // หลังจากกด "ใช่, บันทึกเลย!" ให้แสดงข้อความสำเร็จ
+                                    Swal.fire({
+                                        title: 'บันทึกข้อมูลสำเร็จ',
+                                        text: "ข้อมูลของคุณถูกบันทึกเรียบร้อยแล้ว",
+                                        icon: 'success',
+                                        confirmButtonText: 'ตกลง'
+                                    }).then(() => {
+                                        // หลังจากกด "ตกลง" ให้ทำการส่งฟอร์ม
+                                        form.submit();
+                                    });
                                 } else {
                                     console.log('การบันทึกถูกยกเลิก');
                                 }
