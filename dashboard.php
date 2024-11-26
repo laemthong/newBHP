@@ -561,7 +561,7 @@ $graphDataJSON = json_encode($graphData);
             },
             yaxis: {
                 title: {
-                    text: 'จำนวนคน'
+                    text: 'จำนวน คน'
                 }
             },
             colors: ['#435ebe']
