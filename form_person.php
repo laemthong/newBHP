@@ -578,13 +578,16 @@ $result = $conn->query($sql);
                                         <?php endforeach; ?>
                                     </select>
 
-                                    <!-- ช่องเลือกปี -->
                                     <select name="Expired_year" class="form-select" required>
-                                        <option value="">ปี</option>
-                                        <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
+    <option value="">ปี</option>
+    <?php
+        $currentYear = date("Y") + 543; // ปีปัจจุบันในรูปแบบ พ.ศ.
+        for ($i = $currentYear; $i <= $currentYear + 60; $i++): // เริ่มจากปีปัจจุบัน + 60 ปี
+    ?>
+        <option value="<?= $i ?>"><?= $i ?></option>
+    <?php endfor; ?>
+</select>
+
                                 </div>
                             </div>
                                             
