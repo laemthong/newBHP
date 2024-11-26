@@ -22,6 +22,9 @@ if ($resultGraph && mysqli_num_rows($resultGraph) > 0) {
         ];
     }
 }
+// ดึงข้อมูลบุคลากร (รวมถึงรูปภาพ)
+$sql = "SELECT person_name, person_image FROM personnel";
+$result = mysqli_query($conn, $sql);
 $graphDataJSON = json_encode($graphData);
 ?>
 
@@ -465,8 +468,24 @@ $graphDataJSON = json_encode($graphData);
                             <div class="card-body py-4 px-4">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
-                                        <img src="./photo/p.jpg" alt="User Image"
-                                            style="width: 50px; height: 50px; border-radius: 50%;">
+                                        <?php
+                                        // ดึงข้อมูลรูปภาพจากฐานข้อมูล
+                                        $sqlImage = "SELECT person_image FROM personnel WHERE person_name = ?";
+                                        $stmt = $conn->prepare($sqlImage);
+                                        $stmt->bind_param("s", $userName); // ใช้ชื่อผู้ใช้ในการดึงรูป
+                                        $stmt->execute();
+                                        $resultImage = $stmt->get_result();
+
+                                        if ($resultImage && $resultImage->num_rows > 0) {
+                                            $rowImage = $resultImage->fetch_assoc();
+                                            $imageData = base64_encode($rowImage['person_image']); // แปลงข้อมูล BLOB เป็น Base64
+                                            $imageSrc = "data:image/jpeg;base64," . $imageData; // เตรียมข้อมูลสำหรับแท็ก <img>
+                                        } else {
+                                            $imageSrc = './photo/default-avatar.png'; // กรณีไม่มีรูปภาพ
+                                        }
+                                        ?>
+                                        <img src="<?= $imageSrc ?>" alt="User Image"
+                                            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                                     </div>
                                     <div class="ms-3 name">
                                         <h5 class="font-bold"><?= htmlspecialchars($userName); ?> </h5>
@@ -474,6 +493,7 @@ $graphDataJSON = json_encode($graphData);
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="card">
                             <div class="card-header">
