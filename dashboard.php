@@ -4,10 +4,25 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
 
 include 'connect/connection.php';
 
-$sql = "SELECT COUNT(*) as total FROM personnel";
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
-$totalPersonnel = $row['total'];
+// ดึงจำนวนบุคลากรทั้งหมด
+$sqlTotal = "SELECT COUNT(*) as total FROM personnel";
+$resultTotal = mysqli_query($conn, $sqlTotal);
+$totalPersonnel = $resultTotal && mysqli_num_rows($resultTotal) > 0 ? mysqli_fetch_assoc($resultTotal)['total'] : 0;
+
+// ดึงข้อมูลสำหรับกราฟ
+$sqlGraph = "SELECT person_rank, COUNT(*) as count FROM personnel GROUP BY person_rank";
+$resultGraph = mysqli_query($conn, $sqlGraph);
+
+$graphData = [];
+if ($resultGraph && mysqli_num_rows($resultGraph) > 0) {
+    while ($row = mysqli_fetch_assoc($resultGraph)) {
+        $graphData[] = [
+            'rank' => $row['person_rank'],
+            'count' => (int) $row['count']
+        ];
+    }
+}
+$graphDataJSON = json_encode($graphData);
 ?>
 
 
@@ -24,6 +39,7 @@ $totalPersonnel = $row['total'];
     <link rel="stylesheet" href="./assets/compiled/css/app.css">
     <link rel="stylesheet" href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" href="./assets/compiled/css/iconly.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
         .sidebar-item.activee {
             background-color: transparent;
@@ -54,7 +70,6 @@ $totalPersonnel = $row['total'];
                             <a href="dashboard.php"><img src="photo/รพ.png" alt="Logo"
                                     style="width: 100px; height: 100px;"></a>
                         </div>
-
                         <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                 aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20"
@@ -99,82 +114,54 @@ $totalPersonnel = $row['total'];
                                 <i class="bi bi-grid-fill"></i>
                                 <span>หน้าหลัก</span>
                             </a>
-
-
                         </li>
-
                         <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="fas fa-user-cog"></i>
                                 <span>บุคลากร</span>
                             </a>
-
                             <ul class="submenu ">
-
                                 <li class="submenu-item  ">
                                     <a href="personnel.php" class="submenu-link">แสดงข้อมูลบุคลากร</a>
-
                                 </li>
-
                                 <li class="submenu-item  ">
                                     <a href="form_person.php" class="submenu-link">เพิ่ม / ลบ / แก้ไข </a>
-
                                 </li>
-
                                 <li class="submenu-item  ">
                                     <a href="component-badge.html" class="submenu-link">Badge</a>
-
                                 </li>
-
-
                             </ul>
-
-
                         </li>
-
                         <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="fa fa-address-card"></i>
                                 <span>การลา</span>
                             </a>
-
                             <ul class="submenu ">
-
                                 <li class="submenu-item  ">
                                     <a href="Show_leave.php" class="submenu-link">แสดงข้อมูลการลา</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="vacation_leave.php" class="submenu-link">ลาพักผ่อน</a>
-
                                 </li>
-
-
 
                                 <li class="submenu-item  ">
                                     <a href="extra-component-date-picker.html" class="submenu-link">Date Picker</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="extra-component-sweetalert.html" class="submenu-link">Sweet Alert</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="extra-component-toastify.html" class="submenu-link">Toastify</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="extra-component-rating.html" class="submenu-link">Rating</a>
-
                                 </li>
-
                             </ul>
-
-
                         </li>
 
                         <li class="sidebar-item  has-sub">
@@ -187,32 +174,24 @@ $totalPersonnel = $row['total'];
 
                                 <li class="submenu-item  ">
                                     <a href="layout-default.html" class="submenu-link">Default Layout</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="layout-vertical-1-column.html" class="submenu-link">1 Column</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="layout-vertical-navbar.html" class="submenu-link">Vertical Navbar</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="layout-rtl.html" class="submenu-link">RTL Layout</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="layout-horizontal.html" class="submenu-link">Horizontal Menu</a>
-
                                 </li>
-
                             </ul>
-
-
                         </li>
 
                         <li class="sidebar-title">อื่นๆ</li>
@@ -227,32 +206,26 @@ $totalPersonnel = $row['total'];
 
                                 <li class="submenu-item  ">
                                     <a href="form-element-input.html" class="submenu-link">Input</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="form-element-input-group.html" class="submenu-link">Input Group</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="form-element-select.html" class="submenu-link">Select</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="form-element-radio.html" class="submenu-link">Radio</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="form-element-checkbox.html" class="submenu-link">Checkbox</a>
-
                                 </li>
 
                                 <li class="submenu-item  ">
                                     <a href="form-element-textarea.html" class="submenu-link">Textarea</a>
-
                                 </li>
 
 
@@ -264,13 +237,7 @@ $totalPersonnel = $row['total'];
                                 <i class="	fas fa-power-off"></i>
                                 <span>ออกจากระบบ</span>
                             </a>
-
-
                         </li>
-
-
-
-
                     </ul>
                 </div>
             </div>
@@ -289,7 +256,7 @@ $totalPersonnel = $row['total'];
                 <section class="row">
                     <div class="col-12 col-lg-9">
                         <div class="row">
-                            
+
                             <div class="col-6 col-lg-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body px-4 py-4-5">
@@ -302,7 +269,9 @@ $totalPersonnel = $row['total'];
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                                 <h6 class="text-muted font-semibold">บุคลากร</h6>
-                                                <h6 class="font-extrabold mb-0"><?php echo number_format($totalPersonnel); ?> คน</h6>
+                                                <h6 class="font-extrabold mb-0">
+                                                    <?php echo number_format($totalPersonnel); ?> คน
+                                                </h6>
                                             </div>
                                         </div>
                                     </div>
@@ -496,7 +465,8 @@ $totalPersonnel = $row['total'];
                             <div class="card-body py-4 px-4">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
-                                        <img src="./photo/p.jpg" alt="User Image" style="width: 50px; height: 50px; border-radius: 50%;">
+                                        <img src="./photo/p.jpg" alt="User Image"
+                                            style="width: 50px; height: 50px; border-radius: 50%;">
                                     </div>
                                     <div class="ms-3 name">
                                         <h5 class="font-bold"><?= htmlspecialchars($userName); ?> </h5>
@@ -558,11 +528,7 @@ $totalPersonnel = $row['total'];
             <footer>
                 <div class="footer clearfix mb-0 text-muted">
                     <div class="float-start">
-                        <p>2023 &copy; Mazer</p>
-                    </div>
-                    <div class="float-end">
-                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
-                            by <a href="https://saugi.me">Saugi</a></p>
+                        <p>2023 &copy; Ban Phai Hospital</p>
                     </div>
                 </div>
             </footer>
@@ -570,15 +536,41 @@ $totalPersonnel = $row['total'];
     </div>
     <script src="assets/static/js/components/dark.js"></script>
     <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-
-
     <script src="assets/compiled/js/app.js"></script>
+    <script>
+        // ข้อมูลสำหรับกราฟ
+        var graphData = <?= $graphDataJSON; ?>;
 
+        var categories = graphData.map(item => item.rank);
+        var seriesData = graphData.map(item => item.count);
 
+        var optionsProfileVisit = {
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            series: [{
+                name: 'จำนวนคน',
+                data: seriesData
+            }],
+            xaxis: {
+                categories: categories,
+                title: {
+                    text: 'ตำแหน่งงาน'
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'จำนวนคน'
+                }
+            },
+            colors: ['#435ebe']
+        };
 
-    <!-- Need: Apexcharts -->
-    <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
-    <script src="assets/static/js/pages/dashboard.js"></script>
+        var chart = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
+        chart.render();
+    </script>
+
 
 </body>
 
