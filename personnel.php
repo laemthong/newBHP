@@ -2,60 +2,56 @@
 // เชื่อมต่อฐานข้อมูล
 include 'connect/connection.php';
 
-// กำหนดจำนวนรายการที่จะแสดงต่อหน้า
-$records_per_page = 10;
+// จำนวนข้อมูลต่อหน้า
+$limit = 10;
 
-// ตรวจสอบหน้าปัจจุบันจาก URL
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-$offset = ($page - 1) * $records_per_page;
+// หน้าปัจจุบัน
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$page = max($page, 1);
 
-// ตรวจสอบว่ามีคำค้นหาหรือไม่
-$search_query = isset($_GET['search']) ? $_GET['search'] : '';
+// รับค่าการค้นหา
+$search = isset($_GET['search']) ? trim($_GET['search']) : "";
 
-// สร้างคำสั่ง SQL สำหรับดึงข้อมูลพร้อมเงื่อนไขการค้นหา
-if ($search_query) {
-    // เพิ่มเงื่อนไขสำหรับค้นหา person_id
-    $sql = "SELECT * FROM personnel WHERE person_id LIKE '%$search_query%' 
-            OR person_name LIKE '%$search_query%' 
-            OR person_gender LIKE '%$search_query%' 
-            OR person_rank LIKE '%$search_query%' 
-            OR person_formwork LIKE '%$search_query%' 
-            OR person_level LIKE '%$search_query%' 
-            OR person_salary LIKE '%$search_query%' 
-            OR person_born LIKE '%$search_query%' 
-            OR person_phone LIKE '%$search_query%' 
-            LIMIT $offset, $records_per_page";
-    $total_records_sql = "SELECT COUNT(*) FROM personnel WHERE person_id LIKE '%$search_query%' 
-            OR person_name LIKE '%$search_query%' 
-            OR person_gender LIKE '%$search_query%' 
-            OR person_rank LIKE '%$search_query%' 
-            OR person_formwork LIKE '%$search_query%' 
-            OR person_level LIKE '%$search_query%' 
-            OR person_salary LIKE '%$search_query%' 
-            OR person_born LIKE '%$search_query%' 
-            OR person_phone LIKE '%$search_query%'";
-} else {
-    $sql = "SELECT * FROM personnel LIMIT $offset, $records_per_page";
-    $total_records_sql = "SELECT COUNT(*) FROM personnel";
+// Query สำหรับนับจำนวนทั้งหมด (ใช้ในการคำนวณหน้าทั้งหมด)
+$total_sql = "SELECT COUNT(*) AS total
+              FROM personnel p
+              LEFT JOIN work_group wg ON p.person_formwork = wg.group_id";
+if (!empty($search)) {
+    $total_sql .= " WHERE p.person_name LIKE '%$search%' 
+                    OR p.person_rank LIKE '%$search%' 
+                    OR p.person_phone LIKE '%$search%'
+                    OR p.person_id LIKE '%$search%'
+                    OR p.person_DocNumber LIKE '%$search%'
+                    OR wg.group_name LIKE '%$search%'"; // เพิ่มการค้นหาใน group_name
 }
+$total_result = $conn->query($total_sql);
+$total_row = $total_result->fetch_assoc();
+$total_records = $total_row['total'];
+$total_pages = ceil($total_records / $limit);
+
+// คำนวณตำแหน่งเริ่มต้น
+$offset = ($page - 1) * $limit;
+
+// Query สำหรับดึงข้อมูลตามหน้าปัจจุบัน
+$sql = "SELECT p.person_id, p.person_name, p.person_rank, p.person_level, p.person_salary, 
+               p.person_born, p.person_dateAccepting, p.person_phone, p.person_DocNumber, 
+               wg.group_name
+        FROM personnel p
+        LEFT JOIN work_group wg ON p.person_formwork = wg.group_id"; // JOIN ตาราง work_group
+if (!empty($search)) {
+    $sql .= " WHERE p.person_name LIKE '%$search%' 
+              OR p.person_rank LIKE '%$search%' 
+              OR p.person_phone LIKE '%$search%'
+              OR p.person_id LIKE '%$search%'
+              OR p.person_DocNumber LIKE '%$search%'
+              OR wg.group_name LIKE '%$search%'"; // เพิ่มการค้นหาใน group_name
+}
+$sql .= " LIMIT $limit OFFSET $offset";
 
 $result = $conn->query($sql);
-$total_records_result = $conn->query($total_records_sql);
-$total_records = $total_records_result->fetch_row()[0];
-$total_pages = ceil($total_records / $records_per_page);
-
-// ถ้าเป็นการร้องขอผ่าน AJAX ให้ส่งข้อมูลในรูปแบบ JSON
-if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
-    $data = [];
-    while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
-    }
-    echo json_encode(['data' => $data, 'total_pages' => $total_pages]);
-    exit;
-}
-
-
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -387,305 +383,149 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                 </a>
 
                 <body>
-                    <div class="container my-4">
-
-                        <!-- การ์ดสำหรับตาราง -->
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-primary text-white"
-                                style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <span class="custom-title">ข้อมูลบุคลากร</span>
-                                    <div style="max-width: 300px;">
-                                        <input type="text" id="tableSearch" class="form-control" placeholder="ค้นหา..."
-                                            onkeyup="searchTable()">
-                                    </div>
-                                </div>
-                            </div>
-                            </br>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-striped" id="personnelTable">
-                                        <thead class="table-primary">
-                                            <tr>
-                                                <th>หมายเลขบัตรประชาชน 13 หลัก</th>
-                                                <th>ชื่อ-สกุล</th>
-                                                <th>เพศ</th>
-                                                <th>ตำแหน่ง</th>
-                                                <th>กลุ่มงาน</th>
-                                                <th>ระดับ</th>
-                                                <th>เงินเดือน</th>
-                                                <th>วันเกิด</th>
-                                                <th>วันที่บรรจุ</th>
-                                                <th>โทรศัพท์</th>
-                                                <th>แอคชั่น</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            if ($result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    // แปลงฟอร์แมตวันที่
-                                                    $person_born = date("d/m/", strtotime($row["person_born"])) . (date("Y", strtotime($row["person_born"])) + 543);
-                                                    $person_dateAccepting = date("d/m/", strtotime($row["person_dateAccepting"])) . (date("Y", strtotime($row["person_dateAccepting"])) + 543);
-
-
-                                                    // แปลงค่าของ person_formwork เป็นข้อความ
-                                                    $formwork_text = '';
-                                                    switch ($row["person_formwork"]) {
-                                                        case '1':
-                                                            $formwork_text = 'องค์กรแพทย์';
-                                                            break;
-                                                        case '2':
-                                                            $formwork_text = 'กลุ่มงานบริหารทั่วไป';
-                                                            break;
-                                                        case '3':
-                                                            $formwork_text = 'เกษตรกรรมและคุ้มครองผู้บริโภค';
-                                                            break;
-                                                        case '4':
-                                                            $formwork_text = 'โภชนศาสตร์';
-                                                            break;
-                                                        case '5':
-                                                            $formwork_text = 'แพทย์แผนไทยและแพทย์ทางเลือก';
-                                                            break;
-                                                        case '6':
-                                                            $formwork_text = 'เวชศาสตร์ฟื้นฟู';
-                                                            break;
-                                                        case '7':
-                                                            $formwork_text = 'ประกันสุขภาพ ยุทธศาสตร์ และเทคโนโลยีสารสนเทศ';
-                                                            break;
-                                                        case '8':
-                                                            $formwork_text = 'เทคนิคการแพทย์';
-                                                            break;
-                                                        case '9':
-                                                            $formwork_text = 'บริการด้านปฐมภูมิและองค์รวม';
-                                                            break;
-                                                        case '10':
-                                                            $formwork_text = 'ทันตกรรม';
-                                                            break;
-                                                        case '11':
-                                                            $formwork_text = 'จักษุวิทยา';
-                                                            break;
-                                                        case '12':
-                                                            $formwork_text = 'จิตเวชและยาเสพติด';
-                                                            break;
-                                                        case '13':
-                                                            $formwork_text = 'การพยาบาล';
-                                                            break;
-                                                        case '14':
-                                                            $formwork_text = 'กลุ่มงานอาชีวะและยาเสพติด';
-                                                            break;
-                                                        case '15':
-                                                            $formwork_text = 'สุขภาพจิตจิต';
-                                                            break;
-                                                        default:
-                                                            $formwork_text = 'ไม่ทราบข้อมูล';
-                                                    }
-
-
-                                                    echo "<tr>";
-                                                    echo "<td>" . $row["person_id"] . "</td>";
-                                                    echo "<td>" . $row["person_name"] . "</td>";
-                                                    echo "<td>" . $row["person_gender"] . "</td>";
-                                                    echo "<td>" . $row["person_rank"] . "</td>";
-                                                    echo "<td>" . $formwork_text . "</td>"; // แสดงข้อความแทนตัวเลข
-                                                    echo "<td>" . $row["person_level"] . "</td>";
-                                                    echo "<td>" . $row["person_salary"] . "</td>";
-                                                    echo "<td>" . $person_born . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่ (dd/mm/yyyy) เป็น พ.ศ.
-                                                    echo "<td>" . $person_dateAccepting . "</td>"; // ใช้ฟอร์แมตวันที่ใหม่ (dd/mm/yyyy) เป็น พ.ศ.
-                                                    echo "<td>" . $row["person_phone"] . "</td>";
-                                                    echo "<td>";
-                                                    echo "<div class='d-flex'>";
-                                                    echo "<a href='edit_person.php?id=" . $row["person_id"] . "' class='btn btn-sm btn-warning me-1'>แก้ไข</a>";
-                                                    echo "<a href='#' class='btn btn-sm btn-danger' onclick=\"confirmDelete(" . $row["person_id"] . ")\">ลบ</a>";
-                                                    echo "</div>";
-                                                    echo "</td>";
-                                                    echo "</tr>";
-                                                }
-                                            } else {
-                                                echo "<tr><td colspan='10' class='text-center'>ไม่มีข้อมูล</td></tr>";
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="card-footer"
-                                style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-                                <nav aria-label="Page navigation">
-                                    <ul class="pagination justify-content-center">
-                                        <?php if ($page > 1): ?>
-                                            <li class="page-item">
-                                                <a class="page-link"
-                                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page - 1; ?>"
-                                                    aria-label="Previous">
-                                                    <span aria-hidden="true">&laquo;</span>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
-
+                <div class="container my-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="custom-title">ข้อมูลบุคลากร</span>
+                <!-- ช่องค้นหา -->
+                <input type="text" id="searchInput" class="form-control" placeholder="ค้นหา..." 
+                       value="<?php echo htmlspecialchars($search); ?>" style="width: 200px;">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead class="table-primary">
+    </br>
+                        <tr>
+                            <th>ลำดับที่</th>
+                            <th>หมายเลขบัตรประชาชน</th>
+                            <th>หมายเลข จ.18</th>
+                            <th>ชื่อ-สกุล</th>
+                            <th>ตำแหน่ง</th>
+                            <th>ระดับ</th>
+                            <th>กลุ่มงาน</th> <!-- เพิ่มคอลัมน์นี้ -->
+                            <th>เงินเดือน</th>
+                            <th>วันเกิด</th>
+                            <th>วันที่บรรจุ</th>
+                            <th>หมายเลขโทรศัพท์</th>
+                            
+                            
+                            <th>แอ็คชั่น</th>
+                        </tr>
+                    </thead>
+                    <tbody id="personnelTableBody">
+                        <?php
+                        $index = $offset + 1;
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $person_born = !empty($row['person_born']) 
+                                    ? date("d/m/", strtotime($row['person_born'])) . (date("Y", strtotime($row['person_born'])) + 543)
+                                    : "-";
+                                $person_dateAccepting = !empty($row['person_dateAccepting']) 
+                                    ? date("d/m/", strtotime($row['person_dateAccepting'])) . (date("Y", strtotime($row['person_dateAccepting'])) + 543)
+                                    : "-";
+                                echo "<tr>";
+                                echo "<td>" . $index++ . "</td>";
+                                echo "<td>{$row['person_id']}</td>";
+                                echo "<td>{$row['person_DocNumber']}</td>";
+                                echo "<td>{$row['person_name']}</td>";
+                                echo "<td>{$row['person_rank']}</td>";
+                                echo "<td>{$row['person_level']}</td>";
+                                echo "<td>{$row['group_name']}</td>"; // แสดงชื่อกลุ่มงาน
+                                echo "<td>" . number_format($row['person_salary'], 2) . "</td>";
+                                echo "<td>{$person_born}</td>";
+                                echo "<td>{$person_dateAccepting}</td>";
+                                echo "<td>{$row['person_phone']}</td>";
+                               
+                               
+                                echo "<td>
+                                        <a href='edit_person.php?id={$row['person_id']}' class='btn btn-warning btn-sm'>แก้ไข</a>
+                                        <a href='#' onclick='confirmDelete({$row['person_id']})' class='btn btn-danger btn-sm'>ลบ</a>
+                                      </td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='12' class='text-center'>ไม่มีข้อมูล</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+                    </br>
+             <!-- Pagination -->
+             <nav aria-label="Pagination">
+                                    <ul class="pagination justify-content-center" id="paginationLinks">
+                                        <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">«</a>
+                                        </li>
                                         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                            <li class="page-item <?php if ($i == $page)
-                                                echo 'active'; ?>">
-                                                <a class="page-link"
-                                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                            <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                                <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
                                             </li>
                                         <?php endfor; ?>
-
-                                        <?php if ($page < $total_pages): ?>
-                                            <li class="page-item">
-                                                <a class="page-link"
-                                                    href="?search=<?php echo urlencode($search_query); ?>&page=<?php echo $page + 1; ?>"
-                                                    aria-label="Next">
-                                                    <span aria-hidden="true">&raquo;</span>
-                                                </a>
-                                            </li>
-                                        <?php endif; ?>
+                                        <li class="page-item <?php echo ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">»</a>
+                                        </li>
                                     </ul>
                                 </nav>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+    </div>
+</div>
 
+
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
                     <script>
-                        function searchTable(page = 1) {
-                            var search = document.getElementById("tableSearch").value; // ดึงค่าค้นหา
-                            var url = `personnel.php?search=${encodeURIComponent(search)}&page=${page}&ajax=true`;
+                        document.getElementById('searchInput').addEventListener('keyup', function() {
+                            const search = this.value;
+                            const page = 1; // รีเซ็ตหน้าเมื่อค้นหาใหม่
 
-                            fetch(url)
-                                .then(response => response.json())
-                                .then(data => {
-                                    const tbody = document.querySelector("#personnelTable tbody");
-                                    tbody.innerHTML = ""; // ล้างข้อมูลเดิมในตาราง
+                            // ใช้ AJAX ดึงข้อมูลใหม่จากเซิร์ฟเวอร์
+                            fetch(`?search=${encodeURIComponent(search)}&page=${page}`)
+                                .then(response => response.text())
+                                .then(html => {
+                                    const parser = new DOMParser();
+                                    const doc = parser.parseFromString(html, 'text/html');
 
-                                    // ฟังก์ชันแปลงตัวเลข person_formwork เป็นข้อความ
-                                    function formatFormwork(formwork) {
-                                        switch (formwork) {
-                                            case '1':
-                                                return 'องค์กรแพทย์';
-                                            case '2':
-                                                return 'กลุ่มงานบริหารทั่วไป';
-                                            case '3':
-                                                return 'เกษตรกรรมและคุ้มครองผู้บริโภค';
-                                            case '4':
-                                                return 'โภชนศาสตร์';
-                                            case '5':
-                                                return 'แพทย์แผนไทยและแพทย์ทางเลือก';
-                                            case '6':
-                                                return 'เวชศาสตร์ฟื้นฟู';
-                                            case '7':
-                                                return 'ประกันสุขภาพ ยุทธศาสตร์ และเทคโนโลยีสารสนเทศ';
-                                            case '8':
-                                                return 'เทคนิคการแพทย์';
-                                            case '9':
-                                                return 'บริการด้านปฐมภูมิและองค์รวม';
-                                            case '10':
-                                                return 'ทันตกรรม';
-                                            case '11':
-                                                return 'จักษุวิทยา';
-                                            case '12':
-                                                return 'จิตเวชและยาเสพติด';
-                                            case '13':
-                                                return 'การพยาบาล';
-                                            case '14':
-                                                return 'กลุ่มงานอาชีวะและยาเสพติด';
-                                            case '15':
-                                                return 'สุขภาพจิตจิต';
-                                            default:
-                                                return 'ไม่ทราบข้อมูล';
+                                    // อัปเดตตารางและ Pagination
+                                    const newTableBody = doc.querySelector('#personnelTableBody').innerHTML;
+                                    const newPagination = doc.querySelector('#paginationLinks')?.innerHTML;
+
+                                    document.querySelector('#personnelTableBody').innerHTML = newTableBody;
+                                    if (newPagination) {
+                                        document.querySelector('#paginationLinks').innerHTML = newPagination;
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                        });
+
+
+
+                        // ฟังก์ชันสำหรับค้นหาในตาราง
+                        function searchTable() {
+                            const input = document.getElementById("tableSearch");
+                            const filter = input.value.toLowerCase();
+                            const table = document.getElementById("personnelTable");
+                            const rows = table.getElementsByTagName("tr");
+
+                            for (let i = 1; i < rows.length; i++) {
+                                let cells = rows[i].getElementsByTagName("td");
+                                let match = false;
+
+                                for (let j = 0; j < cells.length; j++) {
+                                    if (cells[j]) {
+                                        const cellText = cells[j].textContent || cells[j].innerText;
+                                        if (cellText.toLowerCase().includes(filter)) {
+                                            match = true;
+                                            break;
                                         }
                                     }
-
-                                    // ฟังก์ชันฟอร์แมตวันที่
-                                    function formatDate(dateString) {
-                                        if (!dateString) return "-"; // ถ้าไม่มีค่าให้คืน "-"
-                                        const date = new Date(dateString);
-                                        if (isNaN(date)) return "-"; // ตรวจสอบความถูกต้องของวันที่
-                                        const day = String(date.getDate()).padStart(2, '0');
-                                        const month = String(date.getMonth() + 1).padStart(2, '0');
-                                        const year = date.getFullYear() + 543; // เพิ่ม 543 เพื่อเปลี่ยนเป็น พ.ศ.
-                                        return `${day}/${month}/${year}`;
-                                    }
-
-                                    // วนลูปเพื่อแสดงข้อมูลในตารางใหม่
-                                    data.data.forEach((row) => {
-                                        tbody.innerHTML += `
-                    <tr>
-                        <td>${row.person_id}</td>
-                        <td>${row.person_name}</td>
-                        <td>${row.person_gender}</td>
-                        <td>${row.person_rank}</td>
-                        <td>${formatFormwork(row.person_formwork)}</td> <!-- แปลงตัวเลขเป็นข้อความ -->
-                        <td>${row.person_level}</td>
-                        <td>${row.person_salary}</td>
-                        <td>${formatDate(row.person_born)}</td> <!-- ฟอร์แมตวันที่เป็น พ.ศ. -->
-                        <td>${formatDate(row.person_dateAccepting)}</td> <!-- ฟอร์แมตวันที่เป็น พ.ศ. -->
-                        <td>${row.person_phone}</td>
-                        <td>
-                            <div class='d-flex'>
-                                <a href='edit_person.php?id=${row.person_id}' class='btn btn-sm btn-warning me-1'>แก้ไข</a>
-                                <a href='#' class='btn btn-sm btn-danger' onclick="confirmDelete(${row.person_id})">ลบ</a>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                                    });
-                                })
-                                .catch(error => {
-                                    console.error('Error fetching data:', error);
-                                });
+                                }
+                                rows[i].style.display = match ? "" : "none";
+                            }
                         }
-
-
-
-
-                        function updatePagination(totalPages, currentPage, search = "") {
-                            const pagination = document.querySelector(".pagination");
-                            pagination.innerHTML = ""; // ล้าง pagination เดิม
-
-                            // ปุ่มไปหน้าก่อนหน้า
-                            if (currentPage > 1) {
-                                pagination.innerHTML += `
-            <li class="page-item">
-                <a class="page-link" href="#" onclick="searchTable(${currentPage - 1})">&laquo;</a>
-            </li>
-        `;
-                            }
-
-                            // สร้าง pagination
-                            for (let i = 1; i <= totalPages; i++) {
-                                pagination.innerHTML += `
-            <li class="page-item ${i === currentPage ? 'active' : ''}">
-                <a class="page-link" href="#" onclick="searchTable(${i})">${i}</a>
-            </li>
-        `;
-                            }
-
-                            // ปุ่มไปหน้าถัดไป
-                            if (currentPage < totalPages) {
-                                pagination.innerHTML += `
-            <li class="page-item">
-                <a class="page-link" href="#" onclick="searchTable(${currentPage + 1})">&raquo;</a>
-            </li>
-        `;
-                            }
-
-                            // // // ปุ่ม ">>" ไปหน้าสุดท้าย
-                            //  if (currentPage < totalPages) {
-                            //      pagination.innerHTML += `
-                            //          <li class="page-item">
-                            //             <a class="page-link" href="#" onclick="searchTable(${totalPages})">&raquo;&raquo;</a>
-                            //         </li>
-                            //      `;
-                            //  }
-                        }
-
-
-                        // เรียกใช้งานเมื่อมีการป้อนคำค้นหา
-                        document.getElementById("tableSearch").addEventListener("input", () => searchTable(1));
-
-
 
                         function confirmDelete(personId) {
                             Swal.fire({
@@ -704,33 +544,11 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
                                 }
                             });
                         }
-                        function formatDate(dateString) {
-                            if (!dateString) return "-"; // ถ้าไม่มีค่าให้คืน "-"
-                            const date = new Date(dateString);
-                            if (isNaN(date)) return "-"; // ตรวจสอบความถูกต้องของวันที่
-                            const day = String(date.getDate()).padStart(2, '0');
-                            const month = String(date.getMonth() + 1).padStart(2, '0');
-                            const year = date.getFullYear() + 543; // เพิ่ม 543 เพื่อเปลี่ยนเป็น พ.ศ.
-                            return `${day}/${month}/${year}`;
-                        }
-
-
                     </script>
                 </body>
-
-
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
                 <script src="assets/static/js/components/dark.js"></script>
                 <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-
-
                 <script src="assets/compiled/js/app.js"></script>
-
-
-
 </body>
 
 </html>
