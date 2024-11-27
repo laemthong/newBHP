@@ -441,7 +441,7 @@ $result = $conn->query($sql);
                                
                                
                                 echo "<td>
-                                        <a href='edit_person.php?id={$row['person_id']}' class='btn btn-warning btn-sm'>แก้ไข</a>
+                                        <a href='edit_person.php?id={$row['person_id']}' class='btn btn-warning btn-sm'>ดูรายละเอียด</a>
                                         <a href='#' onclick='confirmDelete({$row['person_id']})' class='btn btn-danger btn-sm'>ลบ</a>
                                       </td>";
                                 echo "</tr>";
