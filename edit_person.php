@@ -7,16 +7,26 @@ if (isset($_GET['id'])) {
     $person_id = $_GET['id'];
 
     // ดึงข้อมูลของแถวที่ต้องการแก้ไขจากฐานข้อมูล
-    $sql = "SELECT * FROM personnel WHERE person_id = $person_id";
-    $result = $conn->query($sql);
+    $sql = "SELECT * FROM personnel WHERE person_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $person_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    // ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือไม่
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
+
+        // แปลงข้อมูลไบนารีรูปภาพเป็น Base64
+        if (!empty($row['person_image'])) {
+            $base64Image = 'data:image/jpeg;base64,' . base64_encode($row['person_image']);
+        } else {
+            $base64Image = ''; // หากไม่มีรูป
+        }
     } else {
         echo "ไม่พบข้อมูล";
         exit();
     }
+    $stmt->close();
 }
 
 // ตรวจสอบว่ามีการส่งข้อมูลที่แก้ไขกลับมาหรือไม่
@@ -25,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['person_name'];
     $gender = $_POST['person_gender'];
     $rank = $_POST['person_rank'];
-    $formwork = isset($_POST['person_formwork']) ? $_POST['person_formwork'] : ''; // ตรวจสอบ key
+    $formwork = isset($_POST['person_formwork']) ? $_POST['person_formwork'] : '';
     $level = $_POST['person_level'];
     $salary = $_POST['person_salary'];
     $nickname = $_POST['person_nickname'];
@@ -50,43 +60,133 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cardNum = $_POST['person_cardNum'];
 
     // รวมค่าของวันที่หมดอายุบัตรราชการ
-    $Expired_day = $_POST['Expired_day'];
-    $Expired_month = $_POST['Expired_month'];
-    $Expired_year = $_POST['Expired_year'];
-    $cardExpired = ($Expired_year - 543) . "-" . str_pad($Expired_month, 2, '0', STR_PAD_LEFT) . "-" . str_pad($Expired_day, 2, '0', STR_PAD_LEFT);
+    $cardExpired = null;
+    if (!empty($_POST['Expired_day']) && !empty($_POST['Expired_month']) && !empty($_POST['Expired_year'])) {
+        $Expired_day = $_POST['Expired_day'];
+        $Expired_month = $_POST['Expired_month'];
+        $Expired_year = $_POST['Expired_year'];
 
-    // อัพเดตข้อมูลในฐานข้อมูล
-    $sql = "UPDATE personnel SET 
-                person_name = '$name', 
-                person_gender = '$gender', 
-                person_rank = '$rank', 
-                person_formwork = '$formwork', 
-                person_level = '$level', 
-                person_salary = '$salary', 
-                person_nickname = '$nickname', 
-                person_born = '$born', 
-                person_dateAccepting = '$dateAccepting', 
-                person_typeHire = '$typeHire', 
-                person_positionAllowance = '$positionAllowance', 
-                person_phone = '$phone', 
-                person_specialQualification = '$specialQualification', 
-                person_blood = '$blood', 
-                person_cardNum = '$cardNum', 
-                person_CardExpired = '$cardExpired'
-            WHERE person_id = $person_id";
+        // แปลง พ.ศ. เป็น ค.ศ.
+        $converted_year = $Expired_year - 543;
 
-    if ($conn->query($sql) === TRUE) {
-        echo "แก้ไขข้อมูลสำเร็จ";
-        header("Location: personnel.php");
+        // จัดรูปแบบวันที่
+        $cardExpired = sprintf(
+            '%04d-%02d-%02d',
+            $converted_year,
+            intval($Expired_month),
+            intval($Expired_day)
+        );
+    }
+
+    // ตรวจสอบว่ามีการอัปโหลดไฟล์ภาพใหม่หรือไม่
+    if (isset($_FILES['person_image']) && $_FILES['person_image']['error'] === UPLOAD_ERR_OK) {
+        $imageData = file_get_contents($_FILES['person_image']['tmp_name']);
+        if ($imageData === false) {
+            die("Error reading the uploaded file.");
+        }
+
+
+        // อัปเดตข้อมูลพร้อมรูปภาพ
+        $sql = "UPDATE personnel SET 
+    person_name = ?, 
+    person_gender = ?, 
+    person_rank = ?, 
+    person_formwork = ?, 
+    person_level = ?, 
+    person_salary = ?, 
+    person_nickname = ?, 
+    person_born = ?, 
+    person_dateAccepting = ?, 
+    person_typeHire = ?, 
+    person_positionAllowance = ?, 
+    person_phone = ?, 
+    person_specialQualification = ?, 
+    person_blood = ?, 
+    person_cardNum = ?, 
+    person_CardExpired = ?, 
+    person_image = ?
+    WHERE person_id = ?";
+        $stmt = $conn->prepare($sql);
+
+        // ใช้ "b" สำหรับข้อมูลไบนารี
+        $stmt->bind_param(
+            "ssssssssssssssssbs",
+            $name,
+            $gender,
+            $rank,
+            $formwork,
+            $level,
+            $salary,
+            $nickname,
+            $born,
+            $dateAccepting,
+            $typeHire,
+            $positionAllowance,
+            $phone,
+            $specialQualification,
+            $blood,
+            $cardNum,
+            $cardExpired,
+            $imageData,
+            $person_id
+        );
+    } else {
+        // อัปเดตข้อมูลโดยไม่มีรูปภาพ
+        $sql = "UPDATE personnel SET 
+    person_name = ?, 
+    person_gender = ?, 
+    person_rank = ?, 
+    person_formwork = ?, 
+    person_level = ?, 
+    person_salary = ?, 
+    person_nickname = ?, 
+    person_born = ?, 
+    person_dateAccepting = ?, 
+    person_typeHire = ?, 
+    person_positionAllowance = ?, 
+    person_phone = ?, 
+    person_specialQualification = ?, 
+    person_blood = ?, 
+    person_cardNum = ?, 
+    person_CardExpired = ?
+WHERE person_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param(
+            "ssssssssssssssssi",
+            $name,
+            $gender,
+            $rank,
+            $formwork,
+            $level,
+            $salary,
+            $nickname,
+            $born,
+            $dateAccepting,
+            $typeHire,
+            $positionAllowance,
+            $phone,
+            $specialQualification,
+            $blood,
+            $cardNum,
+            $cardExpired,
+            $person_id
+        );
+    }
+
+    // บันทึกข้อมูลลงฐานข้อมูล
+    if ($stmt->execute()) {
+        echo "<script>
+    alert('แก้ไขข้อมูลสำเร็จ');
+    window.location.href = 'personnel.php';
+  </script>";
         exit();
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $stmt->error;
     }
+    $stmt->close();
 }
-
 $conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -449,7 +549,7 @@ $conn->close();
                 <div class="container my-5 d-flex justify-content-center">
                     <div style="max-width: 600px; width: 100%;">
                         <h2 class="text-center mb-4">แก้ไขข้อมูลบุคคล</h2>
-                        <form action="edit_person.php" method="post">
+                        <form action="edit_person.php" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="person_id" value="<?php echo $row['person_id']; ?>">
 
                             <div class="row g-3">
@@ -835,8 +935,11 @@ $conn->close();
                                         <select name="Expired_year" class="form-select" required>
                                             <option value="">ปี</option>
                                             <?php
-                                            $expired_year = $expired_date ? (int) $expired_date[0] + 543 : null; // แปลงปี ค.ศ. เป็น พ.ศ.
-                                            for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
+                                            $currentYear = date("Y") + 543; // ปีปัจจุบันในพ.ศ.
+                                            $expired_date = isset($row['person_CardExpired']) ? explode('-', $row['person_CardExpired']) : null;
+                                            $expired_year = $expired_date ? (int) $expired_date[0] + 543 : null; // แปลงปีเป็นพ.ศ.
+                                            for ($i = $currentYear; $i <= $currentYear + 60; $i++): // สร้างรายการปี
+                                                ?>
                                                 <option value="<?= $i ?>" <?= $i == $expired_year ? 'selected' : '' ?>>
                                                     <?= $i ?>
                                                 </option>
@@ -844,10 +947,20 @@ $conn->close();
                                         </select>
                                     </div>
                                 </div>
-
-
-
-
+                                <!-- Image Display and Update Section -->
+                                <div class="form-group">
+                                    <label for="current_image">Current Profile Image</label><br>
+                                    <?php if (!empty($base64Image)): ?>
+                                        <img src="<?php echo $base64Image; ?>" alt="Profile Image"
+                                            style="max-width: 150px; max-height: 150px;">
+                                    <?php else: ?>
+                                        <p>No image uploaded.</p>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="form-group">
+                                    <label for="person_image">Upload New Profile Image</label>
+                                    <input type="file" name="person_image" class="form-control" accept="image/*">
+                                </div>
                                 <div class="text-center mt-4">
                                     <button type="submit" class="btn btn-success">บันทึกการแก้ไข</button>
                                     <a href="personnel.php" class="btn btn-secondary">ยกเลิก</a>
