@@ -413,9 +413,8 @@ $result = $conn->query($sql);
                             <th>วันเกิด</th>
                             <th>วันที่บรรจุ</th>
                             <th>หมายเลขโทรศัพท์</th>
-                            
-                            
-                            <th>แอ็คชั่น</th>
+       
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="personnelTableBody">
