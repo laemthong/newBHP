@@ -429,18 +429,18 @@ $result = $conn->query($sql);
                                                     $person_dateAccepting = !empty($row['person_dateAccepting'])
                                                         ? date("d/m/", strtotime($row['person_dateAccepting'])) . (date("Y", strtotime($row['person_dateAccepting'])) + 543)
                                                         : "-";
-                                                        echo "<tr>";
-                                                        echo "<td>" . ($row['person_id'] ? $row['person_id'] : "ไม่มีข้อมูล") . "</td>";
-                                                        echo "<td>" . ($row['person_name'] ? $row['person_name'] : "ไม่มีข้อมูล") . "</td>";
-                                                        echo "<td>" . ($row['person_rank'] ? $row['person_rank'] : "ไม่มีข้อมูล") . "</td>";
-                                                        echo "<td>" . ($row['person_level'] ? $row['person_level'] : "ไม่มีข้อมูล") . "</td>";
-                                                        echo "<td>" . ($row['person_salary'] ? $row['person_salary'] : "ไม่มีข้อมูล") . "</td>";
-                                                        echo "<td>" . ($row['person_born'] ? $row['person_born'] : "ไม่มีข้อมูล") . "</td>";
-                                                        echo "<td>" . ($row['person_dateAccepting'] ? $row['person_dateAccepting'] : "ไม่มีข้อมูล") . "</td>";
-                                                        echo "<td>" . ($row['person_phone'] ? $row['person_phone'] : "ไม่มีข้อมูล") . "</td>";
-                                                        echo "<td>" . ($row['person_DocNumber'] ? $row['person_DocNumber'] : "ไม่มีข้อมูล") . "</td>";
-                                                        echo "<td>" . ($row['group_name'] ? $row['group_name'] : "ไม่มีข้อมูล") . "</td>";
-                                                    
+                                                    echo "<tr>";
+                                                    echo "<td>" . ($row['person_id'] ? $row['person_id'] : "ไม่มีข้อมูล") . "</td>";
+                                                    echo "<td>" . ($row['person_name'] ? $row['person_name'] : "ไม่มีข้อมูล") . "</td>";
+                                                    echo "<td>" . ($row['person_rank'] ? $row['person_rank'] : "ไม่มีข้อมูล") . "</td>";
+                                                    echo "<td>" . ($row['person_level'] ? $row['person_level'] : "ไม่มีข้อมูล") . "</td>";
+                                                    echo "<td>" . ($row['person_salary'] ? $row['person_salary'] : "ไม่มีข้อมูล") . "</td>";
+                                                    echo "<td>" . ($row['person_born'] ? $row['person_born'] : "ไม่มีข้อมูล") . "</td>";
+                                                    echo "<td>" . ($row['person_dateAccepting'] ? $row['person_dateAccepting'] : "ไม่มีข้อมูล") . "</td>";
+                                                    echo "<td>" . ($row['person_phone'] ? $row['person_phone'] : "ไม่มีข้อมูล") . "</td>";
+                                                    echo "<td>" . ($row['person_DocNumber'] ? $row['person_DocNumber'] : "ไม่มีข้อมูล") . "</td>";
+                                                    echo "<td>" . ($row['group_name'] ? $row['group_name'] : "ไม่มีข้อมูล") . "</td>";
+
                                                     echo "<td>
                                         <a href='edit_person.php?id={$row['person_id']}' class='btn btn-warning btn-sm'>ดูรายละเอียด</a>
                                         <a href='#' onclick='confirmDelete({$row['person_id']})' class='btn btn-danger btn-sm'>ลบ</a>
