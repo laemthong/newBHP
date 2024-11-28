@@ -45,6 +45,55 @@ $result = $conn->query($sql);
             color: inherit;
             /* ใช้สีของข้อความตามสีพื้นฐาน */
         }
+
+        /* ปรับรูปแบบของการอัปโหลดไฟล์ */
+        .form-group {
+            margin-bottom: 20px;
+            /* เพิ่มระยะห่างจากด้านล่าง */
+        }
+
+        .form-group label {
+            font-weight: bold;
+            /* ทำให้ข้อความของ label หนา */
+            margin-bottom: 10px;
+            /* เพิ่มระยะห่างด้านล่าง */
+            display: block;
+            /* ทำให้ label อยู่ในบรรทัดใหม่ */
+            font-size: 16px;
+            color: #333;
+        }
+
+        .form-group input[type="file"] {
+            display: block;
+            /* ทำให้ input อยู่ในบรรทัดใหม่ */
+            width: 100%;
+            /* ขยายปุ่มให้เต็มความกว้างของ container */
+            padding: 10px;
+            font-size: 14px;
+            color: #555;
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* เพิ่มสไตล์เมื่อ hover หรือมีการเลือกไฟล์ */
+        .form-group input[type="file"]:hover {
+            background-color: #f1f1f1;
+        }
+
+        .form-group input[type="file"]:focus {
+            outline: none;
+            border-color: #007bff;
+            /* สีของขอบเมื่อโฟกัส */
+        }
+
+        /* สำหรับการแสดงปุ่มที่เลือกไฟล์ */
+        .form-group .custom-file-label {
+            padding: 10px;
+            font-size: 14px;
+            color: #555;
+        }
     </style>
 
 
@@ -286,19 +335,21 @@ $result = $conn->query($sql);
             <body class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
                 <div class="container mt-4" style="max-width: 800px;">
                     <h2 class="text-center .text-secondary mb-4">ระบบบันทึกข้อมูลบุคลากร</h2>
-                    <form id="personnelForm" action="save_personnel.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                    <form id="personnelForm" action="save_personnel.php" method="POST" enctype="multipart/form-data"
+                        onsubmit="return validateForm()">
 
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label"><span class="text-danger">*</span> หมายเลขบัตรประชาชน 13
                                     หลัก:</label>
-                                <input type="number" name="person_id" class="form-control"  placeholder="กรอกหมายเลขบัตรประชาชน 13
+                                <input type="number" name="person_id" class="form-control" placeholder="กรอกหมายเลขบัตรประชาชน 13
                                     หลัก" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><span class="text-danger">*</span> ชื่อ - สกุล:</label>
-                                <input type="text" name="person_name" class="form-control" maxlength="255" placeholder="กรอกชื่อ - สกุล" required>
+                                <input type="text" name="person_name" class="form-control" maxlength="255"
+                                    placeholder="กรอกชื่อ - สกุล" required>
                             </div>
 
                             <div class="col-md-6">
@@ -313,7 +364,8 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">ตำแหน่ง:</label>
-                                <input type="text" name="person_rank" class="form-control" maxlength="255"  placeholder="กรอกตำแหน่ง" required>
+                                <input type="text" name="person_rank" class="form-control" maxlength="255"
+                                    placeholder="กรอกตำแหน่ง" required>
                             </div>
 
                             <div class="col-md-6">
@@ -332,8 +384,6 @@ $result = $conn->query($sql);
                                     ?>
                                 </select>
                             </div>
-
-
 
                             <div class="col-md-6">
                                 <label class="form-label">ระดับ:</label>
@@ -372,12 +422,14 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">เงินเดือน:</label>
-                                <input type="number" name="person_salary" class="form-control" step="0.01"placeholder="กรอกเงินเดือน" required>
+                                <input type="number" name="person_salary" class="form-control" step="0.01"
+                                    placeholder="กรอกเงินเดือน" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">ชื่อเล่น:</label>
-                                <input type="text" name="person_nickname" class="form-control" maxlength="255"placeholder="กรอกชื่อเล่น" required>
+                                <input type="text" name="person_nickname" class="form-control" maxlength="255"
+                                    placeholder="กรอกชื่อเล่น" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันเดือนปีเกิด:</label>
@@ -386,7 +438,7 @@ $result = $conn->query($sql);
                                     <select name="day" class="form-select" " required>
                                         <option value="">วัน</option>
                                         <?php for ($i = 1; $i <= 31; $i++): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                                    <option value=" <?= $i ?>"><?= $i ?></option>
                                         <?php endfor; ?>
                                     </select>
 
@@ -420,15 +472,10 @@ $result = $conn->query($sql);
                                             <option value="<?= $i ?>"><?= $i ?></option>
                                         <?php endfor; ?>
                                     </select>
-                                    
+
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">อายุราชการที่เหลือคือ:</label>
-                                <input type="text" name="service_remaining" class="form-control" maxlength="255"
-                                placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ"readonly>
-                            </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันที่บรรจุ:</label>
                                 <div class="d-flex gap-2">
@@ -475,18 +522,20 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">อายุของคุณคือ:</label>
-                                <input type="text" name="age" class="form-control" maxlength="255" placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
+                                <input type="text" name="age" class="form-control" maxlength="255"
+                                    placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันที่คุณเกษียณอายุราชการคือ:</label>
-                                <input type="text" name="retirement_date" class="form-control" placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
+                                <input type="text" name="retirement_date" class="form-control"
+                                    placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">อายุราชการในวันเกษียณของคุณคือ:</label>
                                 <input type="text" name="service_at_retirement" class="form-control" maxlength="255"
-                                placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
-                                    
+                                    placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
+
                             </div>
 
 
@@ -511,14 +560,14 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">เงินประจำตำแหน่ง:</label>
-                                <input type="number" name="person_positionAllowance" class="form-control" step="0.01" placeholder="กรอกเงินประจำตำแหน่ง"
-                                    required>
+                                <input type="number" name="person_positionAllowance" class="form-control" step="0.01"
+                                    placeholder="กรอกเงินประจำตำแหน่ง" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">เบอร์โทรศัพท์:</label>
                                 <input type="tel" name="person_phone" class="form-control" pattern="[0-9]{10}"
-                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก"placeholder="กรอกเบอร์โทรศัพท์" required>
+                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก" placeholder="กรอกเบอร์โทรศัพท์" required>
                             </div>
 
                             <div class="col-md-6">
@@ -541,7 +590,8 @@ $result = $conn->query($sql);
                             <div class="col-md-6">
                                 <label class="form-label">เลขที่บัตรข้าราชการ:</label>
                                 <input type="text" name="person_cardNum" class="form-control" maxlength="13"
-                                    pattern="[0-9]{13}" title="กรุณากรอกเลขบัตร 13 หลัก" placeholder="กรอกเลขที่บัตรข้าราชการ">
+                                    pattern="[0-9]{13}" title="กรุณากรอกเลขบัตร 13 หลัก"
+                                    placeholder="กรอกเลขที่บัตรข้าราชการ">
                             </div>
 
                             <div class="col-md-6">
@@ -579,24 +629,23 @@ $result = $conn->query($sql);
                                     </select>
 
                                     <select name="Expired_year" class="form-select" required>
-    <option value="">ปี</option>
-    <?php
-        $currentYear = date("Y") + 543; // ปีปัจจุบันในรูปแบบ พ.ศ.
-        for ($i = $currentYear; $i <= $currentYear + 60; $i++): // เริ่มจากปีปัจจุบัน + 60 ปี
-    ?>
-        <option value="<?= $i ?>"><?= $i ?></option>
-    <?php endfor; ?>
-</select>
+                                        <option value="">ปี</option>
+                                        <?php
+                                        $currentYear = date("Y") + 543; // ปีปัจจุบันในรูปแบบ พ.ศ.
+                                        for ($i = $currentYear; $i <= $currentYear + 60; $i++): // เริ่มจากปีปัจจุบัน + 60 ปี
+                                            ?>
+                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                        <?php endfor; ?>
+                                    </select>
 
                                 </div>
                             </div>
-                                            
-                            <div class="col-md-6">
-                                <label class="form-label">อัปโหลดรูปภาพ:</label>
-                                <input type="file" name="person_image" class="form-control" accept="image/*">
+
+                            <div class="form-group">
+                                <label for="person_image">อัปโหลดรูปภาพใหม่</label>
+                                <input type="file" name="person_image" id="person_image"
+                                    accept="image/jpeg, image/png, image/gif" class="form-control-file">
                             </div>
-
-
 
 
                             <button type="submit" class="btn btn-success mt-4 w-100">บันทึกข้อมูล</button>
@@ -640,10 +689,10 @@ $result = $conn->query($sql);
                         return isValid;
                     }
 
-                    document.addEventListener("DOMContentLoaded", function() {
+                    document.addEventListener("DOMContentLoaded", function () {
                         const form = document.querySelector("#personnelForm");
 
-                        form.addEventListener("submit", function(event) {
+                        form.addEventListener("submit", function (event) {
                             const expiredDay = document.querySelector("[name='Expired_day']").value;
                             const expiredMonth = document.querySelector("[name='Expired_month']").value;
                             const expiredYear = document.querySelector("[name='Expired_year']").value;
@@ -657,10 +706,10 @@ $result = $conn->query($sql);
 
 
 
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         const form = document.getElementById('personnelForm');
 
-                        form.addEventListener('submit', function(event) {
+                        form.addEventListener('submit', function (event) {
                             event.preventDefault(); // หยุดการส่งฟอร์มแบบปกติ
 
                             if (!validateForm()) {
@@ -695,7 +744,7 @@ $result = $conn->query($sql);
                             });
                         });
                     });
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         // Flatpickr สำหรับวันเดือนปีเกิด
                         flatpickr("#dateBornPicker", {
                             altInput: true,
@@ -712,7 +761,7 @@ $result = $conn->query($sql);
                             locale: "th", // ใช้ภาษาไทย
                         });
                     });
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
                         // อ้างอิงถึงฟิลด์
                         const dayField = document.querySelector('select[name="day"]');
                         const monthField = document.querySelector('select[name="month"]');
@@ -773,7 +822,7 @@ $result = $conn->query($sql);
                             const serviceAtRetirement = calculateAge(acceptDate, retirementDate);
 
                             // คำนวณอายุราชการที่เหลือ
-                            const serviceRemaining = calculateAge(currentDate, retirementDate);
+                            //const serviceRemaining = calculateAge(currentDate, retirementDate);
 
                             // Debugging
                             console.log("Age:", age);

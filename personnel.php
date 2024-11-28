@@ -386,101 +386,103 @@ $result = $conn->query($sql);
                 </a>
 
                 <body>
-                <div class="container my-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="custom-title">ข้อมูลบุคลากร</span>
-                <!-- ช่องค้นหา -->
-                <input type="text" id="searchInput" class="form-control" placeholder="ค้นหา..." 
-                       value="<?php echo htmlspecialchars($search); ?>" style="width: 200px;">
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped">
-                    <thead class="table-primary">
-    </br>
-                        <tr>
-                            <th>ลำดับที่</th>
-                            <th>หมายเลขบัตรประชาชน</th>
-                            <th>หมายเลข จ.18</th>
-                            <th>ชื่อ-สกุล</th>
-                            <th>ตำแหน่ง</th>
-                            <th>ระดับ</th>
-                            <th>กลุ่มงาน</th> <!-- เพิ่มคอลัมน์นี้ -->
-                            <th>เงินเดือน</th>
-                            <th>วันเกิด</th>
-                            <th>วันที่บรรจุ</th>
-                            <th>หมายเลขโทรศัพท์</th>
-       
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="personnelTableBody">
-                        <?php
-                        $index = $offset + 1;
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                $person_born = !empty($row['person_born']) 
-                                    ? date("d/m/", strtotime($row['person_born'])) . (date("Y", strtotime($row['person_born'])) + 543)
-                                    : "-";
-                                $person_dateAccepting = !empty($row['person_dateAccepting']) 
-                                    ? date("d/m/", strtotime($row['person_dateAccepting'])) . (date("Y", strtotime($row['person_dateAccepting'])) + 543)
-                                    : "-";
-                                echo "<tr>";
-                                echo "<td>" . $index++ . "</td>";
-                                echo "<td>{$row['person_id']}</td>";
-                                echo "<td>{$row['person_DocNumber']}</td>";
-                                echo "<td>{$row['person_name']}</td>";
-                                echo "<td>{$row['person_rank']}</td>";
-                                echo "<td>{$row['person_level']}</td>";
-                                echo "<td>{$row['group_name']}</td>"; // แสดงชื่อกลุ่มงาน
-                                echo "<td>" . number_format($row['person_salary'], 2) . "</td>";
-                                echo "<td>{$person_born}</td>";
-                                echo "<td>{$person_dateAccepting}</td>";
-                                echo "<td>{$row['person_phone']}</td>";
-                               
-                               
-                                echo "<td>
+                    <div class="container my-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-primary text-white"
+                                style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="custom-title">ข้อมูลบุคลากร</span>
+                                    <!-- ช่องค้นหา -->
+                                    <input type="text" id="searchInput" class="form-control" placeholder="ค้นหา..."
+                                        value="<?php echo htmlspecialchars($search); ?>" style="width: 200px;">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped">
+                                        <thead class="table-primary">
+                                            </br>
+                                            <tr>
+                                                <th>ลำดับที่</th>
+                                                <th>หมายเลขบัตรประชาชน</th>
+                                                <th>หมายเลข จ.18</th>
+                                                <th>ชื่อ-สกุล</th>
+                                                <th>ตำแหน่ง</th>
+                                                <th>ระดับ</th>
+                                                <th>กลุ่มงาน</th> <!-- เพิ่มคอลัมน์นี้ -->
+                                                <th>เงินเดือน</th>
+                                                <th>วันเกิด</th>
+                                                <th>วันที่บรรจุ</th>
+                                                <th>หมายเลขโทรศัพท์</th>
+
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="personnelTableBody">
+                                            <?php
+                                            $index = $offset + 1;
+                                            if ($result->num_rows > 0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                                    $person_born = !empty($row['person_born'])
+                                                        ? date("d/m/", strtotime($row['person_born'])) . (date("Y", strtotime($row['person_born'])) + 543)
+                                                        : "-";
+                                                    $person_dateAccepting = !empty($row['person_dateAccepting'])
+                                                        ? date("d/m/", strtotime($row['person_dateAccepting'])) . (date("Y", strtotime($row['person_dateAccepting'])) + 543)
+                                                        : "-";
+                                                        echo "<tr>";
+                                                        echo "<td>" . ($row['person_id'] ? $row['person_id'] : "ไม่มีข้อมูล") . "</td>";
+                                                        echo "<td>" . ($row['person_name'] ? $row['person_name'] : "ไม่มีข้อมูล") . "</td>";
+                                                        echo "<td>" . ($row['person_rank'] ? $row['person_rank'] : "ไม่มีข้อมูล") . "</td>";
+                                                        echo "<td>" . ($row['person_level'] ? $row['person_level'] : "ไม่มีข้อมูล") . "</td>";
+                                                        echo "<td>" . ($row['person_salary'] ? $row['person_salary'] : "ไม่มีข้อมูล") . "</td>";
+                                                        echo "<td>" . ($row['person_born'] ? $row['person_born'] : "ไม่มีข้อมูล") . "</td>";
+                                                        echo "<td>" . ($row['person_dateAccepting'] ? $row['person_dateAccepting'] : "ไม่มีข้อมูล") . "</td>";
+                                                        echo "<td>" . ($row['person_phone'] ? $row['person_phone'] : "ไม่มีข้อมูล") . "</td>";
+                                                        echo "<td>" . ($row['person_DocNumber'] ? $row['person_DocNumber'] : "ไม่มีข้อมูล") . "</td>";
+                                                        echo "<td>" . ($row['group_name'] ? $row['group_name'] : "ไม่มีข้อมูล") . "</td>";
+                                                    
+                                                    echo "<td>
                                         <a href='edit_person.php?id={$row['person_id']}' class='btn btn-warning btn-sm'>ดูรายละเอียด</a>
                                         <a href='#' onclick='confirmDelete({$row['person_id']})' class='btn btn-danger btn-sm'>ลบ</a>
                                       </td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='12' class='text-center'>ไม่มีข้อมูล</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-                    </br>
-             <!-- Pagination -->
-             <nav aria-label="Pagination">
+                                                    echo "</tr>";
+                                                }
+                                            } else {
+                                                echo "<tr><td colspan='12' class='text-center'>ไม่มีข้อมูล</td></tr>";
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </br>
+                                <!-- Pagination -->
+                                <nav aria-label="Pagination">
                                     <ul class="pagination justify-content-center" id="paginationLinks">
                                         <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">«</a>
+                                            <a class="page-link"
+                                                href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">«</a>
                                         </li>
                                         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                                             <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-                                                <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
+                                                <a class="page-link"
+                                                    href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
                                             </li>
                                         <?php endfor; ?>
                                         <li class="page-item <?php echo ($page >= $total_pages) ? 'disabled' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">»</a>
+                                            <a class="page-link"
+                                                href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">»</a>
                                         </li>
                                     </ul>
                                 </nav>
-        </div>
-    </div>
-</div>
+                            </div>
+                        </div>
+                    </div>
 
 
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
                     <script>
-                        document.getElementById('searchInput').addEventListener('keyup', function() {
+                        document.getElementById('searchInput').addEventListener('keyup', function () {
                             const search = this.value;
                             const page = 1; // รีเซ็ตหน้าเมื่อค้นหาใหม่
 
@@ -529,32 +531,32 @@ $result = $conn->query($sql);
                             }
                         }
                         function confirmDelete(personId) {
-    // ครั้งแรก: ยืนยันการลบข้อมูล
-    Swal.fire({
-        title: 'คุณต้องการลบข้อมูลนี้หรือไม่?',
-        text: "เมื่อทำการลบแล้วจะไม่สามารถกู้คืนได้",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'ใช่, ลบเลย!',
-        cancelButtonText: 'ยกเลิก'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // ถ้าผู้ใช้ยืนยัน ให้แสดง SweetAlert2 อีกครั้ง
-            Swal.fire({
-                title: 'ลบข้อมูลสำเร็จ!',
-                text: 'ข้อมูลได้ถูกลบเรียบร้อยแล้ว',
-                icon: 'success',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'ตกลง'
-            }).then(() => {
-                // เมื่อผู้ใช้กด "ตกลง" ใน SweetAlert2 ครั้งที่สอง ให้เปลี่ยนเส้นทางไปยังลิงก์ลบจริง ๆ
-                window.location.href = 'delete_person.php?id=' + personId;
-            });
-        }
-    });
-}
+                            // ครั้งแรก: ยืนยันการลบข้อมูล
+                            Swal.fire({
+                                title: 'คุณต้องการลบข้อมูลนี้หรือไม่?',
+                                text: "เมื่อทำการลบแล้วจะไม่สามารถกู้คืนได้",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'ใช่, ลบเลย!',
+                                cancelButtonText: 'ยกเลิก'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // ถ้าผู้ใช้ยืนยัน ให้แสดง SweetAlert2 อีกครั้ง
+                                    Swal.fire({
+                                        title: 'ลบข้อมูลสำเร็จ!',
+                                        text: 'ข้อมูลได้ถูกลบเรียบร้อยแล้ว',
+                                        icon: 'success',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'ตกลง'
+                                    }).then(() => {
+                                        // เมื่อผู้ใช้กด "ตกลง" ใน SweetAlert2 ครั้งที่สอง ให้เปลี่ยนเส้นทางไปยังลิงก์ลบจริง ๆ
+                                        window.location.href = 'delete_person.php?id=' + personId;
+                                    });
+                                }
+                            });
+                        }
 
                     </script>
                 </body>
