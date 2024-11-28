@@ -26,6 +26,23 @@ if ($resultGraph && mysqli_num_rows($resultGraph) > 0) {
 $sql = "SELECT person_name, person_image FROM personnel";
 $result = mysqli_query($conn, $sql);
 $graphDataJSON = json_encode($graphData);
+
+// ดึงข้อมูลจำนวนชายและหญิง
+$sqlGender = "SELECT person_gender, COUNT(*) as count FROM personnel GROUP BY person_gender";
+$resultGender = mysqli_query($conn, $sqlGender);
+
+$genderData = [];
+if ($resultGender && mysqli_num_rows($resultGender) > 0) {
+    while ($row = mysqli_fetch_assoc($resultGender)) {
+        $genderData[] = [
+            'gender' => $row['person_gender'], // ใช้ค่าจากฐานข้อมูลโดยตรง
+            'count' => (int) $row['count']
+        ];
+    }
+}
+$genderDataJSON = json_encode($genderData);
+
+
 ?>
 
 
@@ -494,6 +511,50 @@ $graphDataJSON = json_encode($graphData);
                             </div>
                         </div>
 
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Visitors Profile</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="chart-visitors-profile"></div>
+                                <script>
+                                    var genderData = <?= $genderDataJSON; ?>;
+
+                                    var labels = genderData.map(item => item.gender); // ใช้ "ชาย" และ "หญิง" จากฐานข้อมูล
+                                    var series = genderData.map(item => item.count);
+
+                                    var optionsGenderChart = {
+                                        chart: {
+                                            type: 'donut',
+                                        },
+                                        series: series,
+                                        labels: labels,
+                                        colors: ['#435ebe', '#35a7e7'], // สีสำหรับ "ชาย" และ "หญิง"
+                                        legend: {
+                                            position: 'bottom',
+                                            labels: {
+                                                colors: '#333',
+                                                useSeriesColors: false
+                                            }
+                                        },
+                                        plotOptions: {
+                                            pie: {
+                                                donut: {
+                                                    size: '50%'
+                                                }
+                                            }
+                                        },
+                                        title: {
+                                            text: 'สัดส่วนเพศของบุคลากร',
+                                            align: 'center'
+                                        }
+                                    };
+
+                                    var chartGender = new ApexCharts(document.querySelector("#chart-visitors-profile"), optionsGenderChart);
+                                    chartGender.render();
+                                </script>
+                            </div>
+                        </div>
 
                         <div class="card">
                             <div class="card-header">
@@ -533,14 +594,7 @@ $graphDataJSON = json_encode($graphData);
                                 </div>
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Visitors Profile</h4>
-                            </div>
-                            <div class="card-body">
-                                <div id="chart-visitors-profile"></div>
-                            </div>
-                        </div>
+
                     </div>
                 </section>
             </div>

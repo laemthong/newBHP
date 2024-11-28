@@ -19,10 +19,12 @@ $total_sql = "SELECT COUNT(*) AS total
 if (!empty($search)) {
     $total_sql .= " WHERE p.person_name LIKE '%$search%' 
                     OR p.person_rank LIKE '%$search%' 
+                    OR p.person_level LIKE '%$search%' 
+                    OR p.person_salary LIKE '%$search%' /* เพิ่มเงื่อนไขค้นหาในเงินเดือน */
                     OR p.person_phone LIKE '%$search%'
                     OR p.person_id LIKE '%$search%'
                     OR p.person_DocNumber LIKE '%$search%'
-                    OR wg.group_name LIKE '%$search%'"; // เพิ่มการค้นหาใน group_name
+                    OR wg.group_name LIKE '%$search%'";
 }
 $total_result = $conn->query($total_sql);
 $total_row = $total_result->fetch_assoc();
@@ -37,20 +39,21 @@ $sql = "SELECT p.person_id, p.person_name, p.person_rank, p.person_level, p.pers
                p.person_born, p.person_dateAccepting, p.person_phone, p.person_DocNumber, 
                wg.group_name
         FROM personnel p
-        LEFT JOIN work_group wg ON p.person_formwork = wg.group_id"; // JOIN ตาราง work_group
+        LEFT JOIN work_group wg ON p.person_formwork = wg.group_id";
 if (!empty($search)) {
     $sql .= " WHERE p.person_name LIKE '%$search%' 
               OR p.person_rank LIKE '%$search%' 
+              OR p.person_level LIKE '%$search%' 
+              OR p.person_salary LIKE '%$search%' /* เพิ่มเงื่อนไขค้นหาในเงินเดือน */
               OR p.person_phone LIKE '%$search%'
               OR p.person_id LIKE '%$search%'
               OR p.person_DocNumber LIKE '%$search%'
-              OR wg.group_name LIKE '%$search%'"; // เพิ่มการค้นหาใน group_name
+              OR wg.group_name LIKE '%$search%'";
 }
 $sql .= " LIMIT $limit OFFSET $offset";
 
 $result = $conn->query($sql);
 ?>
-
 
 
 <!DOCTYPE html>
@@ -526,24 +529,34 @@ $result = $conn->query($sql);
                                 rows[i].style.display = match ? "" : "none";
                             }
                         }
-
                         function confirmDelete(personId) {
-                            Swal.fire({
-                                title: 'คุณต้องการลบข้อมูลนี้หรือไม่?',
-                                text: "เมื่อทำการลบแล้วจะไม่สามารถกู้คืนได้",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'ใช่, ลบเลย!',
-                                cancelButtonText: 'ยกเลิก'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // ถ้าผู้ใช้ยืนยันการลบ ให้เปลี่ยนเส้นทางไปยังลิงก์ลบจริง ๆ
-                                    window.location.href = 'delete_person.php?id=' + personId;
-                                }
-                            });
-                        }
+    // ครั้งแรก: ยืนยันการลบข้อมูล
+    Swal.fire({
+        title: 'คุณต้องการลบข้อมูลนี้หรือไม่?',
+        text: "เมื่อทำการลบแล้วจะไม่สามารถกู้คืนได้",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'ใช่, ลบเลย!',
+        cancelButtonText: 'ยกเลิก'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // ถ้าผู้ใช้ยืนยัน ให้แสดง SweetAlert2 อีกครั้ง
+            Swal.fire({
+                title: 'ลบข้อมูลสำเร็จ!',
+                text: 'ข้อมูลได้ถูกลบเรียบร้อยแล้ว',
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'ตกลง'
+            }).then(() => {
+                // เมื่อผู้ใช้กด "ตกลง" ใน SweetAlert2 ครั้งที่สอง ให้เปลี่ยนเส้นทางไปยังลิงก์ลบจริง ๆ
+                window.location.href = 'delete_person.php?id=' + personId;
+            });
+        }
+    });
+}
+
                     </script>
                 </body>
                 <script src="assets/static/js/components/dark.js"></script>
