@@ -292,7 +292,7 @@ $result = $conn->query($sql);
                             <div class="col-md-6">
                                 <label class="form-label"><span class="text-danger">*</span> หมายเลขบัตรประชาชน 13
                                     หลัก:</label>
-                                <input type="number" name="person_id" class="form-control" placeholder="กรอกหมายเลขบัตรประชาชน 13
+                                <input type="number" name="person_id" class="form-control"  placeholder="กรอกหมายเลขบัตรประชาชน 13
                                     หลัก" required>
                             </div>
 
@@ -313,13 +313,13 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">ตำแหน่ง:</label>
-                                <input type="text" name="person_rank" class="form-control" maxlength="255" placeholder="กรอกตำแหน่ง" required>
+                                <input type="text" name="person_rank" class="form-control" maxlength="255"  placeholder="กรอกตำแหน่ง" required>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">ปฏิบัติการที่:</label>
+                                <label class="form-label">กลุ่มงาน:</label>
                                 <select name="person_formwork" class="form-select" required>
-                                    <option value="">เลือกปฏิบัติการ</option>
+                                    <option value="">เลือกกลุ่มงาน</option>
                                     <?php
                                     if ($result->num_rows > 0) {
                                         // วนลูปเพื่อสร้าง option
@@ -336,7 +336,7 @@ $result = $conn->query($sql);
 
 
                             <div class="col-md-6">
-                                <label class="form-label">ระดับข้าราชการ:</label>
+                                <label class="form-label">ระดับ:</label>
                                 <select name="person_level" class="form-select" required>
                                     <option value="">เลือกระดับ</option>
                                     <option value="ระดับทักษะพิเศษ">ระดับทักษะพิเศษ</option>
@@ -372,12 +372,12 @@ $result = $conn->query($sql);
 
                             <div class="col-md-6">
                                 <label class="form-label">เงินเดือน:</label>
-                                <input type="number" name="person_salary" class="form-control" step="0.01" placeholder="กรอกเงินเดือน" required>
+                                <input type="number" name="person_salary" class="form-control" step="0.01"placeholder="กรอกเงินเดือน" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">ชื่อเล่น:</label>
-                                <input type="text" name="person_nickname" class="form-control" maxlength="255" placeholder="กรอกชื่อเล่น" required>
+                                <input type="text" name="person_nickname" class="form-control" maxlength="255"placeholder="กรอกชื่อเล่น" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันเดือนปีเกิด:</label>
@@ -386,8 +386,8 @@ $result = $conn->query($sql);
                                     <select name="day" class="form-select" " required>
                                         <option value="">วัน</option>
                                         <?php for ($i = 1; $i <= 31; $i++): ?>
-                                            <option value=" <?= $i ?>"><?= $i ?></option>
-                                    <?php endfor; ?>
+                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                        <?php endfor; ?>
                                     </select>
 
                                     <!-- ช่องเลือกเดือน -->
@@ -420,14 +420,14 @@ $result = $conn->query($sql);
                                             <option value="<?= $i ?>"><?= $i ?></option>
                                         <?php endfor; ?>
                                     </select>
-
+                                    
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">อายุราชการที่เหลือคือ:</label>
                                 <input type="text" name="service_remaining" class="form-control" maxlength="255"
-                                    placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
+                                placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ"readonly>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">วันที่บรรจุ:</label>
@@ -485,8 +485,8 @@ $result = $conn->query($sql);
                             <div class="col-md-6">
                                 <label class="form-label">อายุราชการในวันเกษียณของคุณคือ:</label>
                                 <input type="text" name="service_at_retirement" class="form-control" maxlength="255"
-                                    placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
-
+                                placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
+                                    
                             </div>
 
 
@@ -518,13 +518,13 @@ $result = $conn->query($sql);
                             <div class="col-md-6">
                                 <label class="form-label">เบอร์โทรศัพท์:</label>
                                 <input type="tel" name="person_phone" class="form-control" pattern="[0-9]{10}"
-                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก" placeholder="กรอกเบอร์โทรศัพท์" required>
+                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก"placeholder="กรอกเบอร์โทรศัพท์" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">วุฒิเฉพาะทาง:</label>
                                 <input type="text" name="person_specialQualification" class="form-control"
-                                    maxlength="255" placeholder="กรอกวุฒิเฉพาะทาง" required>
+                                    maxlength="255" placeholder="กรอกวุฒิพิเศษทางการ" required>
                             </div>
 
                             <div class="col-md-6">
@@ -579,18 +579,18 @@ $result = $conn->query($sql);
                                     </select>
 
                                     <select name="Expired_year" class="form-select" required>
-                                        <option value="">ปี</option>
-                                        <?php
-                                        $currentYear = date("Y") + 543; // ปีปัจจุบันในรูปแบบ พ.ศ.
-                                        for ($i = $currentYear; $i <= $currentYear + 60; $i++): // เริ่มจากปีปัจจุบัน + 60 ปี
-                                        ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
+    <option value="">ปี</option>
+    <?php
+        $currentYear = date("Y") + 543; // ปีปัจจุบันในรูปแบบ พ.ศ.
+        for ($i = $currentYear; $i <= $currentYear + 60; $i++): // เริ่มจากปีปัจจุบัน + 60 ปี
+    ?>
+        <option value="<?= $i ?>"><?= $i ?></option>
+    <?php endfor; ?>
+</select>
 
                                 </div>
                             </div>
-
+                                            
                             <div class="col-md-6">
                                 <label class="form-label">อัปโหลดรูปภาพ:</label>
                                 <input type="file" name="person_image" class="form-control" accept="image/*">
@@ -627,6 +627,13 @@ $result = $conn->query($sql);
                         const phone = form['person_phone'];
                         if (phone && phone.value && !/^\d{10}$/.test(phone.value)) {
                             alert('กรุณากรอกเบอร์โทรศัพท์ 10 หลัก');
+                            isValid = false;
+                        }
+
+                        // ตรวจสอบเลขบัตรประชาชน
+                        const cardNum = form['person_cardNum'];
+                        if (cardNum && cardNum.value && !/^\d{13}$/.test(cardNum.value)) {
+                            alert('กรุณากรอกเลขบัตรประชาชน 13 หลัก');
                             isValid = false;
                         }
 
