@@ -31,7 +31,7 @@ if (isset($_GET['id'])) {
 // ตรวจสอบว่ามีการส่งข้อมูลจากฟอร์มหรือไม่
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $person_id = $_POST['person_id'];
-    
+
     // ดึงข้อมูลรูปภาพเดิมจากฐานข้อมูลก่อน
     $sql_get_image = "SELECT person_image FROM personnel WHERE person_id = ?";
     $stmt_image = $conn->prepare($sql_get_image);
@@ -39,11 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_image->execute();
     $result_image = $stmt_image->get_result();
     $row_image = $result_image->fetch_assoc();
-    
+
     // เก็บรูปภาพเดิมไว้
     $imageBinary = $row_image['person_image'];
     $stmt_image->close();
-    
+
     // รับค่าจากฟอร์ม
     $name = $_POST['person_name'];
     $gender = $_POST['person_gender'];
@@ -73,13 +73,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cardNum = $_POST['person_cardNum'];
 
     // รวมค่าของวันที่หมดอายุบัตรราชการ
-    $cardExpired = null;
-    if (!empty($_POST['Expired_day']) && !empty($_POST['Expired_month']) && !empty($_POST['Expired_year'])) {
-        $Expired_day = $_POST['Expired_day'];
-        $Expired_month = $_POST['Expired_month'];
-        $Expired_year = $_POST['Expired_year'];
-        $cardExpired = sprintf('%04d-%02d-%02d', $Expired_year - 543, $Expired_month, $Expired_day);
+    // รวมค่าของวันที่หมดอายุบัตรราชการ
+$cardExpired = null;
+if (!empty($_POST['Expired_day']) && !empty($_POST['Expired_month']) && !empty($_POST['Expired_year'])) {
+    $Expired_day = (int)$_POST['Expired_day'];
+    $Expired_month = (int)$_POST['Expired_month'];
+    $Expired_year = (int)$_POST['Expired_year'] - 543;
+
+    // ตรวจสอบความถูกต้องของวันที่
+    if (checkdate($Expired_month, $Expired_day, $Expired_year)) {
+        $cardExpired = sprintf('%04d-%02d-%02d', $Expired_year, $Expired_month, $Expired_day);
+    } else {
+        echo "<script>
+            alert('วันที่หมดอายุบัตรราชการไม่ถูกต้อง!');
+            window.history.back();
+        </script>";
+        exit();
     }
+}
+
 
     // จัดการอัปโหลดรูปภาพใหม่ (ถ้ามี)
     if (isset($_FILES['person_image']) && $_FILES['person_image']['error'] === UPLOAD_ERR_OK) {
@@ -127,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         person_CardExpired = ?, 
         person_image = ? 
     WHERE person_id = ?";
-    
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
         "sssssssssssssssssi",
@@ -152,23 +164,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
     if ($stmt->execute()) {
-        echo "<script>
-            alert('แก้ไขข้อมูลสำเร็จ');
-            window.location.href = 'personnel.php';
-        </script>";
+        // การแก้ไขสำเร็จ, Redirect กลับไปที่หน้าเดิมพร้อม ID
+        header("Location: personnel.php");
         exit();
     } else {
+        // กรณีเกิดข้อผิดพลาด
         echo "<script>
-            alert('การอัปเดตข้อมูลล้มเหลว: " . addslashes($stmt->error) . "');
+            alert('เกิดข้อผิดพลาด: " . $stmt->error . "');
             window.history.back();
         </script>";
         exit();
     }
-    
-    $stmt->close();
-}   
+}    
 
-$conn->close();
+
 ?>
 
 
@@ -185,6 +194,7 @@ $conn->close();
     <link rel="stylesheet" href="./assets/compiled/css/app.css">
     <link rel="stylesheet" href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" href="./assets/compiled/css/iconly.css">
+
     <style>
         .sidebar-item.activee {
             background-color: transparent;
@@ -526,6 +536,36 @@ $conn->close();
                     acceptMonthField?.addEventListener('change', calculateDetails);
                     acceptYearField?.addEventListener('change', calculateDetails);
                 });
+
+                document.addEventListener("DOMContentLoaded", function () {
+        // ผูก Event Listener กับปุ่ม saveButton
+        document.getElementById('saveButton').addEventListener('click', function () {
+            // SweetAlert2 ครั้งแรก: ยืนยันการแก้ไข
+            Swal.fire({
+                title: 'คุณแน่ใจหรือไม่?',
+                text: "คุณต้องการแก้ไขข้อมูลนี้หรือไม่?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ใช่, ฉันต้องการแก้ไข!',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // SweetAlert2 ครั้งที่สอง: แสดงข้อความสำเร็จ
+                    Swal.fire({
+                        title: 'สำเร็จ!',
+                        text: 'แก้ไขข้อมูลสำเร็จ',
+                        icon: 'success',
+                        confirmButtonText: 'ตกลง'
+                    }).then(() => {
+                        // ส่งฟอร์มหลังจากแสดงข้อความสำเร็จ
+                        document.getElementById('editForm').submit();
+                    });
+                }
+            });
+        });
+    });
             </script>
 
 
@@ -533,7 +573,7 @@ $conn->close();
                 <div class="container my-5 d-flex justify-content-center">
                     <div style="max-width: 600px; width: 100%;">
                         <h2 class="text-center mb-4">แก้ไขข้อมูลบุคคล</h2>
-                        <form action="edit_person.php" method="post" enctype="multipart/form-data">
+                        <form id="editForm" action="edit_person.php" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="person_id" value="<?php echo $row['person_id']; ?>">
 
                             <div class="row g-3">
@@ -946,7 +986,9 @@ $conn->close();
                                     <input type="file" name="person_image" accept="image/jpeg,image/png,image/gif">
                                 </form>
                                 <div class="text-center mt-4">
-                                    <button type="submit" class="btn btn-success">บันทึกการแก้ไข</button>
+                                    <!-- ปุ่มบันทึกแก้ไข -->
+                                    <button type="button" id="saveButton" class="btn btn-success">บันทึกการแก้ไข</button>
+                                    <!-- ปุ่มยกเลิก -->
                                     <a href="personnel.php" class="btn btn-secondary">ยกเลิก</a>
                                 </div>
                         </form>
@@ -954,8 +996,11 @@ $conn->close();
                 </div>
         </div>
 
+
+
 </body>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/static/js/components/dark.js"></script>
 <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>

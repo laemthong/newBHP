@@ -4,6 +4,9 @@ $userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้
 
 include 'connect/connection.php';
 
+$sql = "SELECT person_name, person_image, person_rank FROM personnel";
+$result = mysqli_query($conn, $sql);
+
 // ดึงจำนวนบุคลากรทั้งหมด
 $sqlTotal = "SELECT COUNT(*) as total FROM personnel";
 $resultTotal = mysqli_query($conn, $sqlTotal);
@@ -74,6 +77,27 @@ $genderDataJSON = json_encode($genderData);
             color: inherit;
             /* ใช้สีของข้อความตามสีพื้นฐาน */
         }
+
+        .avatar-xl {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.name h5 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.name p {
+    font-size: 0.9em;
+    color: #6c757d; /* สีเทาอ่อน */
+    margin: 0;
+}
+
     </style>
 
 
@@ -486,30 +510,34 @@ $genderDataJSON = json_encode($genderData);
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
                                         <?php
-                                        // ดึงข้อมูลรูปภาพจากฐานข้อมูล
-                                        $sqlImage = "SELECT person_image FROM personnel WHERE person_name = ?";
-                                        $stmt = $conn->prepare($sqlImage);
-                                        $stmt->bind_param("s", $userName); // ใช้ชื่อผู้ใช้ในการดึงรูป
+                                        // ดึงข้อมูลรูปภาพและตำแหน่งจากฐานข้อมูล
+                                        $sqlUserDetails = "SELECT person_image, person_rank FROM personnel WHERE person_name = ?";
+                                        $stmt = $conn->prepare($sqlUserDetails);
+                                        $stmt->bind_param("s", $userName); // ใช้ชื่อผู้ใช้ในการดึงข้อมูล
                                         $stmt->execute();
-                                        $resultImage = $stmt->get_result();
+                                        $resultDetails = $stmt->get_result();
 
-                                        if ($resultImage && $resultImage->num_rows > 0) {
-                                            $rowImage = $resultImage->fetch_assoc();
-                                            $imageData = base64_encode($rowImage['person_image']); // แปลงข้อมูล BLOB เป็น Base64
+                                        if ($resultDetails && $resultDetails->num_rows > 0) {
+                                            $rowDetails = $resultDetails->fetch_assoc();
+                                            $imageData = base64_encode($rowDetails['person_image']); // แปลงข้อมูล BLOB เป็น Base64
                                             $imageSrc = "data:image/jpeg;base64," . $imageData; // เตรียมข้อมูลสำหรับแท็ก <img>
+                                            $personRank = htmlspecialchars($rowDetails['person_rank']); // ตำแหน่ง
                                         } else {
                                             $imageSrc = './photo/default-avatar.png'; // กรณีไม่มีรูปภาพ
+                                            $personRank = "ไม่ทราบตำแหน่ง"; // กรณีไม่มีตำแหน่ง
                                         }
                                         ?>
                                         <img src="<?= $imageSrc ?>" alt="User Image"
                                             style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                                     </div>
                                     <div class="ms-3 name">
-                                        <h5 class="font-bold"><?= htmlspecialchars($userName); ?> </h5>
+                                        <h5 class="font-bold"><?= htmlspecialchars($userName); ?></h5>
+                                        <p class="text-muted mb-0"><?= $personRank; ?></p> <!-- แสดงตำแหน่ง -->
                                     </div>
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="card">
                             <div class="card-header">
