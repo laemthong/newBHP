@@ -514,7 +514,7 @@ $result = $conn->query($sql);
                                     <select name="day" class="form-select" " required>
                                         <option value="">วัน</option>
                                         <?php for ($i = 1; $i <= 31; $i++): ?>
-                                                                                        <option value=" <?= $i ?>"><?= $i ?>
+                                                                                                <option value=" <?= $i ?>"><?= $i ?>
                                             </option>
                                         <?php endfor; ?>
                                     </select>
@@ -584,7 +584,7 @@ $result = $conn->query($sql);
                                 <label class="form-label">วันที่หมดอายุบัตรราชการ:</label>
                                 <div class="d-flex gap-2">
                                     <!-- ช่องเลือกวันที่ -->
-                                    <select name="Expired_day" class="form-select" >
+                                    <select name="Expired_day" class="form-select">
                                         <option value="">วัน</option>
                                         <?php for ($i = 1; $i <= 31; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?></option>
@@ -592,7 +592,7 @@ $result = $conn->query($sql);
                                     </select>
 
                                     <!-- ช่องเลือกเดือน -->
-                                    <select name="Expired_month" class="form-select" >
+                                    <select name="Expired_month" class="form-select">
                                         <option value="">เดือน</option>
                                         <?php
                                         $months = [
@@ -614,7 +614,7 @@ $result = $conn->query($sql);
                                         <?php endforeach; ?>
                                     </select>
 
-                                    <select name="Expired_year" class="form-select" >
+                                    <select name="Expired_year" class="form-select">
                                         <option value="">ปี</option>
                                         <?php
                                         $currentYear = date("Y") + 543; // ปีปัจจุบันในรูปแบบ พ.ศ.
@@ -674,7 +674,7 @@ $result = $conn->query($sql);
                         return isValid;
                     }
 
-                  
+
 
 
                     document.addEventListener('DOMContentLoaded', function () {
@@ -740,7 +740,6 @@ $result = $conn->query($sql);
                         const acceptDayField = document.querySelector('select[name="accept_day"]');
                         const acceptMonthField = document.querySelector('select[name="accept_month"]');
                         const acceptYearField = document.querySelector('select[name="accept_year"]');
-
                         const ageField = document.querySelector('input[name="age"]');
                         const retirementDateField = document.querySelector('input[name="retirement_date"]');
                         const serviceAtRetirementField = document.querySelector('input[name="service_at_retirement"]');
