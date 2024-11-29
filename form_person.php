@@ -384,7 +384,7 @@ $result = $conn->query($sql);
                             <div class="col-md-6">
                                 <label class="form-label">ปฎิบัติงานจริง:</label>
                                 <select name="person_formwork" class="form-select" required>
-                                    <option value="">เลือกสถานที่ปฎิบัติงาน</option>
+                                    <option value="">เลือกกลุ่มงานที่ปฏิบัติงาน</option>
                                     <?php
                                     if ($result->num_rows > 0) {
                                         // วนลูปเพื่อสร้าง option
