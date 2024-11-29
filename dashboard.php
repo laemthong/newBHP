@@ -1,51 +1,57 @@
 <?php
 session_start();
-$userName = $_SESSION['user_name'] ?? 'Guest'; // ให้ชื่อผู้ใช้แสดงใน navbar
+$userName = $_SESSION['user_name'] ?? 'Guest';
 
 include 'connect/connection.php';
 
-$sql = "SELECT person_name, person_image, person_rank FROM personnel";
-$result = mysqli_query($conn, $sql);
+// ดึงข้อมูลบุคลากรและตำแหน่ง
+$sqlUserDetails = "SELECT person_name, person_rank FROM personnel WHERE person_name = ?";
+$stmt = $conn->prepare($sqlUserDetails);
+$stmt->bind_param("s", $userName);
+$stmt->execute();
+$resultDetails = $stmt->get_result();
+
+if ($resultDetails && $resultDetails->num_rows > 0) {
+    $userData = $resultDetails->fetch_assoc();
+    $personName = htmlspecialchars($userData['person_name']);
+    $personRank = htmlspecialchars($userData['person_rank']);
+} else {
+    $personName = 'Guest';
+    $personRank = 'ไม่ทราบตำแหน่ง';
+}
 
 // ดึงจำนวนบุคลากรทั้งหมด
 $sqlTotal = "SELECT COUNT(*) as total FROM personnel";
 $resultTotal = mysqli_query($conn, $sqlTotal);
 $totalPersonnel = $resultTotal && mysqli_num_rows($resultTotal) > 0 ? mysqli_fetch_assoc($resultTotal)['total'] : 0;
 
-// ดึงข้อมูลสำหรับกราฟ
+// ดึงข้อมูลสำหรับกราฟตำแหน่งงาน
 $sqlGraph = "SELECT person_rank, COUNT(*) as count FROM personnel GROUP BY person_rank";
 $resultGraph = mysqli_query($conn, $sqlGraph);
-
 $graphData = [];
 if ($resultGraph && mysqli_num_rows($resultGraph) > 0) {
     while ($row = mysqli_fetch_assoc($resultGraph)) {
         $graphData[] = [
             'rank' => $row['person_rank'],
-            'count' => (int) $row['count']
+            'count' => (int)$row['count']
         ];
     }
 }
-// ดึงข้อมูลบุคลากร (รวมถึงรูปภาพ)
-$sql = "SELECT person_name, person_image FROM personnel";
-$result = mysqli_query($conn, $sql);
 $graphDataJSON = json_encode($graphData);
 
 // ดึงข้อมูลจำนวนชายและหญิง
 $sqlGender = "SELECT person_gender, COUNT(*) as count FROM personnel GROUP BY person_gender";
 $resultGender = mysqli_query($conn, $sqlGender);
-
 $genderData = [];
 if ($resultGender && mysqli_num_rows($resultGender) > 0) {
     while ($row = mysqli_fetch_assoc($resultGender)) {
         $genderData[] = [
-            'gender' => $row['person_gender'], // ใช้ค่าจากฐานข้อมูลโดยตรง
-            'count' => (int) $row['count']
+            'gender' => $row['person_gender'],
+            'count' => (int)$row['count']
         ];
     }
 }
 $genderDataJSON = json_encode($genderData);
-
-
 ?>
 
 
@@ -505,38 +511,36 @@ $genderDataJSON = json_encode($genderData);
                     </div>
                     <div class="col-12 col-lg-3">
 
-                        <div class="card">
-                            <div class="card-body py-4 px-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-xl">
-                                        <?php
-                                        // ดึงข้อมูลรูปภาพและตำแหน่งจากฐานข้อมูล
-                                        $sqlUserDetails = "SELECT person_image, person_rank FROM personnel WHERE person_name = ?";
-                                        $stmt = $conn->prepare($sqlUserDetails);
-                                        $stmt->bind_param("s", $userName); // ใช้ชื่อผู้ใช้ในการดึงข้อมูล
-                                        $stmt->execute();
-                                        $resultDetails = $stmt->get_result();
+                    <div class="card">
+    <div class="card-body py-4 px-4">
+        <div class="d-flex align-items-center">
+            <div class="avatar avatar-xl">
+                <?php
+                // ดึงข้อมูลตำแหน่งจากฐานข้อมูล
+                $sqlUserDetails = "SELECT person_rank FROM personnel WHERE person_name = ?";
+                $stmt = $conn->prepare($sqlUserDetails);
+                $stmt->bind_param("s", $userName); // ใช้ชื่อผู้ใช้ในการดึงข้อมูล
+                $stmt->execute();
+                $resultDetails = $stmt->get_result();
 
-                                        if ($resultDetails && $resultDetails->num_rows > 0) {
-                                            $rowDetails = $resultDetails->fetch_assoc();
-                                            $imageData = base64_encode($rowDetails['person_image']); // แปลงข้อมูล BLOB เป็น Base64
-                                            $imageSrc = "data:image/jpeg;base64," . $imageData; // เตรียมข้อมูลสำหรับแท็ก <img>
-                                            $personRank = htmlspecialchars($rowDetails['person_rank']); // ตำแหน่ง
-                                        } else {
-                                            $imageSrc = './photo/default-avatar.png'; // กรณีไม่มีรูปภาพ
-                                            $personRank = "ไม่ทราบตำแหน่ง"; // กรณีไม่มีตำแหน่ง
-                                        }
-                                        ?>
-                                        <img src="<?= $imageSrc ?>" alt="User Image"
-                                            style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
-                                    </div>
-                                    <div class="ms-3 name">
-                                        <h5 class="font-bold"><?= htmlspecialchars($userName); ?></h5>
-                                        <p class="text-muted mb-0"><?= $personRank; ?></p> <!-- แสดงตำแหน่ง -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                if ($resultDetails && $resultDetails->num_rows > 0) {
+                    $rowDetails = $resultDetails->fetch_assoc();
+                    $personRank = htmlspecialchars($rowDetails['person_rank']); // ตำแหน่ง
+                } else {
+                    $personRank = "ไม่ทราบตำแหน่ง"; // กรณีไม่มีตำแหน่ง
+                }
+                ?>
+                <!-- ใช้ไอคอนคนจาก Font Awesome -->
+                <i class="fas fa-user-circle" style="font-size: 50px; color: #ccc;"></i>
+            </div>
+            <div class="ms-3 name">
+                <h5 class="font-bold"><?= htmlspecialchars($userName); ?></h5>
+                <p class="text-muted mb-0"><?= $personRank; ?></p> <!-- แสดงตำแหน่ง -->
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
                         <div class="card">
