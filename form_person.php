@@ -338,7 +338,14 @@ $result = $conn->query($sql);
                     <form id="personnelForm" action="save_personnel.php" method="POST" enctype="multipart/form-data"
                         onsubmit="return validateForm()">
 
+
                         <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label"><span class="text-danger">*</span> ชื่อ - สกุล:</label>
+                                <input type="text" name="person_name" class="form-control" maxlength="255"
+                                    placeholder="กรอกชื่อ - สกุล" required>
+                            </div>
+
                             <div class="col-md-6">
                                 <label class="form-label"><span class="text-danger">*</span> หมายเลขบัตรประชาชน 13
                                     หลัก:</label>
@@ -347,42 +354,9 @@ $result = $conn->query($sql);
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label"><span class="text-danger">*</span> ชื่อ - สกุล:</label>
-                                <input type="text" name="person_name" class="form-control" maxlength="255"
-                                    placeholder="กรอกชื่อ - สกุล" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label"><span class="text-danger">*</span> เพศ:</label>
-                                <select name="person_gender" class="form-select" required>
-                                    <option value="">เลือกเพศ</option>
-                                    <option value="ชาย">ชาย</option>
-                                    <option value="หญิง">หญิง</option>
-
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
                                 <label class="form-label">ตำแหน่ง:</label>
                                 <input type="text" name="person_rank" class="form-control" maxlength="255"
                                     placeholder="กรอกตำแหน่ง" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">กลุ่มงาน:</label>
-                                <select name="person_formwork" class="form-select" required>
-                                    <option value="">เลือกกลุ่มงาน</option>
-                                    <?php
-                                    if ($result->num_rows > 0) {
-                                        // วนลูปเพื่อสร้าง option
-                                        while ($row = $result->fetch_assoc()) {
-                                            echo '<option value="' . $row["group_id"] . '">' . $row["group_name"] . '</option>';
-                                        }
-                                    } else {
-                                        echo '<option value="">ไม่มีข้อมูล</option>';
-                                    }
-                                    ?>
-                                </select>
                             </div>
 
                             <div class="col-md-6">
@@ -400,6 +374,7 @@ $result = $conn->query($sql);
                                     <option value="ระดับปฏิบัติการ">ระดับปฏิบัติการ</option>
                                 </select>
                             </div>
+
                             <div class="col-md-6">
                                 <label class="form-label"><span class="text-danger">*</span> เลข จ.18:</label>
                                 <input type="text" name="person_DocNumber" class="form-control" maxlength="255"
@@ -407,73 +382,55 @@ $result = $conn->query($sql);
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label"><span class="text-danger">*</span> เลขที่ประกอบ:</label>
+                                <label class="form-label">ปฎิบัติงานจริง:</label>
+                                <select name="person_formwork" class="form-select" required>
+                                    <option value="">เลือกสถานที่ปฎิบัติงาน</option>
+                                    <?php
+                                    if ($result->num_rows > 0) {
+                                        // วนลูปเพื่อสร้าง option
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo '<option value="' . $row["group_id"] . '">' . $row["group_name"] . '</option>';
+                                        }
+                                    } else {
+                                        echo '<option value="">ไม่มีข้อมูล</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">ประเภทการจ้าง:</label>
+                                <select name="person_typeHire" class="form-select" required>
+                                    <option value="">เลือกประเภทการจ้าง</option>
+                                    <option value="ข้าราชการ">ข้าราชการ</option>
+                                    <option value="จ้างเหมาบริการ">จ้างเหมาบริการ</option>
+                                    <option value="จ้างเหมาบุคคล">จ้างเหมาบุคคล</option>
+                                    <option value="พนักงานกระทรวง">พนักงานกระทรวง</option>
+                                    <option value="พนักงานราชการ">พนักงานราชการ</option>
+                                    <option value="ลูกจ้างชั่วคราว (รายเดือน)">ลูกจ้างชั่วคราว (รายเดือน)</option>
+                                    <option value="ลูกจ้างชั่วคราวรายวัน">ลูกจ้างชั่วคราวรายวัน</option>
+                                    <option value="ลูกจ้างประจำ">ลูกจ้างประจำ</option>
+                                    <option value="ลูกจ้างรายคาบ">ลูกจ้างรายคาบ</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">เบอร์โทรศัพท์:</label>
+                                <input type="tel" name="person_phone" class="form-control" pattern="[0-9]{10}"
+                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก" placeholder="กรอกเบอร์โทรศัพท์" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><span class="text-danger">*</span>
+                                    เลขที่ประกอบใบประกอบวิชาชีพ:</label>
                                 <input type="text" name="person_SuppNumber" class="form-control" maxlength="255"
-                                    placeholder="กรอกเลขที่ประกอบ" required>
-
+                                    placeholder="กรอกเลขที่ใบประกอบวิชาชีพ" required>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">หมายเลข พอ.ส.ว.:</label>
-                                <input type="text" name="person_POSVNumber" class="form-control" maxlength="255"
-                                    placeholder="กรอกหมายเลข พอ.ส.ว." required>
-                            </div>
-
-
-                            <div class="col-md-6">
-                                <label class="form-label">เงินเดือน:</label>
-                                <input type="number" name="person_salary" class="form-control" step="0.01"
-                                    placeholder="กรอกเงินเดือน" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">ชื่อเล่น:</label>
-                                <input type="text" name="person_nickname" class="form-control" maxlength="255"
-                                    placeholder="กรอกชื่อเล่น" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">วันเดือนปีเกิด:</label>
-                                <div class="d-flex gap-2">
-                                    <!-- ช่องเลือกวันที่ -->
-                                    <select name="day" class="form-select" " required>
-                                        <option value="">วัน</option>
-                                        <?php for ($i = 1; $i <= 31; $i++): ?>
-                                                    <option value=" <?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-
-                                    <!-- ช่องเลือกเดือน -->
-                                    <select name="month" class="form-select" required>
-                                        <option value="">เดือน</option>
-                                        <?php
-                                        $months = [
-                                            "มกราคม",
-                                            "กุมภาพันธ์",
-                                            "มีนาคม",
-                                            "เมษายน",
-                                            "พฤษภาคม",
-                                            "มิถุนายน",
-                                            "กรกฎาคม",
-                                            "สิงหาคม",
-                                            "กันยายน",
-                                            "ตุลาคม",
-                                            "พฤศจิกายน",
-                                            "ธันวาคม"
-                                        ];
-                                        foreach ($months as $key => $month): ?>
-                                            <option value="<?= $key + 1 ?>"><?= $month ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-
-                                    <!-- ช่องเลือกปี -->
-                                    <select name="year" class="form-select" required>
-                                        <option value="">ปี</option>
-                                        <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
-                                            <option value="<?= $i ?>"><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-
-                                </div>
+                                <label class="form-label">วุฒิเฉพาะทาง:</label>
+                                <input type="text" name="person_specialQualification" class="form-control"
+                                    maxlength="255" placeholder="กรอกวุฒิพิเศษทางการ" required>
                             </div>
 
                             <div class="col-md-6">
@@ -520,43 +477,23 @@ $result = $conn->query($sql);
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">อายุของคุณคือ:</label>
-                                <input type="text" name="age" class="form-control" maxlength="255"
+                            <div class="col-md-6"> <!-- แก้ไขเป็นอายุราชการระบบคำนวณด้วย -->
+                                <label class="form-label">อายุราชการ:</label>
+                                <input type="text" name="service_at_retirement" class="form-control" maxlength="255"
                                     placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
                             </div>
+
                             <div class="col-md-6">
-                                <label class="form-label">วันที่คุณเกษียณอายุราชการคือ:</label>
+                                <label class="form-label">เงินเดือน:</label>
+                                <input type="number" name="person_salary" class="form-control" step="0.01"
+                                    placeholder="กรอกเงินเดือน" required>
+                            </div>
+
+                            <div class="col-md-6"> <!-- แก้ไขเป็นปีครบเกษียณระบบคำนวณด้วย -->
+                                <label class="form-label">ปีครบเกษียณ:</label>
                                 <input type="text" name="retirement_date" class="form-control"
                                     placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
                             </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">อายุราชการในวันเกษียณของคุณคือ:</label>
-                                <input type="text" name="service_at_retirement" class="form-control" maxlength="255"
-                                    placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
-
-                            </div>
-
-
-
-                            <div class="col-md-6">
-                                <label class="form-label">ประเภทการจ้าง:</label>
-                                <select name="person_typeHire" class="form-select" required>
-                                    <option value="">เลือกประเภทการจ้าง</option>
-                                    <option value="ข้าราชการ">ข้าราชการ</option>
-                                    <option value="จ้างเหมาบริการ">จ้างเหมาบริการ</option>
-                                    <option value="จ้างเหมาบุคคล">จ้างเหมาบุคคล</option>
-                                    <option value="พนักงานกระทรวง">พนักงานกระทรวง</option>
-                                    <option value="พนักงานราชการ">พนักงานราชการ</option>
-                                    <option value="ลูกจ้างชั่วคราว (รายเดือน)">ลูกจ้างชั่วคราว (รายเดือน)</option>
-                                    <option value="ลูกจ้างชั่วคราวรายวัน">ลูกจ้างชั่วคราวรายวัน</option>
-                                    <option value="ลูกจ้างประจำ">ลูกจ้างประจำ</option>
-                                    <option value="ลูกจ้างรายคาบ">ลูกจ้างรายคาบ</option>
-                                </select>
-                            </div>
-
-
 
                             <div class="col-md-6">
                                 <label class="form-label">เงินประจำตำแหน่ง:</label>
@@ -565,32 +502,81 @@ $result = $conn->query($sql);
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">เบอร์โทรศัพท์:</label>
-                                <input type="tel" name="person_phone" class="form-control" pattern="[0-9]{10}"
-                                    title="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก" placeholder="กรอกเบอร์โทรศัพท์" required>
+                                <label class="form-label">เลขสมาชิก พอ.ส.ว. :</label>
+                                <input type="text" name="person_POSVNumber" class="form-control" maxlength="255"
+                                    placeholder="กรอกเลขสมาชิก พอ.ส.ว." required>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">วุฒิเฉพาะทาง:</label>
-                                <input type="text" name="person_specialQualification" class="form-control"
-                                    maxlength="255" placeholder="กรอกวุฒิพิเศษทางการ" required>
+                                <label class="form-label">วันเดือนปีเกิด:</label>
+                                <div class="d-flex gap-2">
+                                    <!-- ช่องเลือกวันที่ -->
+                                    <select name="day" class="form-select" " required>
+                                        <option value="">วัน</option>
+                                        <?php for ($i = 1; $i <= 31; $i++): ?>
+                                                                                        <option value=" <?= $i ?>"><?= $i ?>
+                                            </option>
+                                        <?php endfor; ?>
+                                    </select>
+
+                                    <!-- ช่องเลือกเดือน -->
+                                    <select name="month" class="form-select" required>
+                                        <option value="">เดือน</option>
+                                        <?php
+                                        $months = [
+                                            "มกราคม",
+                                            "กุมภาพันธ์",
+                                            "มีนาคม",
+                                            "เมษายน",
+                                            "พฤษภาคม",
+                                            "มิถุนายน",
+                                            "กรกฎาคม",
+                                            "สิงหาคม",
+                                            "กันยายน",
+                                            "ตุลาคม",
+                                            "พฤศจิกายน",
+                                            "ธันวาคม"
+                                        ];
+                                        foreach ($months as $key => $month): ?>
+                                            <option value="<?= $key + 1 ?>"><?= $month ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+
+                                    <!-- ช่องเลือกปี -->
+                                    <select name="year" class="form-select" required>
+                                        <option value="">ปี</option>
+                                        <?php for ($i = date("Y") + 543; $i >= 2500; $i--): ?>
+                                            <option value="<?= $i ?>"><?= $i ?></option>
+                                        <?php endfor; ?>
+                                    </select>
+
+                                </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">กรุ๊ปเลือด:</label>
-                                <select name="person_blood" class="form-select" required>
-                                    <option value="">เลือกกรุ๊ปเลือด</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="AB">AB</option>
-                                    <option value="O">O</option>
+                                <label class="form-label">อายุ:</label>
+                                <input type="text" name="age" class="form-control" maxlength="255"
+                                    placeholder="กรอกวัน/เดือน/ปีเกิด และ วันบรรรจุเพื่อมาคำนวณ" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><span class="text-danger">*</span> เพศ:</label>
+                                <select name="person_gender" class="form-select" required>
+                                    <option value="">เลือกเพศ</option>
+                                    <option value="ชาย">ชาย</option>
+                                    <option value="หญิง">หญิง</option>
                                 </select>
                             </div>
 
                             <div class="col-md-6">
+                                <label class="form-label">ชื่อเล่น:</label>
+                                <input type="text" name="person_nickname" class="form-control" maxlength="255"
+                                    placeholder="กรอกชื่อเล่น" required>
+                            </div>
+
+                            <div class="col-md-6">
                                 <label class="form-label">เลขที่บัตรข้าราชการ:</label>
-                                <input type="text" name="person_cardNum" class="form-control" maxlength="13"
-                                    pattern="[0-9]{13}" title="กรุณากรอกเลขบัตร 13 หลัก"
+                                <input type="text" name="person_cardNum" class="form-control" maxlength="255"
                                     placeholder="กรอกเลขที่บัตรข้าราชการ">
                             </div>
 
@@ -640,13 +626,19 @@ $result = $conn->query($sql);
 
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="person_image">อัปโหลดรูปภาพใหม่</label>
-                                <input type="file" name="person_image" id="person_image"
-                                    accept="image/jpeg, image/png, image/gif" class="form-control-file">
+                            <div class="col-md-6">
+                                <label class="form-label">ประเภทการจ้าง:</label>
+                                <select name="person_status" class="form-select" required>
+                                    <option value="ปกติ">ปกติ</option>
+                                    <option value="ออก">ออก</option>
+                                </select>
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label">หมายเหตุ:</label>
+                                <input type="text" name="person_note" class="form-control" maxlength="255"
+                                    placeholder="กรุณาเพิ่มหมายเหตุ" required>
+                            </div>
 
                             <button type="submit" class="btn btn-success mt-4 w-100">บันทึกข้อมูล</button>
                     </form>
@@ -676,13 +668,6 @@ $result = $conn->query($sql);
                         const phone = form['person_phone'];
                         if (phone && phone.value && !/^\d{10}$/.test(phone.value)) {
                             alert('กรุณากรอกเบอร์โทรศัพท์ 10 หลัก');
-                            isValid = false;
-                        }
-
-                        // ตรวจสอบเลขบัตรประชาชน
-                        const cardNum = form['person_cardNum'];
-                        if (cardNum && cardNum.value && !/^\d{13}$/.test(cardNum.value)) {
-                            alert('กรุณากรอกเลขบัตรประชาชน 13 หลัก');
                             isValid = false;
                         }
 
@@ -777,7 +762,6 @@ $result = $conn->query($sql);
 
                         // คำนวณอายุ และอายุราชการที่เหลือ
                         function calculateDetails() {
-                            const retirementAge = 60; // กำหนดอายุเกษียณราชการ
                             const currentDate = new Date(); // วันที่ปัจจุบัน
 
                             // รับค่าจากฟิลด์วันเดือนปีเกิด
@@ -790,10 +774,7 @@ $result = $conn->query($sql);
                             const acceptMonth = parseInt(acceptMonthField.value) - 1; // เดือนใน JavaScript เริ่มต้นที่ 0
                             const acceptYear = parseInt(acceptYearField.value);
 
-                            // Debugging
-                            console.log("Birth Month After Adjustment:", birthMonth);
-                            console.log("Accept Month After Adjustment:", acceptMonth);
-
+                            // ตรวจสอบค่าที่ได้จากฟิลด์
                             if (isNaN(birthDay) || isNaN(birthMonth) || isNaN(birthYear) ||
                                 isNaN(acceptDay) || isNaN(acceptMonth) || isNaN(acceptYear)) {
                                 console.error("ค่าที่รับมาไม่ถูกต้อง:", {
@@ -809,36 +790,60 @@ $result = $conn->query($sql);
 
                             const birthDate = new Date(birthYear - 543, birthMonth, birthDay);
                             const acceptDate = new Date(acceptYear - 543, acceptMonth, acceptDay);
-                            const retirementDate = new Date(birthYear - 543 + retirementAge, 9, 30);
-
-                            // Debugging
-                            console.log("Birth Date:", birthDate);
-                            console.log("Accept Date:", acceptDate);
 
                             // คำนวณอายุปัจจุบัน
                             const age = calculateAge(birthDate, currentDate);
 
-                            // คำนวณอายุราชการในวันเกษียณ
-                            const serviceAtRetirement = calculateAge(acceptDate, retirementDate);
+                            // คำนวณอายุราชการจากวันที่บรรจุถึงวันนี้
+                            const serviceAtRetirement = calculateAge(acceptDate, currentDate);  // เปลี่ยนให้คำนวณถึงวันนี้
 
-                            // คำนวณอายุราชการที่เหลือ
-                            //const serviceRemaining = calculateAge(currentDate, retirementDate);
+                            // คำนวณปีเกษียณ
+                            let retirementYear = (birthYear - 543) + 60; // ใช้ birthYear - 543 เพื่อลบออกและใช้ ค.ศ.
+                            if (birthMonth >= 9) {  // ถ้าเกิดตั้งแต่ตุลาคมถึงธันวาคม
+                                retirementYear += 1; // บวกเพิ่มอีก 1 ปี
+                            }
 
-                            // Debugging
-                            console.log("Age:", age);
-                            console.log("Service At Retirement:", serviceAtRetirement);
-                            console.log("Service Remaining:", serviceRemaining);
+                            const retirementDate = new Date(retirementYear, birthMonth, birthDay);
 
                             // อัปเดตค่าลงในฟิลด์
                             ageField.value = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
-                            retirementDateField.value = `${retirementDate.getDate()} ตุลาคม ${retirementDate.getFullYear() + 543}`;
-                            serviceAtRetirementField.value = `${serviceAtRetirement.years} ปี ${serviceAtRetirement.months} เดือน ${serviceAtRetirement.days} วัน`;
-                            serviceRemainingField.value = `${serviceRemaining.years} ปี ${serviceRemaining.months} เดือน ${serviceRemaining.days} วัน`;
+                            retirementDateField.value = `${retirementDate.getFullYear() + 543}`; // แสดงปีเกษียณในรูปแบบ พ.ศ.
 
-                            console.log("Age Field Value:", ageField.value);
-                            console.log("Retirement Date Field Value:", retirementDateField.value);
-                            console.log("Service Remaining Field Value:", serviceRemainingField.value);
+                            // แสดงแค่ปีที่บรรจุ
+                            serviceAtRetirementField.value = formatServiceTime(serviceAtRetirement);
                         }
+
+                        // ฟังก์ชันคำนวณอายุจากวันที่เกิดและวันที่เป้าหมาย
+                        function calculateAge(birthDate, currentDate) {
+                            let years = currentDate.getFullYear() - birthDate.getFullYear();
+                            let months = currentDate.getMonth() - birthDate.getMonth();
+                            let days = currentDate.getDate() - birthDate.getDate();
+
+                            // ปรับเดือนและปี
+                            if (months < 0) {
+                                years--;
+                                months += 12;
+                            }
+                            if (days < 0) {
+                                months--;
+                                days += new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate(); // หาจำนวนวันในเดือน
+                            }
+
+                            return { years, months, days };
+                        }
+
+                        // ฟังก์ชันจัดรูปแบบอายุราชการให้แสดงผลเป็น yy/mm/dd
+                        function formatServiceTime(serviceTime) {
+                            return `${serviceTime.years} ปี ${serviceTime.months} เดือน ${serviceTime.days} วัน`;
+                        }
+
+                        // เรียกใช้งานคำนวณเมื่อฟิลด์เปลี่ยนแปลง
+                        dayField.addEventListener('change', calculateDetails);
+                        monthField.addEventListener('change', calculateDetails);
+                        yearField.addEventListener('change', calculateDetails);
+                        acceptDayField.addEventListener('change', calculateDetails);
+                        acceptMonthField.addEventListener('change', calculateDetails);
+                        acceptYearField.addEventListener('change', calculateDetails);
 
 
                         // ฟังก์ชันคำนวณช่วงเวลา
